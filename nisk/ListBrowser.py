@@ -88,6 +88,7 @@ class ListBrowserBase(dlger):
         self.ltab = util.defaultv(params, 'ltab', None)
         self.search = util.defaultv(params, 'search', '')
         self.loader = util.defaultv(params, 'loader', self.FoolLoader)
+        self.tocall = util.defaultv(params, 'tocall', None)
         self.tree = False
 
         self.fn = [(urwid.Text(self.txt_noresults), [])]
@@ -154,6 +155,13 @@ class ListBrowserBase(dlger):
         self.listbox.refresh()
         # self.listbox.focus_first_child()
 
+    def _widgetonshow(self):
+        super(ListBrowserBase,self)._widgetonshow()
+
+    def _widgetonunshow(self):
+        if self.tocall:
+            self.tocall()
+        super(ListBrowserBase,self)._widgetonunshow()
 
     def update(self, txtbox, changedtext):
         set_search(changedtext)

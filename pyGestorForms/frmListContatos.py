@@ -59,11 +59,11 @@ class frmListContatos2(ListBrowserBase):
 
     def _widgetonshow(self):
         self._widgetprocessa('dlg_statusbar_put', "Selecione o Cliente Para a Nova OS", self)
-        nisk.TUI.nestedwidget._widgetonshow(self)
+        super(frmListContatos2,self)._widgetonshow()
 
     def _widgetonunshow(self):
         self._widgetprocessa('dlg_statusbar_pop')
-        nisk.TUI.nestedwidget._widgetonunshow(self)
+        super(frmListContatos2,self)._widgetonunshow()
 
     def unhandled_input(self, k):
 

@@ -18,6 +18,9 @@ import pyGestorModel
 import conf
 import app
 
+from nisk.TUI import nestedwidget
+import pyGestorForms.frmListContatos
+from pyGestorForms import frmListA
 
 class crtl_os:
     @staticmethod
@@ -101,6 +104,68 @@ class crtl_os:
             logging.exception(e)
 
         pass
+
+
+    class os_new(nestedwidget):
+        def __init__(self,_widgetpai):
+            crtl_os.os_new.scancela = step = 0
+            crtl_os.os_new.scliente = step = step + 1
+            crtl_os.os_new.stipo = step = step + 1
+            crtl_os.os_new.smarca = step = step + 1
+            crtl_os.os_new.sresp = step = step + 1
+            crtl_os.os_new.sfim = step = step + 1
+            #
+            self.step = crtl_os.os_new.scliente
+            self.r, self.s = None, None
+            self.dados = {}
+
+            nestedwidget.__init__(self,_widgetpai)
+
+        def callback(self, data=None):
+
+            if step == crtl_os.os_new.scliente:
+                (self.r, dados['cliente'],) = data
+            if step == stipo:
+                (self.r, dados['tipo']) = data
+            if step == smarca:
+                (self.r, dados['marca'],) = data
+            if step == sresp:
+                (self.r, dados['usrresp'],) = data
+
+            if r == dlger.ok:
+                step = step + 1
+            elif r == dlger.back:
+                step -= 1
+            elif r == dlger.cancel:
+                step = crtl_os.os_new.scancela
+
+        def step_x(self,step, data=None):
+            if step == crtl_os.os_new.scliente:
+                frmc = pyGestorForms.frmListContatos.frmListContatos2({})
+                self.r, dados['cliente'] = frmc.Show(_widgetpai=self._widgetpai)
+            if step == stipo:
+                w = frmListA.frmListAScreens2({'rtab': 'lists_a', 'ltab': 'ostip'})
+                self.r, dados['tipo'] = w.Show(_widgetpai=self._widgetpai)
+            if step == smarca:
+                w = frmListA.frmListAScreens2({'rtab': 'lists_a', 'ltab': 'osfab'})
+                self.r, dados['marca'] = w.Show(_widgetpai=self.widgetpai)
+            if step == sresp:
+                w = frmListA.frmListAScreens2({'rtab': 'lists_a', 'ltab': 'sysus'})
+                self.r, dados['usrresp'] = w.Show(_widgetpai=self._widgetpai)
+
+            if step == crtl_os.os_new.sfim:
+                pass
+            if step == crtl_os.os_new.scancela:
+                return
+
+        def start(self):
+
+            while step not in (crtl_os.os_new.scancela, crtl_os.os_new.sfim):
+                self.step()
+
+            w = formmer_os_new(params={'new': True, 'dados': self.dados}, dados=self.dados)
+            w.show()
+
 
     @staticmethod
     def actOSOpen(_widgetpai):

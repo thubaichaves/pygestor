@@ -174,6 +174,7 @@ menu_top = (
     u'Neon Gestor', [
         (u'&Ordem de Serviço', [
             (u'&Nova OS', 'os_nova'),
+            (u'&Criar OS', 'os_create'),
             (u'&Abrir OS', 'os_abrir'),
             (u'Imprimir Entrada OS', 'os_print_ent'),
             (u'Histórico', [
@@ -268,6 +269,7 @@ class cmds:
     cmd_frmMain = "cmd_frmMain"
     cmd_checkLogin = "cmd_checkLogin"
     cmd_os_impr = "cmd_os_impr"
+    cmd_os_create= "cmd_os_create"
 
     dlg_frmlistsA_add = "dlg_frmlistsA_add"
     dlg_frmlistsA_open = "dlg_frmlistsA_open"

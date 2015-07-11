@@ -65,6 +65,7 @@ class pyGestorFacade(puremvc.patterns.facade.Facade, nisk.TUI.nestedwidget):
             (conf.cmds.OS_ADD, pyGestorFacade._OS_ADD),
             (conf.cmds.cmd_checkLogin, pyGestorFacade._cmd_checkLogin),
             (conf.cmds.cmd_os_impr, pyGestorFacade._cmd_os_impr),
+            (conf.cmds.cmd_os_create, pyGestorFacade._cmd_os_create),
             (conf.cmds.dlg_frmlistcontatos_add, pyGestorFacade._dlg_frmlistcontatos_add),
             (conf.cmds.dlg_frmlistcontatos_open, pyGestorFacade._dlg_frmlistcontatos_open),
             (conf.cmds.dlg_frmlistsA_add, pyGestorFacade._dlg_frmlistsA_add),
@@ -119,6 +120,14 @@ class pyGestorFacade(puremvc.patterns.facade.Facade, nisk.TUI.nestedwidget):
             b = note.getBody()
             thread.start_new(crtl_os.crtl_os.actImprimeOS, (facade, b))
 
+    class _cmd_os_create(puremvc.patterns.command.SimpleCommand, puremvc.interfaces.ICommand):
+        def execute(self, note):
+            facade = note.facade if issubclass(type(note), pyGestorFacade.superNotification) else None
+
+            b = note.getBody()
+            #thread.start_new(crtl_os.crtl_os.actImprimeOS, (facade, b))
+            crtl_os.crtl_os.os_new()
+
     class _cmd_frmMain(puremvc.patterns.command.SimpleCommand, puremvc.interfaces.ICommand):
         def execute(self, note):
             backref = note.getBody()
@@ -130,7 +139,9 @@ class pyGestorFacade(puremvc.patterns.facade.Facade, nisk.TUI.nestedwidget):
                 pyGestorFacade.mainInstance().sendNotification(conf.cmds.SESSION_UNLOGIN, '')
                 #
             elif backref == 'os_nova':
-                pyGestorFacade.mainInstance().sendNotification(conf.cmds.OS_ADD, '')
+                pyGestorFacade.mainInstance().sendNotification(conf.cmds.OS_ADD, '')#
+            elif backref == 'os_create':
+                pyGestorFacade.mainInstance().sendNotification(conf.cmds.cmd_os_create, '')
                 #
             elif backref == 'os_print_ent':
                 pyGestorFacade.mainInstance().sendNotification(conf.cmds.OS_PRINTENT, '')
