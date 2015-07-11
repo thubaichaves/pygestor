@@ -1,4 +1,4 @@
-#!/usr/bin/python
+﻿#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 import sys
@@ -194,7 +194,7 @@ class TerminalLogger(object):
     def __init__(self, filename=None, iserr=False):
         if filename is None:
             if TerminalLogger.logfile is None:
-                TerminalLogger.logfile = getlogfilename("%s\\stdout-%s.log")
+                TerminalLogger.logfile = getlogfilename("stdout-%s.log")
             filename = TerminalLogger.logfile
 
         if TerminalLogger.logfile is None:
@@ -220,8 +220,8 @@ class TerminalLogger(object):
 
     @staticmethod
     def setup():
-        sys.stdout = TerminalLogger('trashx\\log.log')  # todo
-        sys.stderr = TerminalLogger(filename=TerminalLogger.logfile, iserr=True)
+        sys.stdout = TerminalLogger('log.log')  # todo
+        sys.stderr = TerminalLogger(filename=TerminalLogger.logfile)#, iserr=True)
 
         # import logging.handlers
         # logging.setLevel(logging.DEBUG)
@@ -265,6 +265,7 @@ def show(message, title='NeonGestor'):
 def imprimeLPR(cfg_prntxt, var_prnfile):
     cmd = conf.cfg_prncmd.replace('%cfg_prntxt', cfg_prntxt).replace('%var_prnfile', var_prnfile).split(' ')
 
+    dump(['!!cmd!! ', cmd])
     p1 = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
     stdout, stderr = p1.communicate()
