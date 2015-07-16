@@ -58,12 +58,12 @@ class frmListContatos2(ListBrowserBase):
             self.set_search(txt)
 
     def _widgetonshow(self):
+        ListBrowserBase._widgetonshow(self)
         self._widgetprocessa('dlg_statusbar_put', "Selecione o Cliente Para a Nova OS", self)
-        super(frmListContatos2,self)._widgetonshow()
 
     def _widgetonunshow(self):
+        ListBrowserBase._widgetonunshow(self)
         self._widgetprocessa('dlg_statusbar_pop')
-        super(frmListContatos2,self)._widgetonunshow()
 
     def unhandled_input(self, k):
 

@@ -211,9 +211,9 @@ class session:
         if isDialog:
             self.PilhaDialogs.empilha((v_wgt, v_hdlr, vlocker, _nestedwidget))
         else:
-            _widget_show(self, v_wgt, v_hdlr, vlocker, _nestedwidget)
+            self._widget_show( v_wgt, v_hdlr, vlocker, _nestedwidget)
 
-    def ShowDialogWidgetOverlay(self, v_wgt, v_hdlr, _nestedwidget):
+    def ShowDialogWidgetOverlay(self, v_wgt, v_hdlr, _nestedwidget, isdialog=True):
         bkg = v_wgt  # urwid.AttrWrap(w, 'PopupMessageBg')
 
         if v_hdlr is None:
@@ -226,8 +226,9 @@ class session:
         over = urwid.Overlay(bkg, self.mainframe.body, ('fixed left', 8 + x), sx[1], sx[2], sx[3])
 
         lck = threading.Lock()
-        self.ShowDialogWidget(over, v_hdlr, lck, None, _nestedwidget)
-        util.espera(lck)
+        self.ShowDialogWidget(over, v_hdlr, lck, _nestedwidget, isDialog= isdialog)
+        if isdialog:
+            util.espera(lck)
         #
 
     def UnShowWidget(self):
@@ -236,14 +237,16 @@ class session:
                 if not self.locker.acquire(False):
                     self.locker.release()
 
-            if isinstance(self.nestedwidget, nestedwidget):
-                self.nestedwidget._widgetonunshow()
+            tocall = self.nestedwidget
 
             old = self.PilhaWidget.desempilha()
             self.mainframe.body = old[0]
             self.inputhadler = old[1]
             self.locker = old[2]
             self.nestedwidget = old[3]
+
+            if isinstance(tocall, nestedwidget):
+                tocall._widgetonunshow()
 
 
 ######################################################################

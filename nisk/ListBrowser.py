@@ -71,7 +71,7 @@ class TreeBoxx(TreeBox):
 class ListBrowserBase(dlger):
     footer_text = [
         ('title', "OK"), ('key', "Enter"), "|",
-        ('title', "Cancelar"), ('key', "ESC" ),
+        ('title', "Cancelar"), ('key', "ESC"),
     ]
 
     txt_noresults = '-- sem resultados --'
@@ -115,7 +115,6 @@ class ListBrowserBase(dlger):
         logging.debug(':(')
         return retorno
 
-
     def load(self):
 
         # pprint(self.listbox)
@@ -156,12 +155,12 @@ class ListBrowserBase(dlger):
         # self.listbox.focus_first_child()
 
     def _widgetonshow(self):
-        super(ListBrowserBase,self)._widgetonshow()
+        dlger._widgetonshow(self)
 
     def _widgetonunshow(self):
+        dlger._widgetonunshow(self)
         if self.tocall:
-            self.tocall()
-        super(ListBrowserBase,self)._widgetonunshow()
+            self.tocall((self.r, self.rdata))
 
     def update(self, txtbox, changedtext):
         set_search(changedtext)
@@ -215,8 +214,11 @@ class ListBrowserBase(dlger):
         except:
             return None
 
-    def Show(self, _widgetpai, isdialog=True):
+    def Show(self, _widgetpai, isdialog=True, tocall=None):
         self._widgetregistrapai(_widgetpai)
+
+        if tocall:
+            self.tocall = tocall
 
         bodyWithInfo = self.view
         headBodyFootFrame = nisk.widgets.LineBox(bodyWithInfo, title='|** Selecionar **|')
@@ -233,6 +235,6 @@ class ListBrowserBase(dlger):
             self._widgetsession.ShowDialogWidget(over, self.unhandled_input, lck, _nestedwidget=self)
             nisk.util.espera(lck)
         else:
-            self._widgetsession.ShowDialogWidget(over, self.unhandled_input, _nestedwidget=self, isDialog=False)
+            self._widgetsession.ShowDialogWidget(over, self.unhandled_input, None, _nestedwidget=self, isDialog=False)
 
         return self.r, self.rdata

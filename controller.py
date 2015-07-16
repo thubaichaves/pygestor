@@ -126,7 +126,8 @@ class pyGestorFacade(puremvc.patterns.facade.Facade, nisk.TUI.nestedwidget):
 
             b = note.getBody()
             #thread.start_new(crtl_os.crtl_os.actImprimeOS, (facade, b))
-            crtl_os.crtl_os.os_new()
+            x = crtl_os.crtl_os.os_new(facade)
+            x.act_start()
 
     class _cmd_frmMain(puremvc.patterns.command.SimpleCommand, puremvc.interfaces.ICommand):
         def execute(self, note):

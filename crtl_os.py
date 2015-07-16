@@ -22,6 +22,7 @@ from nisk.TUI import nestedwidget
 import pyGestorForms.frmListContatos
 from pyGestorForms import frmListA
 
+
 class crtl_os:
     @staticmethod
     def actImprimeOS(_widgetpai, params):
@@ -105,9 +106,8 @@ class crtl_os:
 
         pass
 
-
     class os_new(nestedwidget):
-        def __init__(self,_widgetpai):
+        def __init__(self, _widgetpai):
             crtl_os.os_new.scancela = step = 0
             crtl_os.os_new.scliente = step = step + 1
             crtl_os.os_new.stipo = step = step + 1
@@ -119,53 +119,57 @@ class crtl_os:
             self.r, self.s = None, None
             self.dados = {}
 
-            nestedwidget.__init__(self,_widgetpai)
+            nestedwidget.__init__(self, _widgetpai)
 
         def callback(self, data=None):
 
-            if step == crtl_os.os_new.scliente:
-                (self.r, dados['cliente'],) = data
-            if step == stipo:
-                (self.r, dados['tipo']) = data
-            if step == smarca:
-                (self.r, dados['marca'],) = data
-            if step == sresp:
-                (self.r, dados['usrresp'],) = data
+            if self.step == crtl_os.os_new.scliente:
+                (self.r, self.dados['cliente']) = data
+            if self.step == crtl_os.os_new.stipo:
+                (self.r, self.dados['tipo']) = data
+            if self.step == crtl_os.os_new.smarca:
+                (self.r, self.dados['marca']) = data
+            if self.step == crtl_os.os_new.sresp:
+                (self.r, self.dados['usrresp']) = data
 
-            if r == dlger.ok:
-                step = step + 1
-            elif r == dlger.back:
-                step -= 1
-            elif r == dlger.cancel:
-                step = crtl_os.os_new.scancela
+            if self.r == dlger.ok:
+                self.step = self.step + 1
+            elif self.r == dlger.back:
+                self.step -= 1
+            elif self.r == dlger.cancel:
+                self.step = crtl_os.os_new.scancela
 
-        def step_x(self,step, data=None):
+            self.step_x(self.step)
+
+        def step_x(self, step, data=None):
             if step == crtl_os.os_new.scliente:
                 frmc = pyGestorForms.frmListContatos.frmListContatos2({})
-                self.r, dados['cliente'] = frmc.Show(_widgetpai=self._widgetpai)
-            if step == stipo:
+                self.r, self.dados['cliente'] = frmc.Show(_widgetpai=self._widgetpai, isdialog=False, tocall=self.callback)
+            if step == crtl_os.os_new.stipo:
                 w = frmListA.frmListAScreens2({'rtab': 'lists_a', 'ltab': 'ostip'})
-                self.r, dados['tipo'] = w.Show(_widgetpai=self._widgetpai)
-            if step == smarca:
+                self.r, self.dados['tipo'] = w.Show(_widgetpai=self._widgetpai, isdialog=False, tocall=self.callback)
+            if step == crtl_os.os_new.smarca:
                 w = frmListA.frmListAScreens2({'rtab': 'lists_a', 'ltab': 'osfab'})
-                self.r, dados['marca'] = w.Show(_widgetpai=self.widgetpai)
-            if step == sresp:
+                self.r, self.dados['marca'] = w.Show(_widgetpai=self._widgetpai, isdialog=False, tocall=self.callback)
+            if step == crtl_os.os_new.sresp:
                 w = frmListA.frmListAScreens2({'rtab': 'lists_a', 'ltab': 'sysus'})
-                self.r, dados['usrresp'] = w.Show(_widgetpai=self._widgetpai)
+                self.r, self.dados['usrresp'] = w.Show(_widgetpai=self._widgetpai, isdialog=False, tocall=self.callback)
 
             if step == crtl_os.os_new.sfim:
-                pass
+                w = formmer_os_new(params={'new': True, 'dados': self.dados}, dados=self.dados)
+                w._widgetregistrapai(self._widgetpai)
+                w.show(isdialog=False)
+
             if step == crtl_os.os_new.scancela:
-                return
+                self._widgetsession.UnShowWidget()
 
-        def start(self):
+        # def act_fim(self):
+        #
+        # def act_cancela(self):
+        #     pass
 
-            while step not in (crtl_os.os_new.scancela, crtl_os.os_new.sfim):
-                self.step()
-
-            w = formmer_os_new(params={'new': True, 'dados': self.dados}, dados=self.dados)
-            w.show()
-
+        def act_start(self):
+            self.step_x(self.step)
 
     @staticmethod
     def actOSOpen(_widgetpai):
@@ -281,11 +285,11 @@ class formmer_os_new(formmer.formmer):
         lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='Nova OS'), 'windowsborder')
         return lb
 
-    def show(self):
+    def show(self, isdialog=True):
         x = self.binder.consulta(self.params)
         if x:
             self._widgetsession.ShowDialogWidgetOverlay(self.get_frame(), v_hdlr=self.unhandled_input,
-                                                        _nestedwidget=self)
+                                                        _nestedwidget=self, isdialog= isdialog)
 
         else:
             self._widgetprocessa(conf.cmds.dlg_statusbar_put, conf.textos['crtl_os.erro_abriros'])
