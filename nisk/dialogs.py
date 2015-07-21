@@ -149,29 +149,7 @@ class GenericDialogx(WidgetWrap, nisk.TUI.nestedwidget):
 
     @staticmethod
     def dialog_ShowText(texto, _widgetpai, title='Alerta'):
-
-        # instr_wid = urwid.Text(texto + ':')
-        # instr_widx= urwid.Text(texto + ':')
-        # d = GenericDialogx([instr_wid,instr_widx ], title, _widgetpai, ['OK'])
-        #
-        # # logging.debug('2 - %s' % nisk.util.timestampf())
-        # lck = threading.Lock()
-        #
-        # # logging.debug('3 - %s' % nisk.util.timestampf())
-        # d.showwidget(lck)
-        #
-        # # logging.debug('4 - %s' % util.timestampf())
-        # nisk.util.espera(lck)
-        #
-        # # logging.debug('5 - %s' % nisk.util.timestampf())
-        # r = d.d.edit_box.get_edit_text()
-        #
-        # # log logging.debug('6 - %s' % util.timestampf())
-        # return r, d.result
-        # # raise 'erro'
-        thread.start_new(dlgInput.show, ( texto, _widgetpai,title))
-        # return dlgInput.show( texto, _widgetpai,title)
-
+        dlgInput.show(texto, _widgetpai, isdialog=False)
 
 
 ######################################################################
@@ -191,9 +169,10 @@ class InputDialogx(GenericDialogx):
 
 ######################################################################
 class dlgInput(nisk.TUI.nestedwidget):
-    def __init__(self, title, instrucions, _widgetpai, default_txt=''):
+    def __init__(self, title, instrucions, _widgetpai, default_txt='', tocall=None):
         # self.lck = threading.Lock()
         self.result = None
+        self.tocall = tocall
         self._widgetregistrapai(_widgetpai)
         self.d = InputDialogx(title, instrucions, self,
                               default_txt=default_txt, ok_cb=self.ok_cb, cancel_cb=self.cancel_cb)
@@ -209,6 +188,7 @@ class dlgInput(nisk.TUI.nestedwidget):
 
     def ok_cb(self, xx=None, yy=None):
         self.result = dlger.ok
+        self.rdata = self.d.edit_box.get_edit_text()
         self._widgetsession.UnShowWidget()
 
     def cancel_cb(self, xx=None, yy=None):
@@ -220,36 +200,46 @@ class dlgInput(nisk.TUI.nestedwidget):
         # log logging.debug('gett - %s' % str(r))
         return r
 
-    def showwidget(self, lck, _widgetpai):
+    def _widgetonshow(self):
+        nisk.TUI.nestedwidget._widgetonshow(self)
 
-        # overvars = urwid.Overlay(urwid.AttrWrap(urwid.BoxAdapter(self.d, 12), 'PopupMessageBg')
-        # , nisk.tui.mdi.MainFrame, 'center', 40, 'middle', None)
+    def _widgetonunshow(self):
+        nisk.TUI.nestedwidget._widgetonunshow(self)
+        if self.tocall:
+            self.tocall((self.result, self.rdata))
 
+    def showwidget(self, lck, _widgetpai, isdialog=True):
         overvars = urwid.Overlay(urwid.AttrWrap(self.d, 'PopupMessageBg')
                                  , self._widgetgetsession().mainframe.body, 'center', 40, 'middle', 20)
 
-        self._widgetgetsession().ShowDialogWidget(overvars, self.khdl, lck, _nestedwidget=_widgetpai)
+        self._widgetgetsession().ShowDialogWidget(overvars, self.khdl, lck, _nestedwidget=self, isDialog=isdialog)
 
     @staticmethod
-    def show(instrucions, _widgetpai, title='Neon Gestor', default_txt='', ):
+    def show(instrucions, _widgetpai, title='Neon Gestor', default_txt='', tocall=None, isdialog=True):
+        if isdialog:
+            # log logging.debug('1 - %s' % util.timestampf())
+            d = dlgInput(title, instrucions, _widgetpai=_widgetpai, default_txt=default_txt)
 
-        # log logging.debug('1 - %s' % util.timestampf())
-        d = dlgInput(title, instrucions, _widgetpai=_widgetpai, default_txt=default_txt)
+            # logging.debug('2 - %s' % nisk.util.timestampf())
+            lck = threading.Lock()
 
-        # logging.debug('2 - %s' % nisk.util.timestampf())
-        lck = threading.Lock()
+            # logging.debug('3 - %s' % nisk.util.timestampf())
+            d.showwidget(lck, _widgetpai)
 
-        # logging.debug('3 - %s' % nisk.util.timestampf())
-        d.showwidget(lck, _widgetpai)
+            # logging.debug('4 - %s' % util.timestampf())
+            nisk.util.espera(lck)
 
-        # logging.debug('4 - %s' % util.timestampf())
-        nisk.util.espera(lck)
+            # logging.debug('5 - %s' % nisk.util.timestampf())
+            r = d.d.edit_box.get_edit_text()
 
-        # logging.debug('5 - %s' % nisk.util.timestampf())
-        r = d.d.edit_box.get_edit_text()
+            # log logging.debug('6 - %s' % util.timestampf())
+            return r, d.result
 
-        # log logging.debug('6 - %s' % util.timestampf())
-        return r, d.result
+        else:
+            d = dlgInput(title, instrucions, _widgetpai=_widgetpai, default_txt=default_txt, tocall=tocall)
+            lck = threading.Lock()
+            d.showwidget(lck, _widgetpai, isdialog=isdialog)
+            # r = d.d.edit_box.get_edit_text()
 
 
 ######################################################################

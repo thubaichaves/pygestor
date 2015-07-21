@@ -10,6 +10,7 @@ import imprimir
 import urwid
 import pyGestorModel
 import pyGestorModel.orm_listas
+from nisk.TUI import nestedwidget
 import conf
 import app
 
@@ -63,6 +64,112 @@ class crtl_listsA:
         if cb:
             cb({'act': 'open', 'nome': nome})
 
+
+class listsA_new(nestedwidget):
+    def __init__(self, _widgetpai,params):
+        listsA_new.scancela = step = 0
+        #
+        listsA_new.sstart = step = step + 1
+        listsA_new.snome = step = step + 1
+        listsA_new.sedita = step = step + 1
+        #
+        listsA_new.sfim = step = step + 1
+        #
+        self.step = listsA_new.sstart
+        self.r, self.s = None, None
+        self.dados = {}
+
+        nestedwidget.__init__(self, _widgetpai)
+
+        self.params=params
+        self._p_cb = util.defaultv(params, 'callback', None)
+        self._p_txt = util.defaultv(params, 'nome', '').title()
+        self._p_ltab = params['ltab']
+        if not self._p_ltab:
+            raise "tab não informada"
+
+
+    def callback(self, data=None):
+
+        if self.step == listsA_new.snome:
+            (self.r, self.dados['nome']) = data
+        if self.step == listsA_new.sedita:
+            (self.r, self.dados['nome']) = data
+
+        if self.r == dlger.ok:
+            self.step = self.step + 1
+        elif self.r == dlger.back:
+            self.step -= 1
+        elif self.r == dlger.cancel:
+            self.step = listsA_new.scancela
+
+        self.step_x(self.step)
+
+    def step_x(self, step, data=None):
+        if step == listsA_new.sstart:
+            pass
+            #
+        elif step == listsA_new.snome:
+            nisk.dialogs.dlgInput.show('Qual o Nome Completo do novo Registro?', _widgetpai=self._widgetpai,
+                                              default_txt=txt, isdialog=False, tocall=self.callback)
+            #
+            #
+        elif step == listsA_new.sedita:
+            w = formmer_listsA_edit(params={'new': True, 'dados': self.dados}, dados=self.dados)
+            w._widgetregistrapai(self._widgetpai)
+            w.show(isdialog=False,)
+            #
+        elif step == listsA_new.sfim:
+            if self._p_cb:
+                self._p_cb({'act': 'add', 'nome': self._p_nome})
+
+            #
+        elif step == listsA_new.scancela:
+            self._widgetsession.UnShowWidget()
+
+    def act_start(self):
+        self.step_x(self.step)
+
+class os_open(nestedwidget):
+    def __init__(self, _widgetpai):
+        crtl_os.os_open._cancela = step = 0
+        crtl_os.os_open.a_numero = step = step + 1
+        crtl_os.os_open._fim = step = step + 1
+        #
+        self.step = crtl_os.os_open.a_numero
+        self.r, self.s = None, None
+        self.dados = {}
+
+        nestedwidget.__init__(self, _widgetpai)
+
+    def callback(self, data=None):
+
+        if self.step == crtl_os.os_open.a_numero:
+            (self.r, self.dados['osn']) = data
+
+        if self.r == dlger.ok:
+            self.step = self.step + 1
+        elif self.r == dlger.back:
+            self.step -= 1
+        elif self.r == dlger.cancel:
+            self.step = crtl_os.os_open._cancela
+
+        self.step_x(self.step)
+
+    def step_x(self, step, data=None):
+        if step == crtl_os.os_open.a_numero:
+            nisk.dialogs.dlgInput.show('Abrir OS', self._widgetpai, tocall=self.callback, isdialog=False)
+
+        if step == crtl_os.os_open._fim:
+            w = formmer_os_edit(params={'os': self.dados['osn']})
+            w._widgetregistrapai(self._widgetpai)
+            w.show()
+
+        if step == crtl_os.os_open._cancela:
+            self._widgetsession.UnShowWidget()
+
+    def act_start(self):
+        self.step_x(self.step)
 
 class formmer_listsA_edit(formmer.formmer, dlger):
     # text_button_list = [('key', ['M', ('title', "emu"), "F1"]), ]
@@ -155,11 +262,11 @@ class formmer_listsA_edit(formmer.formmer, dlger):
         lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='Registros'), 'windowsborder')
         return lb
 
-    def show(self):
+    def show(self, isdialog=False):
         x = self.binder.consulta(self.params)
         if x:
             self._widgetsession.ShowDialogWidgetOverlay(self.get_frame(), v_hdlr=self.unhandled_input,
-                                                        _nestedwidget=self)
+                                                        _nestedwidget=self, isdialog=False)
         else:
             self._widgetprocessa(conf.cmds.dlg_statusbar_put, (('error'), 'Não foi possível abrir essa OS'))
             # nisk.dialogs.dlgInput.show(conf.textos['crtl_os.erro_abriros'],self._widgetpai)

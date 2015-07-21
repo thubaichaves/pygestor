@@ -46,66 +46,6 @@ class crtl_os:
         else:
             nisk.dialogs.dlgInput.show('OS Inexistente', _widgetpai)
 
-    @staticmethod
-    def actOSNew(_widgetpai):
-        util.TerminalLogger.setup()
-
-        # log.debug('passou1')
-        try:
-            import pyGestorForms.frmListContatos
-            from pyGestorForms import frmListA
-        except Exception, e:
-            log.exception(e)
-        # todo: erro ao usar python run.py
-        # log.debug('passou2')
-
-        scancela = step = 0
-        scliente = step = step + 1
-        stipo = step = step + 1
-        smarca = step = step + 1
-        sresp = step = step + 1
-        sfim = step = step + 1
-        #
-        step = scliente
-        r, s = None, None
-        dados = {}
-
-        while step not in (scancela, sfim):
-            if step == scliente:
-                frmc = pyGestorForms.frmListContatos.frmListContatos2({})
-                r, dados['cliente'] = frmc.Show(_widgetpai=_widgetpai)
-            if step == stipo:
-                w = frmListA.frmListAScreens2({'rtab': 'lists_a', 'ltab': 'ostip'})
-                r, dados['tipo'] = w.Show(_widgetpai=_widgetpai)
-            if step == smarca:
-                w = frmListA.frmListAScreens2({'rtab': 'lists_a', 'ltab': 'osfab'})
-                r, dados['marca'] = w.Show(_widgetpai=_widgetpai)
-            if step == sresp:
-                w = frmListA.frmListAScreens2({'rtab': 'lists_a', 'ltab': 'sysus'})
-                r, dados['usrresp'] = w.Show(_widgetpai=_widgetpai)
-            # log.debug('step:' + str(step))
-            if r == dlger.ok:
-                step = step + 1
-            elif r == dlger.back:
-                step -= 1
-            elif r == dlger.cancel:
-                step = scancela
-            if step == sfim:
-                pass
-            if step == scancela:
-                return
-
-        w = formmer_os_new(params={'new': True, 'dados': dados}, dados=dados)
-        w._widgetregistrapai(_widgetpai)
-        w.show()
-
-        try:
-            pass
-        except Exception, e:
-            logging.exception(e)
-
-        pass
-
     class os_new(nestedwidget):
         def __init__(self, _widgetpai):
             crtl_os.os_new.scancela = step = 0
@@ -125,11 +65,11 @@ class crtl_os:
 
             if self.step == crtl_os.os_new.scliente:
                 (self.r, self.dados['cliente']) = data
-            if self.step == crtl_os.os_new.stipo:
+            elif self.step == crtl_os.os_new.stipo:
                 (self.r, self.dados['tipo']) = data
-            if self.step == crtl_os.os_new.smarca:
+            elif self.step == crtl_os.os_new.smarca:
                 (self.r, self.dados['marca']) = data
-            if self.step == crtl_os.os_new.sresp:
+            elif self.step == crtl_os.os_new.sresp:
                 (self.r, self.dados['usrresp']) = data
 
             if self.r == dlger.ok:
@@ -142,51 +82,71 @@ class crtl_os:
             self.step_x(self.step)
 
         def step_x(self, step, data=None):
-            if step == crtl_os.os_new.scliente:
+            if 0 > 1: pass
+            elif step == crtl_os.os_new.scliente:
                 frmc = pyGestorForms.frmListContatos.frmListContatos2({})
-                self.r, self.dados['cliente'] = frmc.Show(_widgetpai=self._widgetpai, isdialog=False, tocall=self.callback)
-            if step == crtl_os.os_new.stipo:
+                frmc.Show(_widgetpai=self._widgetpai, isdialog=False, tocall=self.callback)
+            elif step == crtl_os.os_new.stipo:
                 w = frmListA.frmListAScreens2({'rtab': 'lists_a', 'ltab': 'ostip'})
-                self.r, self.dados['tipo'] = w.Show(_widgetpai=self._widgetpai, isdialog=False, tocall=self.callback)
-            if step == crtl_os.os_new.smarca:
+                w.Show(_widgetpai=self._widgetpai, isdialog=False, tocall=self.callback)
+            elif step == crtl_os.os_new.smarca:
                 w = frmListA.frmListAScreens2({'rtab': 'lists_a', 'ltab': 'osfab'})
-                self.r, self.dados['marca'] = w.Show(_widgetpai=self._widgetpai, isdialog=False, tocall=self.callback)
-            if step == crtl_os.os_new.sresp:
+                w.Show(_widgetpai=self._widgetpai, isdialog=False, tocall=self.callback)
+            elif step == crtl_os.os_new.sresp:
                 w = frmListA.frmListAScreens2({'rtab': 'lists_a', 'ltab': 'sysus'})
-                self.r, self.dados['usrresp'] = w.Show(_widgetpai=self._widgetpai, isdialog=False, tocall=self.callback)
+                w.Show(_widgetpai=self._widgetpai, isdialog=False, tocall=self.callback)
 
-            if step == crtl_os.os_new.sfim:
+            elif step == crtl_os.os_new.sfim:
                 w = formmer_os_new(params={'new': True, 'dados': self.dados}, dados=self.dados)
                 w._widgetregistrapai(self._widgetpai)
                 w.show(isdialog=False)
 
-            if step == crtl_os.os_new.scancela:
+            elif step == crtl_os.os_new.scancela:
                 self._widgetsession.UnShowWidget()
-
-        # def act_fim(self):
-        #
-        # def act_cancela(self):
-        #     pass
 
         def act_start(self):
             self.step_x(self.step)
 
-    @staticmethod
-    def actOSOpen(_widgetpai):
-        util.TerminalLogger.setup()
+    class os_open(nestedwidget):
+        def __init__(self, _widgetpai):
+            crtl_os.os_open._cancela = step = 0
+            crtl_os.os_open.a_numero = step = step + 1
+            crtl_os.os_open._fim = step = step + 1
+            #
+            self.step = crtl_os.os_open.a_numero
+            self.r, self.s = None, None
+            self.dados = {}
 
-        osn, rr = nisk.dialogs.dlgInput.show('Abrir OS', _widgetpai)
+            nestedwidget.__init__(self, _widgetpai)
 
-        w = formmer_os_edit(params={'os': util.asInt(osn)})
-        w._widgetregistrapai(_widgetpai)
-        w.show()
+        def callback(self, data=None):
 
-        try:
-            pass
-        except Exception, e:
-            logging.exception(e)
+            if self.step == crtl_os.os_open.a_numero:
+                (self.r, self.dados['osn']) = data
 
-        pass
+            if self.r == dlger.ok:
+                self.step = self.step + 1
+            elif self.r == dlger.back:
+                self.step -= 1
+            elif self.r == dlger.cancel:
+                self.step = crtl_os.os_open._cancela
+
+            self.step_x(self.step)
+
+        def step_x(self, step, data=None):
+            if step == crtl_os.os_open.a_numero:
+                nisk.dialogs.dlgInput.show('Abrir OS', self._widgetpai, tocall=self.callback, isdialog=False)
+
+            if step == crtl_os.os_open._fim:
+                w = formmer_os_edit(params={'os': self.dados['osn']})
+                w._widgetregistrapai(self._widgetpai)
+                w.show()
+
+            if step == crtl_os.os_open._cancela:
+                self._widgetsession.UnShowWidget()
+
+        def act_start(self):
+            self.step_x(self.step)
 
 
 class formmer_os_new(formmer.formmer):
@@ -235,14 +195,14 @@ class formmer_os_new(formmer.formmer):
             return True
         else:
             # tui.mdi.ShowDialogText('Não Identificado: ' + str(backref))
-            logging.debug('Não Identificado: ' + str(backref))
+            if isinstance(backref, str):
+                logging.debug('Não Identificado: ' + str(backref))
             pass
         return False
 
     def unhandled_input(self, k):
         if k in ('esc',):
             if self.binder.get_isdirty():
-                pass
                 return True
 
         if k in ('f1', 'meta m'):
@@ -289,7 +249,7 @@ class formmer_os_new(formmer.formmer):
         x = self.binder.consulta(self.params)
         if x:
             self._widgetsession.ShowDialogWidgetOverlay(self.get_frame(), v_hdlr=self.unhandled_input,
-                                                        _nestedwidget=self, isdialog= isdialog)
+                                                        _nestedwidget=self, isdialog=isdialog)
 
         else:
             self._widgetprocessa(conf.cmds.dlg_statusbar_put, conf.textos['crtl_os.erro_abriros'])
@@ -424,11 +384,11 @@ class formmer_os_edit(formmer.formmer, dlger):
         lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='OS'), 'windowsborder')
         return lb
 
-    def show(self):
+    def show(self, isdialog=False):
         x = self.binder.consulta(self.params)
         if x:
             self._widgetsession.ShowDialogWidgetOverlay(self.get_frame(), v_hdlr=self.unhandled_input,
-                                                        _nestedwidget=self)
+                                                        _nestedwidget=self, isdialog=isdialog)
         else:
             self._widgetprocessa(conf.cmds.dlg_statusbar_put, (('error'), 'Não foi possível abrir essa OS'))
             # nisk.dialogs.dlgInput.show(conf.textos['crtl_os.erro_abriros'],self._widgetpai)

@@ -79,8 +79,8 @@ class frmLoginA(nisk.TUI.nestedwidget):
         return self.callbacks(input)
 
     def show(self):
-        lck = threading.Lock()
+        # lck = threading.Lock()
 
-        self._widgetsession.ShowDialogWidget(self.widget, self.keyHandler, lck, self)
+        self._widgetsession.ShowDialogWidget(self.widget, self.keyHandler, None, self,isDialog=False)
 
-        nisk.util.espera(lck)
+        # nisk.util.espera(lck)
