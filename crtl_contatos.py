@@ -41,17 +41,17 @@ class contatos_new(nestedwidget):
         self.r=None
 
         if self.step == contatos_new.snome:
-            (self.r, self.dados['nome']) = data
+            (self.r, self.dados['nome'],z) = data
 
         elif self.step == contatos_new.stelefone:
-            (xr, telefone) = data
+            (xr, telefone,z) = data
             if telefone and xr == dlger.ok:
                 self.dados['telefones'].append(telefone)
             else:
                 self.step = self.step + 1
             #
         elif self.step == contatos_new.sedita:
-            (self.r, self.dados['nome']) = data
+            (self.r, self.dados['nome'],z) = data
             #
 
 
@@ -133,7 +133,7 @@ class contatos_open(nestedwidget):
         if self.step == contatos_open._start:
             self.step = self.step + 1
         if self.step == contatos_open._start:
-            (self.r, self.dados['osn']) = data
+            (self.r, self.dados['osn'],z) = data
 
         if self.r == dlger.ok:
             self.step = self.step + 1
@@ -275,8 +275,12 @@ class formmer_contatos_edit(formmer.formmer, dlger):
     def show(self, isdialog=False):
         x = self.binder.consulta(self.params)
         if x:
-            self._widgetsession.ShowDialogWidgetOverlay(self.get_frame(), v_hdlr=self.unhandled_input,
-                                                        _nestedwidget=self, isdialog=isdialog)
+            sx = conf.sizes['ListBrowser1']
+            over = urwid.Overlay(self.get_frame(), self._widgetsession. mainframe.body,('fixed left', 8 ), sx[1], sx[2], sx[3])
+            #over = urwid.Overlay(self.get_frame(), self._widgetsession. mainframe.body, 'center', ('relative', 75), 'middle',
+            #                     ('relative', 75))
+            self._widgetsession.ShowDialogWidget(over, self.unhandled_input, None,
+                                                 _nestedwidget=self, isDialog=False)
         else:
             self._widgetprocessa(conf.cmds.dlg_statusbar_put, (('error'), 'Não foi possível abrir essa OS'))
             # nisk.dialogs.dlgInput.show(conf.textos['crtl_os.erro_abriros'],self._widgetpai)

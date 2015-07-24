@@ -64,13 +64,13 @@ class crtl_os:
         def callback(self, data=None):
 
             if self.step == crtl_os.os_new.scliente:
-                (self.r, self.dados['cliente']) = data
+                (self.r, self.dados['cliente'], z) = data
             elif self.step == crtl_os.os_new.stipo:
-                (self.r, self.dados['tipo']) = data
+                (self.r, self.dados['tipo'], z) = data
             elif self.step == crtl_os.os_new.smarca:
-                (self.r, self.dados['marca']) = data
+                (self.r, self.dados['marca'], z) = data
             elif self.step == crtl_os.os_new.sresp:
-                (self.r, self.dados['usrresp']) = data
+                (self.r, self.dados['usrresp'], z) = data
 
             if self.r == dlger.ok:
                 self.step = self.step + 1
@@ -82,7 +82,8 @@ class crtl_os:
             self.step_x(self.step)
 
         def step_x(self, step, data=None):
-            if 0 > 1: pass
+            if 0 > 1:
+                pass
             elif step == crtl_os.os_new.scliente:
                 frmc = pyGestorForms.frmListContatos.frmListContatos2({})
                 frmc.Show(_widgetpai=self._widgetpai, isdialog=False, tocall=self.callback)
@@ -122,7 +123,7 @@ class crtl_os:
         def callback(self, data=None):
 
             if self.step == crtl_os.os_open.a_numero:
-                (self.r, self.dados['osn']) = data
+                (self.r, self.dados['osn'],z) = data
 
             if self.r == dlger.ok:
                 self.step = self.step + 1

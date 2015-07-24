@@ -20,7 +20,7 @@ class frmListAScreens2(nisk.ListBrowser.ListBrowserBase):
         ('title', "Voltar"), ('key', "Home"), "|",
         ('title', "Novo"), ('key', "F2"), "|",
         ('title', "Editar"), ('key', "F4"), "|",
-        ('title', "Cancelar"), ('key', "ESC" ), "\n",
+        ('title', "Cancelar"), ('key', "ESC"), "\n",
         #
         # ('title', "Infomacoes"), ('key', "F5"), "|",
         # ('title', "Ajuda"), ('key', "Ctrl-Back"), "|",
@@ -29,7 +29,6 @@ class frmListAScreens2(nisk.ListBrowser.ListBrowserBase):
     def __init__(self, params):
         # params['loader'] = self.FoolLoader
         nisk.ListBrowser.ListBrowserBase.__init__(self, params)
-
 
     def FoolLoader(self, params):
         rtab = params['rtab']
@@ -69,7 +68,7 @@ class frmListAScreens2(nisk.ListBrowser.ListBrowserBase):
                 searchx = search.split(' ')
                 for s in searchx:
                     q = q.filter(tabxs.nome.like('%' + s + '%'))
-                # q = q.filter(tabxs.nome.like('%' + search + '%'))
+                    # q = q.filter(tabxs.nome.like('%' + search + '%'))
 
         q = q.limit(quantos)
         r = q.all()
@@ -84,8 +83,6 @@ class frmListAScreens2(nisk.ListBrowser.ListBrowserBase):
 
         return {'dados': dados}
 
-
-
     def callback_acts(self, params={}):
         if util.defaultv(params, 'act', '') == 'add':
             txt = util.defaultv(params, 'nome', '')
@@ -99,12 +96,12 @@ class frmListAScreens2(nisk.ListBrowser.ListBrowserBase):
 
         if k == "f2":
             self._widgetprocessa(conf.cmds.dlg_frmlistsA_add,
-                         {'nome': self.search, 'ltab':self.ltab, 'callback': self.callback_acts})
+                                 {'nome': self.search, 'ltab': self.ltab, 'callback': self.callback_acts})
             return k
 
         if k == "f4":
             self._widgetprocessa(conf.cmds.dlg_frmlistsA_open,
-                         {'id': self.getTid(), 'ltab':self.ltab, 'callback': self.callback_acts})
+                                 {'id': self.getTid(), 'ltab': self.ltab, 'callback': self.callback_acts})
             return k
 
         if k == 'home':
@@ -115,11 +112,17 @@ class frmListAScreens2(nisk.ListBrowser.ListBrowserBase):
         return nisk.ListBrowser.ListBrowserBase.unhandled_input(self, k)
 
 
-def defaultPopupSelector_(wgtFieldBoxDb1, params=None):
+def defaultPopupSelector_cb():
+    if r == dlger.ok:
+        wgtFieldBoxDb1.setValue(d['tid'])
+    else:
+        nisk.util.dump(r, d)
 
+
+def defaultPopupSelector_(wgtFieldBoxDb1, params=None):
     act = util.defaultv(params, 'act', 'select')
 
-    if act=='select':
+    if act == 'select':
         if wgtFieldBoxDb1 is None:
             return
         d, w, r = None, None, None
@@ -127,22 +130,18 @@ def defaultPopupSelector_(wgtFieldBoxDb1, params=None):
         ltabela = wgtFieldBoxDb1.ltabela
 
         if tabela == 'grupos':
-            w = frmListAScreens2({'rtab': tabela, 'ltab': ltabela})
+            w = frmListAScreens2({'rtab': tabela, 'ltab': ltabela, 'widget': wgtFieldBoxDb1})
         elif tabela == 'contatos':
             import frmListContatos
 
-            w = frmListContatos.frmListContatos2({})
+            w = frmListContatos.frmListContatos2({'widget': wgtFieldBoxDb1})
         else:  # if tabela == 'lists_a':
-            w = frmListAScreens2({'rtab': 'lists_a', 'ltab': ltabela})
+            w = frmListAScreens2({'rtab': 'lists_a', 'ltab': ltabela, 'widget': wgtFieldBoxDb1})
 
         if not w is None:
-            r, d = w.Show(_widgetpai=wgtFieldBoxDb1)
-            if r == dlger.ok:
-                wgtFieldBoxDb1.setValue(d['tid'])
-        else:
-            nisk.util.dump(r, d)
+            w.Show(_widgetpai=wgtFieldBoxDb1)
 
-    if act=='edit':
+    if act == 'edit':
         if wgtFieldBoxDb1 is None:
             return
         d, w, r = None, None, None

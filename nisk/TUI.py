@@ -221,9 +221,9 @@ class session:
 
         sx = conf.sizes['ListBrowser1']
 
-        x = len(self.PilhaDialogs.dados)
+        #x = len(self.PilhaWidget.dados)
 
-        over = urwid.Overlay(bkg, self.mainframe.body, ('fixed left', 8 + x), sx[1], sx[2], sx[3])
+        over = urwid.Overlay(bkg, self.mainframe.body, ('fixed left', 8 ), sx[1], sx[2], sx[3])
 
         lck = threading.Lock()
         self.ShowDialogWidget(over, v_hdlr, lck, _nestedwidget, isDialog= isdialog)

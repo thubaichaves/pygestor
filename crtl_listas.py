@@ -15,34 +15,6 @@ import conf
 import app
 
 
-class crtl_listsA:
-    @staticmethod
-    def actOpen(_widgetpai, params):
-        util.TerminalLogger.setup()
-
-        osn = nisk.util.defaultv(params, 'id', None)
-        ltab = params['ltab']
-        if not ltab:
-            raise "tab não informada"
-
-        # if not osn:
-        #     osn, rr = nisk.dialogs.dlgInput.show('Abrir Registro por Código', _widgetpai)
-
-        w = formmer_listsA_edit(params=params)
-        w._widgetregistrapai(_widgetpai)
-        w.show()
-
-        nome = None
-        try:
-            nome = w.binder._dados.nome
-        except:
-            pass
-
-        cb = util.defaultv(params, 'callback', None)
-        if cb:
-            cb({'act': 'open', 'nome': nome})
-
-
 class listsA_new(nestedwidget):
     def __init__(self, _widgetpai, params):
         listsA_new.scancela = step = 0
@@ -69,9 +41,9 @@ class listsA_new(nestedwidget):
     def callback(self, data=None):
 
         if self.step == listsA_new.snome:
-            (self.r, self.dados['nome']) = data
+            (self.r, self.dados['nome'],z) = data
         if self.step == listsA_new.sedita:
-            (self.r, self.dados['nome']) = data
+            (self.r, self.dados['nome'],z) = data
 
         if self.r == dlger.ok:
             self.step = self.step + 1
@@ -142,7 +114,7 @@ class listsA_open(nestedwidget):
         if self.step == listsA_open._start:
             self.step = self.step + 1
         if self.step == listsA_open._start:
-            (self.r, self.dados['osn']) = data
+            (self.r, self.dados['osn'],z) = data
 
         if self.r == dlger.ok:
             self.step = self.step + 1
@@ -288,10 +260,14 @@ class formmer_listsA_edit(formmer.formmer, dlger):
     def show(self, isdialog=False):
         x = self.binder.consulta(self.params)
         if x:
-            #self._widgetsession.ShowDialogWidgetOverlay(self.get_frame(), v_hdlr=self.unhandled_input,
+            # self._widgetsession.ShowDialogWidgetOverlay(self.get_frame(), v_hdlr=self.unhandled_input,
             #                                            _nestedwidget=self, isdialog=False)
-            self._widgetsession.ShowDialogWidget(self.get_frame(), self.unhandled_input,None,
-                                                        _nestedwidget=self, isDialog=False)
+            sx = conf.sizes['ListBrowser1']
+            over = urwid.Overlay(self.get_frame(), self._widgetsession. mainframe.body,('fixed left', 8 ), sx[1], sx[2], sx[3])
+            #over = urwid.Overlay(self.get_frame(), self._widgetsession. mainframe.body, 'center', ('relative', 75), 'middle',
+            #                     ('relative', 75))
+            self._widgetsession.ShowDialogWidget(over, self.unhandled_input, None,
+                                                 _nestedwidget=self, isDialog=False)
         else:
             self._widgetprocessa(conf.cmds.dlg_statusbar_put, (('error'), 'Não foi possível abrir essa OS'))
             # nisk.dialogs.dlgInput.show(conf.textos['crtl_os.erro_abriros'],self._widgetpai)

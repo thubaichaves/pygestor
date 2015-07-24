@@ -161,7 +161,7 @@ class ListBrowserBase(dlger):
     def _widgetonunshow(self):
         dlger._widgetonunshow(self)
         if self.tocall:
-            self.tocall((self.r, self.rdata))
+            self.tocall((self.r, self.rdata, self._params))
 
     def update(self, txtbox, changedtext):
         set_search(changedtext)
@@ -231,12 +231,12 @@ class ListBrowserBase(dlger):
         over = urwid.Overlay(bkg, self._widgetsession.mainframe.body, sx[0], sx[1], sx[2], sx[3])
 
         self.load()
-        # self._widgetonshow()
+        #
         if isdialog:
             lck = threading.Lock()
             self._widgetsession.ShowDialogWidget(over, self.unhandled_input, lck, _nestedwidget=self)
             nisk.util.espera(lck)
+            return self.r, self.rdata
         else:
             self._widgetsession.ShowDialogWidget(over, self.unhandled_input, None, _nestedwidget=self, isDialog=False)
 
-        return self.r, self.rdata
