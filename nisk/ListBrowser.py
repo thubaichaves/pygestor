@@ -12,6 +12,7 @@ import conf
 import nisk
 import nisk.util as util
 from nisk.dialogs import dlger
+import nisk.dialogs
 
 
 class FocusableText(urwid.WidgetWrap):
@@ -198,7 +199,8 @@ class ListBrowserBase(dlger):
                 self._widgetsession.UnShowWidget()
                 return True
             else:
-                util.show('É necessário selecionar um registro para prosseguir!')
+                nisk.dialogs.GenericDialogx.dialog_ShowText(
+                    'É necessário selecionar um registro para prosseguir!', self)
                 return True
                 pass
 
@@ -214,7 +216,7 @@ class ListBrowserBase(dlger):
         except:
             return None
 
-    def Show(self, _widgetpai, isdialog=True, tocall=None):
+    def Show(self, _widgetpai, isdialog=False, tocall=None):
         self._widgetregistrapai(_widgetpai)
 
         if tocall:

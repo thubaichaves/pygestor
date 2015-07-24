@@ -75,7 +75,7 @@ class frmListContatos2(ListBrowserBase):
         if k == "f4":
             self._widgetprocessa(conf.cmds.dlg_frmlistcontatos_open,
                          {'id': self.getTid(), 'callback': self.callback_acts})
-            return k
+            return "x"
 
         if (k == 'home'):  # "crtl _" = backspace
             self.r = nisk.dialogs.dlger.back

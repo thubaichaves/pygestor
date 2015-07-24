@@ -173,6 +173,7 @@ class dlgInput(nisk.TUI.nestedwidget):
         # self.lck = threading.Lock()
         self.result = None
         self.tocall = tocall
+        self.rdata =None
         self._widgetregistrapai(_widgetpai)
         self.d = InputDialogx(title, instrucions, self,
                               default_txt=default_txt, ok_cb=self.ok_cb, cancel_cb=self.cancel_cb)

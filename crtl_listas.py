@@ -17,28 +17,6 @@ import app
 
 class crtl_listsA:
     @staticmethod
-    def actAdd(_widgetpai, params):
-        util.TerminalLogger.setup()
-
-        txt = util.defaultv(params, 'nome', '').title()
-        ltab = params['ltab']
-        if not ltab:
-            raise "tab não informada"
-
-        nome, rr = nisk.dialogs.dlgInput.show('Qual o Nome Completo do novo Registro?', _widgetpai=_widgetpai,
-                                              default_txt=txt)
-
-        if nome and rr == dlger.ok:
-            nome = nome.title()
-
-            x = pyGestorModel.listas_Proxy(pyGestorModel.orm_listas.lists_a,ltab)
-            y = x.getNovo({},dados={'nome': nome, 'ltab': ltab})
-
-        cb = util.defaultv(params, 'callback', None)
-        if cb:
-            cb({'act': 'add', 'nome': nome})
-
-    @staticmethod
     def actOpen(_widgetpai, params):
         util.TerminalLogger.setup()
 
@@ -66,7 +44,7 @@ class crtl_listsA:
 
 
 class listsA_new(nestedwidget):
-    def __init__(self, _widgetpai,params):
+    def __init__(self, _widgetpai, params):
         listsA_new.scancela = step = 0
         #
         listsA_new.sstart = step = step + 1
@@ -81,13 +59,12 @@ class listsA_new(nestedwidget):
 
         nestedwidget.__init__(self, _widgetpai)
 
-        self.params=params
+        self.params = params
         self._p_cb = util.defaultv(params, 'callback', None)
         self._p_txt = util.defaultv(params, 'nome', '').title()
         self._p_ltab = params['ltab']
         if not self._p_ltab:
             raise "tab não informada"
-
 
     def callback(self, data=None):
 
@@ -103,48 +80,68 @@ class listsA_new(nestedwidget):
         elif self.r == dlger.cancel:
             self.step = listsA_new.scancela
 
-        self.step_x(self.step)
+        x = 1
+        while x:
+            x = self.step_x(self.step)
 
     def step_x(self, step, data=None):
         if step == listsA_new.sstart:
-            pass
+            self.step = listsA_new.snome
+            return 1
             #
         elif step == listsA_new.snome:
             nisk.dialogs.dlgInput.show('Qual o Nome Completo do novo Registro?', _widgetpai=self._widgetpai,
-                                              default_txt=txt, isdialog=False, tocall=self.callback)
+                                       default_txt=self._p_txt, isdialog=False, tocall=self.callback)
             #
-            #
+            # txt
         elif step == listsA_new.sedita:
-            w = formmer_listsA_edit(params={'new': True, 'dados': self.dados}, dados=self.dados)
+            w = formmer_listsA_edit(
+                params={'new': True, 'dados': self.dados, 'ltab': util.defaultv(self.params, 'ltab', ''),
+                        'rtab': util.defaultv(self.params, 'rtab', '')},
+                dados=self.dados)
             w._widgetregistrapai(self._widgetpai)
-            w.show(isdialog=False,)
+            w.show(isdialog=False)
             #
         elif step == listsA_new.sfim:
             if self._p_cb:
                 self._p_cb({'act': 'add', 'nome': self._p_nome})
-
+            self.step = None
             #
         elif step == listsA_new.scancela:
             self._widgetsession.UnShowWidget()
+            self.step = None
+        return 0
 
     def act_start(self):
-        self.step_x(self.step)
+        x = 1
+        while x:
+            x = self.step_x(self.step)
 
-class os_open(nestedwidget):
-    def __init__(self, _widgetpai):
-        crtl_os.os_open._cancela = step = 0
-        crtl_os.os_open.a_numero = step = step + 1
-        crtl_os.os_open._fim = step = step + 1
+
+class listsA_open(nestedwidget):
+    def __init__(self, _widgetpai, params):
+        listsA_open._cancela = step = 0
+        listsA_open._start = step = step + 1
+        listsA_open.sopen = step = step + 1
+        listsA_open._fim = step = step + 1
         #
-        self.step = crtl_os.os_open.a_numero
+        self.step = listsA_open._start
         self.r, self.s = None, None
         self.dados = {}
 
         nestedwidget.__init__(self, _widgetpai)
+        self.params = params
+        self._p_cb = util.defaultv(params, 'callback', None)
+        self._p_txt = util.defaultv(params, 'nome', '').title()
+        self._p_ltab = params['ltab']
+        if not self._p_ltab:
+            raise "tab não informada"
 
     def callback(self, data=None):
 
-        if self.step == crtl_os.os_open.a_numero:
+        if self.step == listsA_open._start:
+            self.step = self.step + 1
+        if self.step == listsA_open._start:
             (self.r, self.dados['osn']) = data
 
         if self.r == dlger.ok:
@@ -152,24 +149,50 @@ class os_open(nestedwidget):
         elif self.r == dlger.back:
             self.step -= 1
         elif self.r == dlger.cancel:
-            self.step = crtl_os.os_open._cancela
+            self.step = listsA_open._cancela
 
-        self.step_x(self.step)
+        x = 1
+        while x:
+            x = self.step_x(self.step)
 
     def step_x(self, step, data=None):
-        if step == crtl_os.os_open.a_numero:
-            nisk.dialogs.dlgInput.show('Abrir OS', self._widgetpai, tocall=self.callback, isdialog=False)
 
-        if step == crtl_os.os_open._fim:
-            w = formmer_os_edit(params={'os': self.dados['osn']})
-            w._widgetregistrapai(self._widgetpai)
-            w.show()
+        if step == listsA_open._start:
+            osn = nisk.util.defaultv(self.params, 'id', None)
+            ltab = self.params['ltab']
+            if not ltab:
+                raise "tab não informada"
+            self.step = listsA_open.sopen
+            return 1
 
-        if step == crtl_os.os_open._cancela:
+        if step == listsA_open.sopen:
+            self.w = formmer_listsA_edit(params=self.params)
+            self.w._widgetregistrapai(self._widgetpai)
+            self.w.show()
+            return
+
+        if step == listsA_open._fim:
+
+            nome = None
+            try:
+                nome = self.w.binder._dados.nome
+            except:
+                pass
+
+            cb = util.defaultv(self.params, 'callback', None)
+            if cb:
+                cb({'act': 'open', 'nome': nome})
+            return
+
+        if step == listsA_open._cancela:
             self._widgetsession.UnShowWidget()
+            return
 
     def act_start(self):
-        self.step_x(self.step)
+        x = 1
+        while x:
+            x = self.step_x(self.step)
+
 
 class formmer_listsA_edit(formmer.formmer, dlger):
     # text_button_list = [('key', ['M', ('title', "emu"), "F1"]), ]
@@ -265,8 +288,10 @@ class formmer_listsA_edit(formmer.formmer, dlger):
     def show(self, isdialog=False):
         x = self.binder.consulta(self.params)
         if x:
-            self._widgetsession.ShowDialogWidgetOverlay(self.get_frame(), v_hdlr=self.unhandled_input,
-                                                        _nestedwidget=self, isdialog=False)
+            #self._widgetsession.ShowDialogWidgetOverlay(self.get_frame(), v_hdlr=self.unhandled_input,
+            #                                            _nestedwidget=self, isdialog=False)
+            self._widgetsession.ShowDialogWidget(self.get_frame(), self.unhandled_input,None,
+                                                        _nestedwidget=self, isDialog=False)
         else:
             self._widgetprocessa(conf.cmds.dlg_statusbar_put, (('error'), 'Não foi possível abrir essa OS'))
             # nisk.dialogs.dlgInput.show(conf.textos['crtl_os.erro_abriros'],self._widgetpai)
@@ -279,4 +304,4 @@ class mediator_listas(pyGestorModel.mediator_base):
         super(mediator_listas, self).__init__(f,
                                               pyGestorModel.listas_Proxy(pyGestorModel.orm_listas.lists_a,
                                                                          f.params['ltab']),
-                                                'mediator_listas')
+                                              'mediator_listas')

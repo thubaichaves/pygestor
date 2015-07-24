@@ -1,69 +1,185 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import urwid
+
 from nisk import *
 from nisk.nsatw import *
 from nisk.formmer import tfld
 import nisk.dialogs
-
-import imprimir
-import urwid
 import pyGestorModel
 import conf
-import app
+from nisk.TUI import nestedwidget
 
 
-class crtl_contatos:
-    @staticmethod
-    def actAdd(_widgetpai, params):
-        util.TerminalLogger.setup()
+class contatos_new(nestedwidget):
+    def __init__(self, _widgetpai, params):
+        contatos_new.scancela = step = 0
+        #
+        contatos_new.sstart = step = step + 1
+        contatos_new.snome = step = step + 1
+        contatos_new.stelefone = step = step + 1
+        contatos_new.sedita = step = step + 1
+        #
+        contatos_new.sfim = step = step + 1
+        #
+        self.step = contatos_new.sstart
+        self.r, self.s = None, None
 
-        txt = util.defaultv(params, 'nome', '').title()
+        self.telefone = True
+        self.dados = {
+            "telefones": []
+        }
 
-        nome, rr = nisk.dialogs.dlgInput.show('Qual o Nome Completo do novo Contato?', _widgetpai=_widgetpai,
-                                              default_txt=txt)
+        nestedwidget.__init__(self, _widgetpai)
 
-        if nome and rr == dlger.ok:
-            nome = nome.title()
+        self.params = params
+        self._p_cb = util.defaultv(params, 'callback', None)
+        self._p_txt = util.defaultv(params, 'nome', '').title()
 
-            telefones = []
-            telefone = True
-            while rr != dlger.cancel and telefone:
-                telefone, rr = nisk.dialogs.dlgInput.show(
-                    "Informe um telefone ou email para '%s'\n\r(%i adicionados)" % (nome, len(telefones)),
-                    _widgetpai=_widgetpai)
-                if telefone and rr == dlger.ok:
-                    telefones.append(telefone)
+    def callback(self, data=None):
+        self.r=None
+
+        if self.step == contatos_new.snome:
+            (self.r, self.dados['nome']) = data
+
+        elif self.step == contatos_new.stelefone:
+            (xr, telefone) = data
+            if telefone and xr == dlger.ok:
+                self.dados['telefones'].append(telefone)
+            else:
+                self.step = self.step + 1
+            #
+        elif self.step == contatos_new.sedita:
+            (self.r, self.dados['nome']) = data
+            #
+
+
+        if self.r == dlger.ok:
+            self.step = self.step + 1
+        elif self.r == dlger.back:
+            self.step -= 1
+        elif self.r == dlger.cancel:
+            self.step = contatos_new.scancela
+            #
+        x = 1
+        while x:
+            x = self.step_x(self.step)
+
+    def step_x(self, step, data=None):
+        if step == contatos_new.sstart:
+            self.step = contatos_new.snome
+            return 1
+            #
+        elif step == contatos_new.snome:
+            nisk.dialogs.dlgInput.show('Qual o Nome Completo do novo Registro?', _widgetpai=self._widgetpai,
+                                       default_txt=self._p_txt, isdialog=False, tocall=self.callback)
+            return
+            #
+        elif step == contatos_new.stelefone:
+            nisk.dialogs.dlgInput.show(
+                "Informe um telefone ou email para '%s'\n\r(%i adicionados)" % (
+                self.dados['nome'], len(self.dados['telefones'])),
+                _widgetpai=self._widgetpai, isdialog=False, tocall=self.callback)
+            return
+            #
+        elif step == contatos_new.sedita:
 
             x = pyGestorModel.contatos_Proxy()
-            y = x.getNovo(params={},dados={'nome': nome, 'telefones': telefones})
+            y = x.getNovo(params={}, dados=self.dados)
 
-        cb = util.defaultv(params, 'callback', None)
-        if cb:
-            cb({'act': 'add', 'nome': nome})
+            w = formmer_contatos_edit(
+                params={'new': True, 'dados': self.dados},
+                dados=self.dados)
+            w._widgetregistrapai(self._widgetpai)
+            w.show(isdialog=False)
+            return
+            #
+        elif step == contatos_new.sfim:
+            if self._p_cb:
+                self._p_cb({'act': 'add', 'nome': self._p_nome})
+            self.step = None
+            return
+            #
+        elif step == contatos_new.scancela:
+            self._widgetsession.UnShowWidget()
+            self.step = None
+        return 0
 
-    @staticmethod
-    def actOpen(_widgetpai, params):
-        util.TerminalLogger.setup()
+    def act_start(self):
+        x = 1
+        while x:
+            x = self.step_x(self.step)
 
-        osn = nisk.util.defaultv(params, 'id', None)
 
-        if not osn:
-            osn, rr = nisk.dialogs.dlgInput.show('Abrir Contato por Código', _widgetpai)
+class contatos_open(nestedwidget):
+    def __init__(self, _widgetpai, params):
+        contatos_open._cancela = step = 0
+        contatos_open._start = step = step + 1
+        contatos_open.sopen = step = step + 1
+        contatos_open._fim = step = step + 1
+        #
+        self.step = contatos_open._start
+        self.r, self.s = None, None
+        self.dados = {}
 
-        w = formmer_contatos_edit(params={'id': util.asInt(osn)})
-        w._widgetregistrapai(_widgetpai)
-        w.show()
+        nestedwidget.__init__(self, _widgetpai)
+        self.params = params
+        self._p_cb = util.defaultv(params, 'callback', None)
+        self._p_txt = util.defaultv(params, 'nome', '').title()
 
-        nome = None
-        try:
-            nome = w.binder._dados.nome
-        except:
-            pass
+    def callback(self, data=None):
 
-        cb = util.defaultv(params, 'callback', None)
-        if cb:
-            cb({'act': 'open', 'nome': nome})
+        if self.step == contatos_open._start:
+            self.step = self.step + 1
+        if self.step == contatos_open._start:
+            (self.r, self.dados['osn']) = data
+
+        if self.r == dlger.ok:
+            self.step = self.step + 1
+        elif self.r == dlger.back:
+            self.step -= 1
+        elif self.r == dlger.cancel:
+            self.step = contatos_open._cancela
+
+        x = 1
+        while x:
+            x = self.step_x(self.step)
+
+    def step_x(self, step, data=None):
+
+        if step == contatos_open._start:
+            osn = nisk.util.defaultv(self.params, 'id', None)
+            self.step = contatos_open.sopen
+            return 1
+
+        if step == contatos_open.sopen:
+            self.w = formmer_contatos_edit(params=self.params)
+            self.w._widgetregistrapai(self._widgetpai)
+            self.w.show()
+            return
+
+        if step == contatos_open._fim:
+
+            nome = None
+            try:
+                nome = self.w.binder._dados.nome
+            except:
+                pass
+
+            cb = util.defaultv(self.params, 'callback', None)
+            if cb:
+                cb({'act': 'open', 'nome': nome})
+            return
+
+        if step == contatos_open._cancela:
+            self._widgetsession.UnShowWidget()
+            return
+
+    def act_start(self):
+        x = 1
+        while x:
+            x = self.step_x(self.step)
 
 
 class formmer_contatos_edit(formmer.formmer, dlger):
@@ -156,11 +272,11 @@ class formmer_contatos_edit(formmer.formmer, dlger):
         lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='Contato'), 'windowsborder')
         return lb
 
-    def show(self):
+    def show(self, isdialog=False):
         x = self.binder.consulta(self.params)
         if x:
             self._widgetsession.ShowDialogWidgetOverlay(self.get_frame(), v_hdlr=self.unhandled_input,
-                                                        _nestedwidget=self)
+                                                        _nestedwidget=self, isdialog=isdialog)
         else:
             self._widgetprocessa(conf.cmds.dlg_statusbar_put, (('error'), 'Não foi possível abrir essa OS'))
             # nisk.dialogs.dlgInput.show(conf.textos['crtl_os.erro_abriros'],self._widgetpai)

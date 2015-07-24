@@ -21,7 +21,7 @@ class tui:
 
     def __init__(self, mainframe=None, unhandled_input=None, khdl_app=None, colors=conf.const_PALETTE):
 
-        self._setupSIGINTprocess()
+        tui._setupSIGINTprocess()
 
         self.mainframe = mainframe
         self.inputhadler = unhandled_input
@@ -133,7 +133,7 @@ class tui:
         def signal_handler2(signal, frame):
             return False
 
-        if tui.signal_handled is None:
+        if not tui.signal_handled:
             signal.signal(signal.SIGINT, signal_handler)
             signal.signal(signal.SIGTSTP, signal_handler2)
             tui.signal_handled = 1

@@ -173,7 +173,8 @@ class pyGestorFacade(puremvc.patterns.facade.Facade, nisk.TUI.nestedwidget):
 
             facade = note.facade if issubclass(type(note), pyGestorFacade.superNotification) else None
 
-            thread.start_new(crtl_contatos.crtl_contatos.actAdd, (facade, (b)))
+            f = crtl_contatos.contatos_new(facade, b)
+            f.act_start()
 
     class _dlg_frmlistcontatos_open(puremvc.patterns.command.SimpleCommand, puremvc.interfaces.ICommand):
         def execute(self, note):
@@ -181,7 +182,9 @@ class pyGestorFacade(puremvc.patterns.facade.Facade, nisk.TUI.nestedwidget):
 
             facade = note.facade if issubclass(type(note), pyGestorFacade.superNotification) else None
 
-            thread.start_new(crtl_contatos.crtl_contatos.actOpen, (facade, (b)))
+            f = crtl_contatos.contatos_open(facade, b)
+            f.act_start()
+
 
 
 
@@ -191,7 +194,8 @@ class pyGestorFacade(puremvc.patterns.facade.Facade, nisk.TUI.nestedwidget):
 
             facade = note.facade if issubclass(type(note), pyGestorFacade.superNotification) else None
 
-            thread.start_new(crtl_listas.crtl_listsA.actAdd, (facade, (b)))
+            f = crtl_listas.listsA_new(facade, b)
+            f.act_start()
 
     class _dlg_frmlistsA_open(puremvc.patterns.command.SimpleCommand, puremvc.interfaces.ICommand):
         def execute(self, note):
@@ -199,7 +203,8 @@ class pyGestorFacade(puremvc.patterns.facade.Facade, nisk.TUI.nestedwidget):
 
             facade = note.facade if issubclass(type(note), pyGestorFacade.superNotification) else None
 
-            thread.start_new(crtl_listas.crtl_listsA.actOpen, (facade, (b)))
+            f = crtl_listas.listsA_open(facade, b)
+            f.act_start()
 
     class _OS_ADD(puremvc.patterns.command.SimpleCommand, puremvc.interfaces.ICommand):
         def execute(self, note):

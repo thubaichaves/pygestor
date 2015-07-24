@@ -143,7 +143,10 @@ class listas_Proxy(puremvc.patterns.proxy.Proxy, common.consultor):
     def getNovo(self, params, dados):
         x = self.rtab_orm()
         x.nome = dados['nome']
-        x.tab = dados['ltab']
+        ltab = nisk.util.defaultv(params, 'ltab', nisk.util.defaultv(dados, 'ltab', ''))
+        if not ltab:
+            raise 'erro de parametro ltab'
+        x.tab = ltab
         self.consultor.add(x)
 
         self.consultor.commit()
