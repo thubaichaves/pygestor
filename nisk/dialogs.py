@@ -169,9 +169,10 @@ class InputDialogx(GenericDialogx):
 
 ######################################################################
 class dlgInput(nisk.TUI.nestedwidget):
-    def __init__(self, title, instrucions, _widgetpai, default_txt='', tocall=None):
+    def __init__(self, title, instrucions, _widgetpai, default_txt='', tocall=None,params=None):
         # self.lck = threading.Lock()
         self.result = None
+        self.params = params
         self.tocall = tocall
         self.rdata =None
         self._widgetregistrapai(_widgetpai)
@@ -207,7 +208,7 @@ class dlgInput(nisk.TUI.nestedwidget):
     def _widgetonunshow(self):
         nisk.TUI.nestedwidget._widgetonunshow(self)
         if self.tocall:
-            self.tocall((self.result, self.rdata))
+            self.tocall((self.result, self.rdata,self.params))
 
     def showwidget(self, lck, _widgetpai, isdialog=True):
         overvars = urwid.Overlay(urwid.AttrWrap(self.d, 'PopupMessageBg')

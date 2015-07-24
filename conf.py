@@ -119,7 +119,7 @@ const_PALETTE = [
     ('Bg', 'dark gray', 'black'),  # screen background
     ('InfoFooterText', 'white', 'dark blue'),  # footer text
     ('InfoFooterHotkey', 'dark cyan, bold', 'dark blue'),  # hotkeys in footer text
-    ('InfoFooter', 'yellow, bold', 'dark blue'),  # footer background
+    ('InfoFooter', 'yellow, bold', 'dark green'),  # footer background
     ('InfoHeaderText', 'white, bold', 'dark blue'),  # header text
     ('InfoHeader', 'black', 'dark blue'),  # header background
     ('GeneralInfo', 'brown', 'black'),  # main menu text
@@ -148,6 +148,9 @@ const_PALETTE = [
     ('focus options', 'black', 'light gray'),
     ('selected', 'white', 'dark blue'),
 ]
+def mudacor():
+    # conf.const_PALETTE[3] = ('windowsborder', 'white', 'black')
+    # tui.mdi.loop.screen.register_palette(conf.const_PALETTE)
 
 menu_Items = {
     'novaOS': ('Nova OS', None),

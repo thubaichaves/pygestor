@@ -12,6 +12,7 @@ from nisk.nsatw import *
 import thread
 from nisk.TUI import *
 import nisk.ListBrowser
+import nisk.TUI
 
 
 class frmListAScreens2(nisk.ListBrowser.ListBrowserBase):
@@ -111,12 +112,15 @@ class frmListAScreens2(nisk.ListBrowser.ListBrowserBase):
 
         return nisk.ListBrowser.ListBrowserBase.unhandled_input(self, k)
 
-
-def defaultPopupSelector_cb():
+from urwid.display_common import AttrSpec
+def defaultPopupSelector_cb(data):
+    (r, d, params) = data
+    w = util.defaultv(params, 'widget', None)
     if r == dlger.ok:
-        wgtFieldBoxDb1.setValue(d['tid'])
+        w.setValue(d['tid'])
     else:
         nisk.util.dump(r, d)
+
 
 
 def defaultPopupSelector_(wgtFieldBoxDb1, params=None):
@@ -125,7 +129,7 @@ def defaultPopupSelector_(wgtFieldBoxDb1, params=None):
     if act == 'select':
         if wgtFieldBoxDb1 is None:
             return
-        d, w, r = None, None, None
+        w = None
         tabela = wgtFieldBoxDb1.tabela
         ltabela = wgtFieldBoxDb1.ltabela
 
@@ -139,7 +143,7 @@ def defaultPopupSelector_(wgtFieldBoxDb1, params=None):
             w = frmListAScreens2({'rtab': 'lists_a', 'ltab': ltabela, 'widget': wgtFieldBoxDb1})
 
         if not w is None:
-            w.Show(_widgetpai=wgtFieldBoxDb1)
+            w.Show(_widgetpai=wgtFieldBoxDb1, tocall=defaultPopupSelector_cb)
 
     if act == 'edit':
         if wgtFieldBoxDb1 is None:
