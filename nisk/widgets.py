@@ -329,8 +329,9 @@ class wgtFieldBox(Columns, bindablefield):
         self.setValue(txt, writelast=False)
 
     def edit_changed(self, x, d, *arg):
-        if d != self._lastvalue:
+        if not nisk.util.isEquivalent(d, self._lastvalue):
             urwid.emit_signal(self, 'change', self, d)
+
 
     def keypress(self, size, key):
         key = self.__super.keypress(size, key)
@@ -473,7 +474,7 @@ class wgtDateFieldBox(Columns, bindablefield):
         if self.textField._checamudou():
             urwid.emit_signal(self, 'change', self, d)
             nisk.util.dump((self.textField.value(), self.textField._lastlastvalue, self.textField._checamudou()),
-                'change date')
+                           'change date')
 
     def keypress(self, size, key):
         key = self.__super.keypress(size, key)
@@ -594,7 +595,7 @@ class wgtFieldBoxDb(urwid.Pile, bindablefield):
             self.codField.setvalue(None)
             self.textField.set_text('')
             self.lastCod = None
-            if 1  :# self._iniciado:
+            if 1:  # self._iniciado:
                 urwid.emit_signal(self, 'change', self, self.GetValue())
         self._iniciado = True
 
@@ -634,8 +635,9 @@ class wgtFieldBoxDb(urwid.Pile, bindablefield):
             if x is None:
                 if not wgtFieldBoxDb.defaultPopupSelector is None:
                     x = wgtFieldBoxDb.defaultPopupSelector
-            if not x is None:
-                nisk.util.paralelo(x, [self])
+            if x:
+                # nisk.util.paralelo(x, [self])
+                x(self)
 
         elif key == "f5":
             self._widgetprocessa('dlg_statusbar_put',
@@ -1326,13 +1328,13 @@ class HMenu(urwid.Columns):
 
         def first(self):
             o = len(self.pilha.dados) > 0 if not self.onclose is None else len(self.pilha.dados) > 1
-            y = 2 if self.onclose else 2
+            y = 2 #if len(self.pilha.dados) > 1 else 1
             if o:
                 del self.pilha.dados[y:]
                 x = self.pilha.topo()
-                if not x is None:
+                if x:
                     (self.body, self.menu) = x
-                    if self.pilha.vazia() and not self.onclose is None:
+                    if (self.pilha.vazia() or not  self.menu)and self.onclose:
                         self.onclose()
                     return True
             return False

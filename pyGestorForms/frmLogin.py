@@ -17,7 +17,7 @@ class frmLoginA(nisk.TUI.nestedwidget):
     def __init__(self, _widgetpai):
         self.edtUser = nisk.widgets.wgtFieldBoxDb(ltabela='sysus', tabela='lists_a', caption=u'Usuário',
                                                   params={"canedit": False})
-        self.edtPass = urwid.Edit(mask='*')
+        self.edtPass = urwid.Edit(caption = 'Senha',mask='*')
         nisk.TUI.nestedwidget.__init__(self, pai=_widgetpai, filhos=[self.edtUser, self.edtPass])
         self._constroi()
 

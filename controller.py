@@ -111,21 +111,22 @@ class pyGestorFacade(puremvc.patterns.facade.Facade, nisk.TUI.nestedwidget):
     class _OS_PRINTENT(puremvc.patterns.command.SimpleCommand, puremvc.interfaces.ICommand):
         def execute(self, note):
             facade = note.facade if issubclass(type(note), pyGestorFacade.superNotification) else None
-            thread.start_new(crtl_os.crtl_os.actImprimeOS, (facade,))
+            # thread.start_new(crtl_os.crtl_os.actImprimeOS, (facade,))
+            crtl_os.crtl_os.actImprimeOS(facade)
 
     class _cmd_os_impr(puremvc.patterns.command.SimpleCommand, puremvc.interfaces.ICommand):
         def execute(self, note):
             facade = note.facade if issubclass(type(note), pyGestorFacade.superNotification) else None
 
             b = note.getBody()
-            thread.start_new(crtl_os.crtl_os.actImprimeOS, (facade, b))
+            crtl_os.crtl_os.actImprimeOS(facade, b)
 
     class _cmd_os_create(puremvc.patterns.command.SimpleCommand, puremvc.interfaces.ICommand):
         def execute(self, note):
             facade = note.facade if issubclass(type(note), pyGestorFacade.superNotification) else None
 
             b = note.getBody()
-            #thread.start_new(crtl_os.crtl_os.actImprimeOS, (facade, b))
+            # thread.start_new(crtl_os.crtl_os.actImprimeOS, (facade, b))
             x = crtl_os.crtl_os.os_new(facade)
             x.act_start()
 
@@ -140,7 +141,7 @@ class pyGestorFacade(puremvc.patterns.facade.Facade, nisk.TUI.nestedwidget):
                 pyGestorFacade.mainInstance().sendNotification(conf.cmds.SESSION_UNLOGIN, '')
                 #
             elif backref == 'os_nova':
-                pyGestorFacade.mainInstance().sendNotification(conf.cmds.OS_ADD, '')#
+                pyGestorFacade.mainInstance().sendNotification(conf.cmds.OS_ADD, '')  #
             elif backref == 'os_create':
                 pyGestorFacade.mainInstance().sendNotification(conf.cmds.cmd_os_create, '')
                 #
@@ -184,9 +185,6 @@ class pyGestorFacade(puremvc.patterns.facade.Facade, nisk.TUI.nestedwidget):
 
             f = crtl_contatos.contatos_open(facade, b)
             f.act_start()
-
-
-
 
     class _dlg_frmlistsA_add(puremvc.patterns.command.SimpleCommand, puremvc.interfaces.ICommand):
         def execute(self, note):

@@ -221,7 +221,8 @@ class formmer_os_new(formmer.formmer):
 
     def get_frame(self):
 
-        bkg = widgets.SBListBox(self, (u"\u2593", "handle"), (u"\u2592", "scrollbar_bg"))
+        bkg = widgets.SBListBox(self, (u"*", "handle"), (u" ", "scrollbar_bg"))
+        # bkg = widgets.SBListBox(self, (u"\u2593", "handle"), (u"\u2592", "scrollbar_bg"))
         bkg = urwid.AttrWrap(bkg, 'body')
         self._footertxb = urwid.Text(self.footer_text)
         self.footer = urwid.AttrWrap(self._footertxb, 'foot')

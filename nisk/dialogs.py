@@ -239,7 +239,7 @@ class dlgInput(nisk.TUI.nestedwidget):
 
         else:
             d = dlgInput(title, instrucions, _widgetpai=_widgetpai, default_txt=default_txt, tocall=tocall)
-            lck = threading.Lock()
+            lck = None
             d.showwidget(lck, _widgetpai, isdialog=isdialog)
             # r = d.d.edit_box.get_edit_text()
 

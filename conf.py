@@ -97,13 +97,13 @@ const_PALETTE = [
     ('scrollbar_bg', 'black', 'dark cyan', 'bold'),  # scrollbar fundo
     #
     ('PopupMessageBg', 'white', 'dark green'),  # popup message background
-    ('windowsborder', 'yellow', 'dark blue'),  # popup message background
+    ('windowsborder', 'white', 'dark green','bold,underline','#ddf', '#06a'),  # popup message background
     ('foot', 'light gray', 'black', 'standout'),
-    ('body', 'black', 'light gray'),
+    ('body', 'black', 'dark cyan'),
     ('key', 'dark red,bold', 'brown'),
     ('title', 'white', 'black', 'bold'),
-    ('field', 'black', 'dark cyan'),  # information fields, Search: etc.
-    ('field_of', 'white', 'dark blue', 'bold'),  # information fields, Search: etc.
+    ('field', 'white', 'dark cyan','','#ffd', '#00a'),  # information fields, Search: etc.
+    ('field_of', 'white', 'dark blue', 'bold','#ff8', '#806'),  # information fields, Search: etc.
 
 
 
@@ -119,7 +119,7 @@ const_PALETTE = [
     ('Bg', 'dark gray', 'black'),  # screen background
     ('InfoFooterText', 'white', 'dark blue'),  # footer text
     ('InfoFooterHotkey', 'dark cyan, bold', 'dark blue'),  # hotkeys in footer text
-    ('InfoFooter', 'yellow, bold', 'dark green'),  # footer background
+    ('InfoFooter', 'yellow, bold', 'dark blue'),  # footer background
     ('InfoHeaderText', 'white, bold', 'dark blue'),  # header text
     ('InfoHeader', 'black', 'dark blue'),  # header background
     ('GeneralInfo', 'brown', 'black'),  # main menu text
@@ -149,8 +149,9 @@ const_PALETTE = [
     ('selected', 'white', 'dark blue'),
 ]
 def mudacor():
-    # conf.const_PALETTE[3] = ('windowsborder', 'white', 'black')
-    # tui.mdi.loop.screen.register_palette(conf.const_PALETTE)
+    conf.const_PALETTE[3] = ('windowsborder', 'white', 'black')
+    tui.mdi.loop.screen.register_palette(conf.const_PALETTE)
+    pass
 
 menu_Items = {
     'novaOS': ('Nova OS', None),

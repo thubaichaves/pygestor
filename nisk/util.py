@@ -73,6 +73,11 @@ def isInt(s):
     except:
         return False
 
+def isEquivalent(a ,b):
+    x = a if a else ''
+    y= b if b else ''
+    z = x == y
+    return z
 
 def asstr(v):
     if v:
@@ -221,7 +226,7 @@ class TerminalLogger(object):
     @staticmethod
     def setup():
         sys.stdout = TerminalLogger('log.log')  # todo
-        sys.stderr = TerminalLogger(filename=TerminalLogger.logfile)#, iserr=True)
+        sys.stderr = TerminalLogger(filename=TerminalLogger.logfile)  # , iserr=True)
 
         # import logging.handlers
         # logging.setLevel(logging.DEBUG)
@@ -274,20 +279,27 @@ def imprimeLPR(cfg_prntxt, var_prnfile):
         logging.debug('!!out!! ' + stdout)
     if len(stderr) > 0:
         logging.debug('!!out!! ' + stderr)
+    '''
+    import os
+    os.name
+    import platform
+    platform.system()
+    import sys
+    sys.platform
+    '''
+    # os.system(cmd)
 
-        # os.system(cmd)
-
-        #
-        # p1 = subprocess.Popen(["lpr", "-d", cfg_prntxt, var_prnfile], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        # stdout, stderr = p1.communicate()
-        #
-        # # print('Got stdout:', stdout)
-        # # print('Got stderr:', stderr)
-        #
-        # if len(stdout) > 0:
-        #     logging.debug('!!out!! ' + stdout)
-        # if len(stderr) > 0:
-        #     logging.debug('!!out!! ' + stderr)
+    #
+    # p1 = subprocess.Popen(["lpr", "-d", cfg_prntxt, var_prnfile], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    # stdout, stderr = p1.communicate()
+    #
+    # # print('Got stdout:', stdout)
+    # # print('Got stderr:', stderr)
+    #
+    # if len(stdout) > 0:
+    #     logging.debug('!!out!! ' + stdout)
+    # if len(stderr) > 0:
+    #     logging.debug('!!out!! ' + stderr)
 
 
 def abreGestor():
