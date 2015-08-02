@@ -3,7 +3,8 @@
 
 
 import urwid
-import urwid.raw_display
+import urwid.rawx_display
+
 
 import util
 
@@ -19,7 +20,7 @@ class tui:
     mdi = None
     signal_handled = None
 
-    def __init__(self, mainframe=None, unhandled_input=None, khdl_app=None, colors=conf.const_PALETTE):
+    def __init__(self, mainframe=None, unhandled_input=None, khdl_app=None, colors=conf.const_PALETTE, eventloop=None):
 
         self._setupSIGINTprocess()
 
@@ -32,7 +33,7 @@ class tui:
         screen.set_terminal_properties(256)
 
         self.loop = urwid.MainLoop(mainframe, colors, screen=screen, unhandled_input=self._khdl,
-                                   pop_ups=True, input_filter=self._inputfilter)
+                                   pop_ups=True, input_filter=self._inputfilter,event_loop=eventloop)
 
         self.loop.set_alarm_in(0.1, self._sndloop, None)
 
