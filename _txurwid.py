@@ -26,16 +26,11 @@ TODO:
 
 Copyright: 2010, Ali Afshar <aafshar@gmail.com>
 License:   MIT <http://www.opensource.org/licenses/mit-license.php>
-
-Portions Copyright: 2010, Ian Ward <ian@excess.org>
-Licence:   LGPL <http://opensource.org/licenses/lgpl-2.1.php>
 """
 
 import os
 
 import urwid
-#from urwid.curses_display import Screen
-from urwid.rawx_display import Screen
 
 from zope.interface import Interface, Attribute, implements
 from twisted.application.service import Application
@@ -97,23 +92,11 @@ class UrwidUi(object):
         raise NotImplementedError
 
     def create_urwid_palette(self):
-        return [
-            ('body','black','light gray', 'standout'),
-            ('reverse','light gray','black'),
-            ('header','white','dark red', 'bold'),
-            ('important','dark blue','light gray',('standout','underline')),
-            ('editfc','white', 'dark blue', 'bold'),
-            ('editbx','light gray', 'dark blue'),
-            ('editcp','black','light gray', 'standout'),
-            ('bright','dark gray','light gray', ('bold','standout')),
-            ('buttn','black','dark cyan'),
-            ('buttnf','white','dark blue','bold'),
-            ]
+        return
 
     def create_urwid_mainloop(self):
-        evl = urwid.TwistedEventLoop(manage_reactor=False)
         loop = urwid.MainLoop(self.toplevel, screen=self.screen,
-                              event_loop=evl,
+                              event_loop=TwistedSharedEventLoop(),
                               unhandled_input=self.mind.unhandled_key,
                               palette=self.palette)
         self.screen.loop = loop
@@ -172,7 +155,16 @@ class UrwidMind(Adapter):
 
 
 
-class TwistedScreen(Screen):
+class TwistedSharedEventLoop(urwid.TwistedEventLoop):
+    """An Urwid event loop which will run as part of Twisted without starting and
+    stopping the reactor.
+    """
+    def run(self):
+        # reactor is already running, so don't start it
+        pass
+
+
+class TwistedScreen(urwid.BaseScreen):
     """A Urwid screen which knows about the Twisted terminal protocol that is
     driving it.
 
@@ -181,7 +173,7 @@ class TwistedScreen(Screen):
     1. Input
     2. Output
 
-    Input is achieved in normal urwid by passing a list of available readable
+    Input is achieved in normal urwid by passing a lsit of available readable
     file descriptors to the event loop for polling/selecting etc. In the
     Twisted situation, this is not necessary because Twisted polls the input
     descriptors itself. Urwid allows this by being driven using the main loop
@@ -193,7 +185,7 @@ class TwistedScreen(Screen):
         # We will need these later
         self.terminalProtocol = terminalProtocol
         self.terminal = terminalProtocol.terminal
-        Screen.__init__(self)
+        urwid.BaseScreen.__init__(self)
         self.colors = 256
         self._pal_escape = {}
         self.bright_is_bold = True
@@ -201,7 +193,7 @@ class TwistedScreen(Screen):
         urwid.signals.connect_signal(self, urwid.UPDATE_PALETTE_ENTRY,
             self._on_update_palette_entry)
         # Don't need to wait for anything to start
-        self._started = True
+        self.started = True
 
     # Urwid Screen API
 
@@ -219,9 +211,6 @@ class TwistedScreen(Screen):
         writes it out.
         """
         #self.terminal.eraseDisplay()
-
-        self._setup_G1()
-
         lasta = None
         for i, row in enumerate(r.content()):
             self.terminal.cursorPosition(0, i)
@@ -237,35 +226,25 @@ class TwistedScreen(Screen):
             self.terminal.cursorPosition(*cursor)
 
     # XXX from base screen
-    def set_mouse_tracking(self, enable=True):
+    def set_mouse_tracking(self):
         """
-        Enable (or disable) mouse tracking.
+        Enable mouse tracking.
 
         After calling this function get_input will include mouse
         click events along with keystrokes.
         """
-        if enable:
-            self.write(urwid.escape.MOUSE_TRACKING_ON)
-        else:
-            self.write(urwid.escape.MOUSE_TRACKING_OFF)
+        self.write(urwid.escape.MOUSE_TRACKING_ON)
+
+        self._start_gpm_tracking()
 
     # twisted handles polling, so we don't need the loop to do it, we just
     # push what we get to the loop from dataReceived.
-    def hook_event_loop(self, event_loop, callback):
-        self._urwid_callback = callback
-        self._evl = event_loop
-
-    def unhook_event_loop(self, event_loop):
-        pass
+    def get_input_descriptors(self):
+        return []
 
     # Do nothing here either. Not entirely sure when it gets called.
     def get_input(self, raw_keys=False):
         return
-
-    def get_available_raw_input(self):
-        data = self._data
-        self._data = []
-        return data
 
     # Twisted driven
     def push(self, data):
@@ -279,8 +258,9 @@ class TwistedScreen(Screen):
         3. Pass the calculated keys as a list to the Urwid main loop.
         4. Redraw the screen
         """
-        self._data = list(map(ord, data))
-        self.parse_input(self._evl, self._urwid_callback,self._data)
+        keys = self.loop.input_filter(data, [])
+        keys, remainder = urwid.escape.process_keyqueue(map(ord, keys), True)
+        self.loop.process_input(keys)
         self.loop.draw_screen()
 
     # Convenience
@@ -288,8 +268,25 @@ class TwistedScreen(Screen):
         self.terminal.write(data)
 
     # Private
+    def _start_gpm_tracking(self):
+        if not os.path.isfile("/usr/bin/mev"):
+            return
+        if not os.environ.get('TERM',"").lower().startswith("linux"):
+            return
+        if not Popen:
+            return
+        m = Popen(["/usr/bin/mev","-e","158"], stdin=PIPE, stdout=PIPE,
+            close_fds=True)
+        fcntl.fcntl(m.stdout.fileno(), fcntl.F_SETFL, os.O_NONBLOCK)
+        self.gpm_mev = m
+
+    def _stop_gpm_tracking(self):
+        os.kill(self.gpm_mev.pid, signal.SIGINT)
+        os.waitpid(self.gpm_mev.pid, 0)
+        self.gpm_mev = None
+
     def _on_update_palette_entry(self, name, *attrspecs):
-        # copy the attribute to a dictionary containing the escape sequences
+        # copy the attribute to a dictionary containing the escape seqences
         self._pal_escape[name] = self._attrspec_to_escape(
            attrspecs[{16:0,1:1,88:2,256:3}[self.colors]])
 

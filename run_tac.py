@@ -16,21 +16,22 @@ Then in another terminal run::
 Note: To use this in real life, you must use some real checker.
 """
 
-from twisted.cred.checkers import InMemoryUsernamePasswordDatabaseDontUse,AllowAnonymousAccess
-
-from txurwid import UrwidMind, UrwidUi, create_application,TwistedScreen,TwistedSharedEventLoop
-import logging
-import urwid
 import nisk
+import appbase
 import app
+
+from twisted.cred.checkers import InMemoryUsernamePasswordDatabaseDontUse, AllowAnonymousAccess
+
+from txurwid import UrwidMind, UrwidUi, create_application, TwistedScreen
+import urwid
 import conf
 import nisk.util
 import nisk.TUI
 import controller
 import pyGestorForms.frmMain
 
-class HelloUi(UrwidUi):
 
+class HelloUi(UrwidUi):
     def __init__(self, urwid_mind):
         self.mind = urwid_mind
         self.toplevel = self.create_urwid_toplevel()
@@ -41,16 +42,17 @@ class HelloUi(UrwidUi):
     def create_urwid_palette(self):
         return conf.const_PALETTE
 
-    def unhandled_input(self,key):
-                k = self.mind.unhandled_key(key)
-                if k:
-                    k = self.toplevel.keyHandler(k)
-                return
+    def unhandled_input(self, key):
+        k = self.mind.unhandled_key(key)
+        if k:
+            k = self.toplevel.keyHandler(k)
+        return
 
     def create_urwid_mainloop(self):
-        t =nisk.TUI.tui(
-            mainframe=self.toplevel,screen=self.screen, unhandled_input=self.unhandled_input, khdl_app=app.keyHandler,
-            colors= self.palette,eventloop=TwistedSharedEventLoop()
+        eventloop = urwid.TwistedEventLoop(manage_reactor=False)
+        t = nisk.TUI.tui(
+            mainframe=self.toplevel, screen=self.screen, unhandled_input=self.unhandled_input, khdl_app=app.app.keyHandler,
+            colors=self.palette, eventloop=eventloop
         )
 
         # if nisk.TUI.tui.mdi is None:
@@ -74,11 +76,10 @@ class HelloUi(UrwidUi):
 
 class HelloMind(UrwidMind):
     ui_factory = HelloUi
-    cred_checkers = [InMemoryUsernamePasswordDatabaseDontUse(user='pw'),AllowAnonymousAccess()]
+    cred_checkers = [InMemoryUsernamePasswordDatabaseDontUse(user=''), AllowAnonymousAccess()]
     # cred_checkers = [AllowAnonymousAccess()]
 
 
 application = create_application('TXUrwid Demo', HelloMind, 6022)
 
 # vim: ft=python
-
