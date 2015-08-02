@@ -17,7 +17,7 @@ class frmLoginA(nisk.TUI.nestedwidget):
     def __init__(self, _widgetpai):
         self.edtUser = nisk.widgets.wgtFieldBoxDb(ltabela='sysus', tabela='lists_a', caption=u'Usuário',
                                                   params={"canedit": False})
-        self.edtPass = urwid.Edit(caption = 'Senha',mask='*')
+        self.edtPass = urwid.Edit(caption = 'Senha: ',mask='*')
         nisk.TUI.nestedwidget.__init__(self, pai=_widgetpai, filhos=[self.edtUser, self.edtPass])
         self._constroi()
 
@@ -33,9 +33,9 @@ class frmLoginA(nisk.TUI.nestedwidget):
         ])
         _listbox = urwid.ListBox(self._lw)
         _linebox = nisk.widgets.LineBox(_listbox, title='|** Neon Gestor - Login **|')
-        _linebox_ = urwid.AttrWrap(_linebox, 'field', 'field_of')
+        _linebox_ = urwid.AttrWrap(_linebox, 'windowsborder', 'windowsborder_of')
 
-        self.widget = urwid.Overlay(_linebox_, _frame,
+        self.widget = urwid.Overlay(_linebox_, self._widgetsession. mainframe.body,
                                     'center', 40,
                                     'middle', 12)
 
@@ -80,7 +80,9 @@ class frmLoginA(nisk.TUI.nestedwidget):
 
     def show(self):
         # lck = threading.Lock()
-
-        self._widgetsession.ShowDialogWidget(self.widget, self.keyHandler, None, self,isDialog=False)
+        over = self.widget
+        # over = urwid.Overlay(self.widget, self._widgetsession. mainframe.body, 'center', ('relative', 75), 'middle',
+        #                     ('relative', 75))
+        self._widgetsession.ShowDialogWidget(over, self.keyHandler, None, self,isDialog=False)
 
         # nisk.util.espera(lck)

@@ -28,6 +28,8 @@ class formmer(urwid.ListBox, nisk.TUI.nestedwidget):
         self.fields = {}  # (widget1,widget2...)
         self.lwlist = []
         self.isdirty = False
+        self.divider = urwid.Divider(u' ')
+        self.lwlist.append(self.divider)
 
         for x in campos:
             t = x[0]  # tipo
@@ -52,6 +54,7 @@ class formmer(urwid.ListBox, nisk.TUI.nestedwidget):
                 #
             self.widgets[tf] = (c, b, o)
             self.lwlist.append(tf)
+            self.lwlist.append(self.divider)
             #
             if self.fields.has_key(b):
                 self.fields[b][0].append(tf)

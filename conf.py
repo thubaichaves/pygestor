@@ -97,10 +97,12 @@ const_PALETTE = [
     ('scrollbar_bg', 'black', 'dark cyan', 'bold'),  # scrollbar fundo
     #
     ('PopupMessageBg', 'white', 'dark green'),  # popup message background
-    ('windowsborder', 'white', 'dark green','bold,underline','#ddf', '#06a'),  # popup message background
-    ('foot', 'light gray', 'black', 'standout'),
-    ('body', 'black', 'dark cyan'),
-    ('key', 'dark red,bold', 'brown'),
+    ('windowsborder', 'white', 'dark green','bold,underline','#668', '#035'),
+    ('windowsborder_of', 'white', 'dark green','bold,underline','#ddf', '#06a'),
+    ('foot', 'light gray', 'dark blue', 'standout'),
+    ('body', 'black', 'light gray'),
+    ('body_of', 'black', 'dark cyan'),
+    ('key', 'dark blue', 'light gray'),
     ('title', 'white', 'black', 'bold'),
     ('field', 'white', 'dark cyan','','#ffd', '#00a'),  # information fields, Search: etc.
     ('field_of', 'white', 'dark blue', 'bold','#ff8', '#806'),  # information fields, Search: etc.
@@ -142,7 +144,8 @@ const_PALETTE = [
 
     ('heading', 'black', 'light red'),
     ('line', 'light gray', 'white'),
-    ('options', 'white', 'black'),
+    ('options', 'white', 'black','bold,underline','#fff', '#06a'),
+    ('options_nf', 'white', 'black','bold,underline','#668', '#035'),
     ('focus heading', 'white', 'light red'),
     ('focus line', 'black', 'light red'),
     ('focus options', 'black', 'light gray'),
@@ -170,7 +173,7 @@ sizes = {
     "ListBrowser1": ( ('fixed left', 8), 120, ('fixed top', 6), 40),
     "wgtFieldBoxDb1": (14, 5  ),
     "wgtFieldBox": 14,
-    "statusbarbuttonA": 14,
+    "statusbarbuttonA": 20,
 
 
 }

@@ -73,11 +73,13 @@ def isInt(s):
     except:
         return False
 
-def isEquivalent(a ,b):
+
+def isEquivalent(a, b):
     x = a if a else ''
-    y= b if b else ''
+    y = b if b else ''
     z = x == y
     return z
+
 
 def asstr(v):
     if v:
@@ -117,6 +119,17 @@ def asDateTime(t, f=None):
                 pass
 
     return d
+
+
+def asUnicode(s):
+    u = u''
+    for t in s:
+        try:
+            x = t.decode('utf-8')
+            u = u + x
+        except:
+            u = u + t
+    return u
 
 
 def defaultv(a, b, c):

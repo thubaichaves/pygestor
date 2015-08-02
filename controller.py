@@ -155,7 +155,7 @@ class pyGestorFacade(puremvc.patterns.facade.Facade, nisk.TUI.nestedwidget):
                 facade._widgetprocessa(conf.cmds.cmd_checkLogin)
                 #
             else:
-                nisk.dialogs.GenericDialogx.dialog_ShowText('Não Identificado: ' + str(backref), self)
+                nisk.dialogs.GenericDialogx.dialog_ShowText('Não Identificado: ' + str(backref), facade)
                 pass
 
     class _cmd_checkLogin(puremvc.patterns.command.SimpleCommand, puremvc.interfaces.ICommand):

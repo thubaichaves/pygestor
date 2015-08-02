@@ -287,7 +287,8 @@ class wgtFieldBox(Columns, bindablefield):
         self.dirty = False
         self.caption = caption
         self._enterIsTab = enterIsTab
-        self.capField = urwid.Text([('key', caption[:1]), caption[1:]])
+        self.capField = urwid.Text( nisk.util.asUnicode(( u'\N{BULLET} ', caption)))
+        # self.capField = urwid.Text([('key', caption[:1]), caption[1:]])
         self.textField = urwid.Edit('')
         self.textField.multiline = not enterIsTab
         urwid.connect_signal(self.textField, 'change', self.edit_changed)
@@ -331,7 +332,6 @@ class wgtFieldBox(Columns, bindablefield):
     def edit_changed(self, x, d, *arg):
         if not nisk.util.isEquivalent(d, self._lastvalue):
             urwid.emit_signal(self, 'change', self, d)
-
 
     def keypress(self, size, key):
         key = self.__super.keypress(size, key)
@@ -382,7 +382,7 @@ class wgtIntFieldBox(Columns, bindablefield):
         self._TextValue = ''
         self.dirty = False
         self._enterIsTab = enterIsTab
-        self.capField = urwid.Text([('key', caption[:1]), caption[1:]])
+        self.capField = urwid.Text(nisk.util.asUnicode(( u'\N{BULLET} ', caption)))
         self.textField = wgtIntEdit('')
         urwid.connect_signal(self.textField, 'valuechange', self.edit_changed)
 
@@ -440,7 +440,7 @@ class wgtDateFieldBox(Columns, bindablefield):
         self._TextValue = ''
         self.dirty = False
         self._enterIsTab = enterIsTab
-        self.capField = urwid.Text([('key', caption[:1]), caption[1:]])
+        self.capField = urwid.Text(nisk.util.asUnicode(( u'\N{BULLET} ', caption)))
         self.textField = wgtDateEdit()
         self.dformat = dformat
         urwid.connect_signal(self.textField, 'valuechange', self.edit_changed)
@@ -535,7 +535,7 @@ class wgtFieldBoxDb(urwid.Pile, bindablefield):
         self._orm = None
         self._iniciado = False
 
-        self.capField = urwid.Text([('key', caption[:1]), caption[1:]])
+        self.capField = urwid.Text(nisk.util.asUnicode(( u'\N{BULLET} ', caption)))
 
         self.codField = wgtIntEdit()
         self.lastCod = nisk.util.asInt(self.codField.value())
@@ -971,7 +971,7 @@ class SBListBox(urwid.WidgetWrap):
     A ListBox with a scroll bar.
     """
 
-    def __init__(self, body, handle, background):
+    def __init__(self, body, handle=(u"#", "handle"), background=(u"|", "scrollbar_bg")):
         """
         body -- list or a SimpleListWalker object that contains the
                 widgets to be displayed inside the list box.
@@ -1206,7 +1206,7 @@ class HMenu(urwid.Columns):
                                                                         'heading'),
                                                                     urwid.AttrMap(line, 'line'),
                                                                     urwid.Divider()] + choices + [urwid.Divider()]))
-            self.menu = urwid.AttrMap(listbox, 'options')
+            self.menu = urwid.AttrMap(listbox, 'options_nf','options')
 
         def open_menu(self, button):
             self.parent.open_box(self.menu, self)
@@ -1297,7 +1297,7 @@ class HMenu(urwid.Columns):
     def onmenuopen(self):
         if not self.opts is None:
             if len(self.contents) == 1:
-                self.contents.insert(0, (urwid.AttrMap(self.top, 'options'), self.options('given', self.wdt)))
+                self.contents.insert(0, (urwid.AttrMap(self.top, 'options_nf','options',), self.options('given', self.wdt)))
                 self.top.open_box(self.opts.menu, self.opts)
         self.set_focus_column(0)
 
@@ -1328,13 +1328,13 @@ class HMenu(urwid.Columns):
 
         def first(self):
             o = len(self.pilha.dados) > 0 if not self.onclose is None else len(self.pilha.dados) > 1
-            y = 2 #if len(self.pilha.dados) > 1 else 1
+            y = 2  # if len(self.pilha.dados) > 1 else 1
             if o:
                 del self.pilha.dados[y:]
                 x = self.pilha.topo()
                 if x:
                     (self.body, self.menu) = x
-                    if (self.pilha.vazia() or not  self.menu)and self.onclose:
+                    if (self.pilha.vazia() or not self.menu) and self.onclose:
                         self.onclose()
                     return True
             return False

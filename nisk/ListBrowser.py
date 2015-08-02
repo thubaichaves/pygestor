@@ -227,8 +227,10 @@ class ListBrowserBase(dlger):
 
         bkg = urwid.AttrWrap(headBodyFootFrame, 'PopupMessageBg')
 
-        sx = conf.sizes['ListBrowser1']
-        over = urwid.Overlay(bkg, self._widgetsession.mainframe.body, sx[0], sx[1], sx[2], sx[3])
+        # sx = conf.sizes['ListBrowser1']
+        # over = urwid.Overlay(bkg, self._widgetsession.mainframe.body, sx[0], sx[1], sx[2], sx[3])
+        # over = urwid.Overlay(over, self._widgetsession. mainframe.body,('fixed left', 8 ), sx[1], sx[2], sx[3])
+        over = bkg
 
         self.load()
         #

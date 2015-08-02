@@ -123,7 +123,7 @@ class crtl_os:
         def callback(self, data=None):
 
             if self.step == crtl_os.os_open.a_numero:
-                (self.r, self.dados['osn'],z) = data
+                (self.r, self.dados['osn'], z) = data
 
             if self.r == dlger.ok:
                 self.step = self.step + 1
@@ -151,15 +151,11 @@ class crtl_os:
 
 
 class formmer_os_new(formmer.formmer):
-    footer_text = [
-        [('title', "OK"), ('key', "Enter")], "|",
-        [('title', "Cancelar"), ('key', "ESC")],
-    ]
-
     text_button_list = [
-        [('title', "OK"), ('key', "Enter")],
-        ('key', ['C', ('title', "ancelar"), "ESC"]),
-        ('key', ['M', ('title', "emu"), "F1"])]
+        ('key', [('title', " Menu "), " F1 "]),
+        ('key', [('title', " Concluir "), " F6 "]),
+        ('key', [('title', " Cancelar "), " ESC "])
+    ]
 
     def __init__(self, params={}, dados={}):
         self.params = params
@@ -221,30 +217,30 @@ class formmer_os_new(formmer.formmer):
 
     def get_frame(self):
 
-        bkg = widgets.SBListBox(self, (u"*", "handle"), (u" ", "scrollbar_bg"))
         # bkg = widgets.SBListBox(self, (u"\u2593", "handle"), (u"\u2592", "scrollbar_bg"))
-        bkg = urwid.AttrWrap(bkg, 'body')
-        self._footertxb = urwid.Text(self.footer_text)
-        self.footer = urwid.AttrWrap(self._footertxb, 'foot')
+        bkg = widgets.SBListBox(self, (u"#", "handle"), (u"-", "scrollbar_bg"))
+        bkg = urwid.Padding(widgets.SBListBox(self), left=1, right=1)
+        bkg = urwid.AttrWrap(bkg, 'body', 'body_of')
+
         fw = urwid.Frame(bkg)
-        fw.set_footer = self.footer
+
+        bts = [urwid.AttrWrap(CustomButton(txt, self.button_press, left_border=("["), right_border="]"),
+                              'buttn', 'buttnf') for txt in self.text_button_list]
+        buttonbar = urwid.Pile([
+            urwid.Divider('='),
+            urwid.GridFlow(bts, conf.sizes['statusbarbuttonA'], 0, 0, 'left')
+        ])
+
         mt = TabsContainer()
-
-        buttonbar = urwid.GridFlow([urwid.AttrWrap(
-            CustomButton(txt, self.button_press, left_border=('scrollbar_bg', "|"), right_border=' '),
-            'buttn', 'buttnf') for txt in self.text_button_list],
-                                   conf.sizes['statusbarbuttonA'], 0, 0, 'left')
-
         mt.addTab('Básico', fw)
         mt.addTab('Pagamentos',
                   urwid.Filler(urwid.Text('IMPLANTAR')))
-
         mt.addComplement(urwid.AttrWrap(buttonbar, 'foot'))
-        ff = urwid.AttrWrap(mt, 'body')
 
         self.cc.setwid(mt)
+        self.cc.onmenuopen()
 
-        lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='Nova OS'), 'windowsborder')
+        lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='Nova OS'), 'windowsborder', 'windowsborder_of', )
         return lb
 
     def show(self, isdialog=True):
@@ -355,24 +351,27 @@ class formmer_os_edit(formmer.formmer, dlger):
         pass
 
     def get_frame(self):
-        # fw = widgets.LineBox(self, title='Nova OS')
         # bkg = widgets.SBListBox(self, (u"\u25bc", "handle"), (u"\u25b2", "scrollbar_bg"))
-        bkg = widgets.SBListBox(self, (u"\u2593", "handle"), (u"\u2592", "scrollbar_bg"))
+        bkg = urwid.Padding(widgets.SBListBox(self), left=1, right=1)
         bkg = urwid.AttrWrap(bkg, 'body')
+
         self._footertxb = urwid.Text(self.footer_text)
         self.footer = urwid.AttrWrap(self._footertxb, 'foot')
+
+        # fw = widgets.LineBox(self, title='Nova OS')
         fw = urwid.Frame(bkg)
         fw.set_footer = self.footer
+
         mt = TabsContainer()
+        mt.addTab('Básico', fw)
+        mt.addTab('Informações',
+                  urwid.Filler(urwid.Text('xxx')))
 
         buttonbar = urwid.GridFlow([urwid.AttrWrap(
             CustomButton(txt, self.button_press, left_border=('scrollbar_bg', "|"), right_border=' '),
             'buttn', 'buttnf') for txt in self.text_button_list],
                                    conf.sizes['statusbarbuttonA'], 0, 0, 'left')
 
-        mt.addTab('Básico', fw)
-        mt.addTab('Informações',
-                  urwid.Filler(urwid.Text('xxx')))
 
         # self.menuBar = formmer_os_edit.MainMenux(tui.mdi.loop)
         # self.menuBar =MenuRoller( [('a',MainMenu(tui.mdi.loop)),('b',ProdutosMenu(tui.mdi.loop))])
@@ -383,14 +382,21 @@ class formmer_os_edit(formmer.formmer, dlger):
 
         self.cc.setwid(mt)
 
-        lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='OS'), 'windowsborder')
+        lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='OS'), 'windowsborder', 'windowsborder_of')
         return lb
 
     def show(self, isdialog=False):
         x = self.binder.consulta(self.params)
         if x:
-            self._widgetsession.ShowDialogWidgetOverlay(self.get_frame(), v_hdlr=self.unhandled_input,
-                                                        _nestedwidget=self, isdialog=isdialog)
+            # self._widgetsession.ShowDialogWidgetOverlay(self.get_frame(), v_hdlr=self.unhandled_input,
+            #                                             _nestedwidget=self, isdialog=isdialog)
+            # sx = conf.sizes['ListBrowser1']
+            # over = urwid.Overlay(self.get_frame(), self._widgetsession. mainframe.body,('fixed left', 8 ), sx[1], sx[2], sx[3])
+            # over = urwid.Overlay(self.get_frame(), self._widgetsession. mainframe.body, 'center', ('relative', 75), 'middle',
+            #                     ('relative', 75))
+            over = self.get_frame()
+            self._widgetsession.ShowDialogWidget(over, self.unhandled_input, None,
+                                                 _nestedwidget=self, isDialog=False)
         else:
             self._widgetprocessa(conf.cmds.dlg_statusbar_put, (('error'), 'Não foi possível abrir essa OS'))
             # nisk.dialogs.dlgInput.show(conf.textos['crtl_os.erro_abriros'],self._widgetpai)

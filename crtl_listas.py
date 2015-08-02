@@ -254,7 +254,7 @@ class formmer_listsA_edit(formmer.formmer, dlger):
 
         self.cc.setwid(mt)
 
-        lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='Registros'), 'windowsborder')
+        lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='Registros'), 'windowsborder','windowsborder_of')
         return lb
 
     def show(self, isdialog=False):
@@ -262,10 +262,11 @@ class formmer_listsA_edit(formmer.formmer, dlger):
         if x:
             # self._widgetsession.ShowDialogWidgetOverlay(self.get_frame(), v_hdlr=self.unhandled_input,
             #                                            _nestedwidget=self, isdialog=False)
-            sx = conf.sizes['ListBrowser1']
-            over = urwid.Overlay(self.get_frame(), self._widgetsession. mainframe.body,('fixed left', 8 ), sx[1], sx[2], sx[3])
+            # sx = conf.sizes['ListBrowser1']
+            # over = urwid.Overlay(self.get_frame(), self._widgetsession. mainframe.body,('fixed left', 8 ), sx[1], sx[2], sx[3])
             #over = urwid.Overlay(self.get_frame(), self._widgetsession. mainframe.body, 'center', ('relative', 75), 'middle',
             #                     ('relative', 75))
+            over = self.get_frame()
             self._widgetsession.ShowDialogWidget(over, self.unhandled_input, None,
                                                  _nestedwidget=self, isDialog=False)
         else:

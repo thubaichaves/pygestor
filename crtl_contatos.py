@@ -193,6 +193,7 @@ class formmer_contatos_edit(formmer.formmer, dlger):
         formmer.formmer.__init__(self, [
             (tfld.textbox, 'Nome', 'alias'),
             (tfld.textbox, 'Nome Completo', 'nomec'),
+            (tfld.fieldbox, 'Grupo', 'intc', {'ltab': 'contgrupo'}),
         ])
         self.binder = mediator_contatos(self)
 
@@ -269,16 +270,17 @@ class formmer_contatos_edit(formmer.formmer, dlger):
 
         self.cc.setwid(mt)
 
-        lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='Contato'), 'windowsborder')
+        lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='Contato'), 'windowsborder','windowsborder_of',)
         return lb
 
     def show(self, isdialog=False):
         x = self.binder.consulta(self.params)
         if x:
-            sx = conf.sizes['ListBrowser1']
-            over = urwid.Overlay(self.get_frame(), self._widgetsession. mainframe.body,('fixed left', 8 ), sx[1], sx[2], sx[3])
+            # sx = conf.sizes['ListBrowser1']
+            # over = urwid.Overlay(self.get_frame(), self._widgetsession. mainframe.body,('fixed left', 8 ), sx[1], sx[2], sx[3])
             #over = urwid.Overlay(self.get_frame(), self._widgetsession. mainframe.body, 'center', ('relative', 75), 'middle',
             #                     ('relative', 75))
+            over = self.get_frame()
             self._widgetsession.ShowDialogWidget(over, self.unhandled_input, None,
                                                  _nestedwidget=self, isDialog=False)
         else:

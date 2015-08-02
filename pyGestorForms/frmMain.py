@@ -32,7 +32,7 @@ class WxApp(nisk.dialogs.widgetBase):
             ])
         self.mural = urwid.AttrWrap(
             nisk.widgets.LineBox(
-                urwid.ListBox(lw)), 'body')
+                urwid.ListBox(lw)), 'body', 'body_of')
 
 
 
