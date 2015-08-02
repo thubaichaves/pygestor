@@ -21,7 +21,7 @@ class tui:
 
     def __init__(self, mainframe=None, unhandled_input=None, khdl_app=None, colors=conf.const_PALETTE):
 
-        tui._setupSIGINTprocess()
+        self._setupSIGINTprocess()
 
         self.mainframe = mainframe
         self.inputhadler = unhandled_input
@@ -133,7 +133,7 @@ class tui:
         def signal_handler2(signal, frame):
             return False
 
-        if not tui.signal_handled:
+        if tui.signal_handled is None:
             signal.signal(signal.SIGINT, signal_handler)
             signal.signal(signal.SIGTSTP, signal_handler2)
             tui.signal_handled = 1
@@ -221,9 +221,9 @@ class session:
 
         sx = conf.sizes['ListBrowser1']
 
-        #x = len(self.PilhaWidget.dados)
+        x = len(self.PilhaDialogs.dados)
 
-        over = urwid.Overlay(bkg, self.mainframe.body, ('fixed left', 8 ), sx[1], sx[2], sx[3])
+        over = urwid.Overlay(bkg, self.mainframe.body, ('fixed left', 8 + x), sx[1], sx[2], sx[3])
 
         lck = threading.Lock()
         self.ShowDialogWidget(over, v_hdlr, lck, _nestedwidget, isDialog= isdialog)
