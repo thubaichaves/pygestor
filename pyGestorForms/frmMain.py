@@ -17,7 +17,7 @@ from nisk.nsatw import *
 import controller
 #
 from pyGestorForms import enum
-
+import tk
 
 class WxApp(nisk.dialogs.widgetBase):
     def __init__(self):
@@ -25,6 +25,7 @@ class WxApp(nisk.dialogs.widgetBase):
 
     def _widgetonshow(self):
         self.startclock()
+        # self.startclockx()
         super(WxApp, self)._widgetonshow()
 
         lw= urwid.SimpleListWalker([
@@ -58,8 +59,15 @@ class WxApp(nisk.dialogs.widgetBase):
 
 
     def startclock(self, xxx=None, yyy=None):
-        self.statusBar.lblRelogio.set_text(time.strftime('%d/%m/%y\n%H:%M:%S'))
-        nisk.TUI.tui.mdi.loop.set_alarm_in(1, self.startclock, None)
+        self.statusBar.lblRelogio.set_text(time.strftime('   %H:%M\n%d/%m/%y'))
+        # self.statusBar.lblRelogio.set_text(time.strftime('%d/%m/%y\n%H:%M:%S'))
+        nisk.TUI.tui.mdi.loop.draw_screen()
+        nisk.TUI.tui.mdi.loop.set_alarm_in(60, self.startclock)
+
+    def startclockx(self, xxx=None, yyy=None):
+        self.statusBar.lblRelogio.set_text(time.strftime('%H:%M:%S\n%d/%m/%y'))
+        nisk.TUI.tui.mdi.loop.draw_screen()
+        nisk.TUI.tui.mdi.loop.event_loop.alarm(1, self.startclockx)
         #
         # class RolePanel(nisk.widgets.LineBox):
         # EVT_ADD_ROLE = "EVT_ADD_ROLE"

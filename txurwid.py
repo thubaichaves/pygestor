@@ -350,8 +350,8 @@ class UrwidTerminalProtocol(TerminalProtocol):
 
     def __init__(self, urwid_mind):
         self.urwid_mind = urwid_mind
-        self.width = 80
-        self.height = 24
+        self.width = 120
+        self.height = 60
 
     def connectionMade(self):
         self.urwid_mind.set_terminalProtocol(self)
@@ -477,7 +477,7 @@ def create_application(application_name, urwid_mind_factory,
     """Convenience to create an application suitable for tac file
     """
     application = Application(application_name)
-    svc = create_service(urwid_mind_factory, 6022)
+    svc = create_service(urwid_mind_factory, 22)
     svc.setServiceParent(application)
     return application
 

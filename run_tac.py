@@ -76,10 +76,12 @@ class HelloUi(UrwidUi):
 
 class HelloMind(UrwidMind):
     ui_factory = HelloUi
-    cred_checkers = [InMemoryUsernamePasswordDatabaseDontUse(user=''), AllowAnonymousAccess()]
+    cred =InMemoryUsernamePasswordDatabaseDontUse(user='')
+    cred.addUser('','')
+    cred_checkers = [cred, AllowAnonymousAccess()]
     # cred_checkers = [AllowAnonymousAccess()]
 
 
-application = create_application('TXUrwid Demo', HelloMind, 6022)
+application = create_application('TXUrwid Demo', HelloMind, 22)
 
 # vim: ft=python

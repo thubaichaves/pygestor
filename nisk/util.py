@@ -188,7 +188,8 @@ class pilha:
 
 def paralelo(function, args=[]):
     Thread(target=function, args=tuple(args)).start()
-    # return thread.start_new (function,args)
+    # return thread.start_new (function,())
+    pass
 
 
 def getlogfilename(fileformat="log-%s.log"):
