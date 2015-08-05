@@ -85,3 +85,16 @@ class HelloMind(UrwidMind):
 application = create_application('TXUrwid Demo', HelloMind, 22)
 
 # vim: ft=python
+
+#twistd.py
+import os, sys
+
+# try:
+#     import _preamble
+# except ImportError:
+#     sys.exc_clear()
+#
+# sys.path.insert(0, os.path.abspath(os.getcwd()))
+# from twisted.scripts.twistd import run, runApp
+# # run()
+# runApp()

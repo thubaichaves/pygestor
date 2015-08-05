@@ -31,11 +31,9 @@ Portions Copyright: 2010, Ian Ward <ian@excess.org>
 Licence:   LGPL <http://opensource.org/licenses/lgpl-2.1.php>
 """
 
-import os
-
 import urwid
 #from urwid.curses_display import Screen
-from urwid.rawx_display import Screen
+from rawx_display import Screen
 
 from zope.interface import Interface, Attribute, implements
 from twisted.application.service import Application

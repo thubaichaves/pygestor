@@ -23,8 +23,12 @@
 Curses-based UI implementation
 """
 
-import curses
+import unicurses as curses
+import curses as curses_
 import _curses
+import nisk.util
+import chardet
+import codecs
 
 from urwid import escape
 
@@ -37,22 +41,22 @@ KEY_MOUSE = 409 # curses.KEY_MOUSE
 
 _curses_colours = {
     'default':        (-1,                    0),
-    'black':          (curses.COLOR_BLACK,    0),
-    'dark red':       (curses.COLOR_RED,      0),
-    'dark green':     (curses.COLOR_GREEN,    0),
-    'brown':          (curses.COLOR_YELLOW,   0),
-    'dark blue':      (curses.COLOR_BLUE,     0),
-    'dark magenta':   (curses.COLOR_MAGENTA,  0),
-    'dark cyan':      (curses.COLOR_CYAN,     0),
-    'light gray':     (curses.COLOR_WHITE,    0),
-    'dark gray':      (curses.COLOR_BLACK,    1),
-    'light red':      (curses.COLOR_RED,      1),
-    'light green':    (curses.COLOR_GREEN,    1),
-    'yellow':         (curses.COLOR_YELLOW,   1),
-    'light blue':     (curses.COLOR_BLUE,     1),
-    'light magenta':  (curses.COLOR_MAGENTA,  1),
-    'light cyan':     (curses.COLOR_CYAN,     1),
-    'white':          (curses.COLOR_WHITE,    1),
+    'black':          (curses_.COLOR_BLACK,    0),
+    'dark red':       (curses_.COLOR_RED,      0),
+    'dark green':     (curses_.COLOR_GREEN,    0),
+    'brown':          (curses_.COLOR_YELLOW,   0),
+    'dark blue':      (curses_.COLOR_BLUE,     0),
+    'dark magenta':   (curses_.COLOR_MAGENTA,  0),
+    'dark cyan':      (curses_.COLOR_CYAN,     0),
+    'light gray':     (curses_.COLOR_WHITE,    0),
+    'dark gray':      (curses_.COLOR_BLACK,    1),
+    'light red':      (curses_.COLOR_RED,      1),
+    'light green':    (curses_.COLOR_GREEN,    1),
+    'yellow':         (curses_.COLOR_YELLOW,   1),
+    'light blue':     (curses_.COLOR_BLUE,     1),
+    'light magenta':  (curses_.COLOR_MAGENTA,  1),
+    'light cyan':     (curses_.COLOR_CYAN,     1),
+    'white':          (curses_.COLOR_WHITE,    1),
 }
 
 
@@ -64,7 +68,7 @@ class Screen(BaseScreen, RealTerminal):
         ]
         self.palette = {}
         self.has_color = False
-        self.s = None
+        self.stdscr = None
         self.cursor_state = None
         self._keyqueue = []
         self.prev_input_resize = 0
@@ -102,15 +106,71 @@ class Screen(BaseScreen, RealTerminal):
 
         self._mouse_tracking_enabled = enable
 
+    def parse_input(self, event_loop, callback, codes, wait_for_more=True):
+        """
+        Read any available input from get_available_raw_input, parses it into
+        keys, and calls the given callback.
+
+        The current implementation tries to avoid any assumptions about what
+        the screen or event loop look like; it only deals with parsing keycodes
+        and setting a timeout when an incomplete one is detected.
+
+        `codes` should be a sequence of keycodes, i.e. bytes.  A bytearray is
+        appropriate, but beware of using bytes, which only iterates as integers
+        on Python 3.
+        """
+        # Note: event_loop may be None for 100% synchronous support, only used
+        # by get_input.  Not documented because you shouldn't be doing it.
+        if self._input_timeout and event_loop:
+            event_loop.remove_alarm(self._input_timeout)
+            self._input_timeout = None
+
+        original_codes = codes
+        processed = []
+        try:
+            while codes:
+                run, codes = escape.process_keyqueue(
+                    codes, wait_for_more)
+                processed.extend(run)
+        except escape.MoreInputRequired:
+            # Set a timer to wait for the rest of the input; if it goes off
+            # without any new input having come in, use the partial input
+            k = len(original_codes) - len(codes)
+            processed_codes = original_codes[:k]
+            self._partial_codes = codes
+
+            def _parse_incomplete_input():
+                self._input_timeout = None
+                self._partial_codes = None
+                self.parse_input(
+                    event_loop, callback, codes, wait_for_more=False)
+            if event_loop:
+                self._input_timeout = event_loop.alarm(
+                    self.complete_wait, _parse_incomplete_input)
+
+        else:
+            processed_codes = original_codes
+            self._partial_codes = None
+
+        if self._resized:
+            processed.append('window resize')
+            self._resized = False
+
+        if callback:
+            callback(processed, processed_codes)
+        else:
+            # For get_input
+            return processed, processed_codes
+
     def _start(self):
         """
         Initialize the screen and input mode.
         """
-        self.s = curses.initscr()
+        self.stdscr = curses.initscr()
         self.has_color = curses.has_colors()
         if self.has_color:
             curses.start_color()
-            if curses.COLORS < 8:
+            if curses_.COLORS < 8:
                 # not colourful enough
                 self.has_color = False
         if self.has_color:
@@ -121,9 +181,11 @@ class Screen(BaseScreen, RealTerminal):
                 self.has_default_colors=False
         self._setup_colour_pairs()
         curses.noecho()
-        curses.meta(1)
+        # curses.meta(None, 1)
+        #todo
+        curses.meta( None,1)
         curses.halfdelay(10) # use set_input_timeouts to adjust
-        self.s.keypad(0)
+        self.stdscr.keypad(0)
 
         if not self._signal_keys_set:
             self._old_signal_keys = self.tty_signal_keys()
@@ -160,8 +222,8 @@ class Screen(BaseScreen, RealTerminal):
         for fg in xrange(8):
             for bg in xrange(8):
                 # leave out white on black
-                if fg == curses.COLOR_WHITE and \
-                   bg == curses.COLOR_BLACK:
+                if fg == curses_.COLOR_WHITE and \
+                   bg == curses_.COLOR_BLACK:
                     continue
 
                 curses.init_pair(bg * 8 + 7 - fg, fg, bg)
@@ -177,8 +239,8 @@ class Screen(BaseScreen, RealTerminal):
 
 
     def _clear(self):
-        self.s.clear()
-        self.s.refresh()
+        self.stdscr.clear()
+        self.stdscr.refresh()
 
 
     def _getch(self, wait_tenths):
@@ -188,11 +250,11 @@ class Screen(BaseScreen, RealTerminal):
             curses.cbreak()
         else:
             curses.halfdelay(wait_tenths)
-        self.s.nodelay(0)
-        return self.s.getch()
+        self.stdscr.nodelay(0)
+        return self.stdscr.getch()
 
     def _getch_nodelay(self):
-        self.s.nodelay(1)
+        self.stdscr.nodelay(1)
         while 1:
             # this call fails sometimes, but seems to work when I try again
             try:
@@ -201,7 +263,7 @@ class Screen(BaseScreen, RealTerminal):
             except _curses.error:
                 pass
 
-        return self.s.getch()
+        return self.stdscr.getch()
 
     def set_input_timeouts(self, max_wait=None, complete_wait=0.1,
         resize_wait=0.1):
@@ -417,16 +479,16 @@ class Screen(BaseScreen, RealTerminal):
 
     def _dbg_instr(self): # messy input string (intended for debugging)
         curses.echo()
-        self.s.nodelay(0)
+        self.stdscr.nodelay(0)
         curses.halfdelay(100)
-        str = self.s.getstr()
+        str = self.stdscr.getstr()
         curses.noecho()
         return str
 
     def _dbg_out(self,str): # messy output function (intended for debugging)
-        self.s.clrtoeol()
-        self.s.addstr(str)
-        self.s.refresh()
+        self.stdscr.clrtoeol()
+        self.stdscr.addstr(str)
+        self.stdscr.refresh()
         self._curs_set(1)
 
     def _dbg_query(self,question): # messy query (intended for debugging)
@@ -434,19 +496,19 @@ class Screen(BaseScreen, RealTerminal):
         return self._dbg_instr()
 
     def _dbg_refresh(self):
-        self.s.refresh()
+        self.stdscr.refresh()
 
 
 
     def get_cols_rows(self):
         """Return the terminal dimensions (num columns, num rows)."""
-        rows,cols = self.s.getmaxyx()
+        rows,cols = self.stdscr.getmaxyx()
         return cols,rows
 
 
     def _setattr(self, a):
         if a is None:
-            self.s.attrset(0)
+            self.stdscr.attrset(0)
             return
         elif not isinstance(a, AttrSpec):
             p = self._palette.get(a, (AttrSpec('default', 'default'),))
@@ -466,7 +528,7 @@ class Screen(BaseScreen, RealTerminal):
             else:
                 bg = 0
 
-            attr = curses.color_pair(bg * 8 + 7 - fg)
+            attr = curses_.color_pair(bg * 8 + 7 - fg)
         else:
             attr = 0
 
@@ -479,7 +541,7 @@ class Screen(BaseScreen, RealTerminal):
         if a.blink:
             attr |= curses.A_BLINK
 
-        self.s.attrset(attr)
+        self.stdscr.attrset(attr)
 
     def draw_screen(self, (cols, rows), r ):
         """Paint screen with rendered canvas."""
@@ -491,7 +553,7 @@ class Screen(BaseScreen, RealTerminal):
         for row in r.content():
             y += 1
             try:
-                self.s.move( y, 0 )
+                self.stdscr.move( y, 0 )
             except _curses.error:
                 # terminal shrunk?
                 # move failed so stop rendering.
@@ -511,15 +573,28 @@ class Screen(BaseScreen, RealTerminal):
                 try:
                     if cs in ("0", "U"):
                         for i in range(len(seg)):
-                            self.s.addch( 0x400000 +
+                            self.stdscr.addch( 0x400000 +
                                 ord(seg[i]) )
                     else:
                         assert cs is None
                         if PYTHON3:
                             assert isinstance(seg, bytes)
-                            self.s.addstr(seg.decode('utf-8'))
+                            self.stdscr.addstr(seg.decode('utf-8'))
                         else:
-                            self.s.addstr(seg)
+
+                            # self.stdscr.addstr(seg)
+                            # try:
+                            #     self.stdscr.addstr(codecs.decode(seg,'1252').encode('850'))
+                            # except:
+                            try:
+                                self.stdscr.addstr(codecs.decode(seg,'utf-8').encode('cp850',errors='replace'))
+                            # except:
+                            #     try:
+                            #         self.stdscr.addstr(codecs.decode(seg, '1252').encode('cp850'))
+                            except Exception as x:
+                                self.stdscr.addstr(seg)
+                                nisk.util.dump([seg,chardet.detect(seg),codecs.decode(seg,'utf-8'),x])
+
                 except _curses.error:
                     # it's ok to get out of the
                     # screen on the lower right
@@ -534,14 +609,14 @@ class Screen(BaseScreen, RealTerminal):
             x,y = r.cursor
             self._curs_set(1)
             try:
-                self.s.move(y,x)
+                self.stdscr.move(y,x)
             except _curses.error:
                 pass
         else:
             self._curs_set(0)
-            self.s.move(0,0)
+            self.stdscr.move(0,0)
 
-        self.s.refresh()
+        self.stdscr.refresh()
         self.keep_cache_alive_link = r
 
 
@@ -550,7 +625,7 @@ class Screen(BaseScreen, RealTerminal):
         Force the screen to be completely repainted on the next
         call to draw_screen().
         """
-        self.s.clear()
+        self.stdscr.clear()
 
 
 

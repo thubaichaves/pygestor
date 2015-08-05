@@ -59,10 +59,10 @@ class WxApp(nisk.dialogs.widgetBase):
 
 
     def startclock(self, xxx=None, yyy=None):
-        self.statusBar.lblRelogio.set_text(time.strftime('   %H:%M\n%d/%m/%y'))
+        self.statusBar.lblRelogio.set_text(time.strftime('%H:%M:%S\n%d/%m/%y'))
         # self.statusBar.lblRelogio.set_text(time.strftime('%d/%m/%y\n%H:%M:%S'))
-        nisk.TUI.tui.mdi.loop.draw_screen()
-        nisk.TUI.tui.mdi.loop.set_alarm_in(60, self.startclock)
+        # nisk.TUI.tui.mdi.loop.draw_screen()
+        nisk.TUI.tui.mdi.loop.set_alarm_in(1, self.startclock)
 
     def startclockx(self, xxx=None, yyy=None):
         self.statusBar.lblRelogio.set_text(time.strftime('%H:%M:%S\n%d/%m/%y'))

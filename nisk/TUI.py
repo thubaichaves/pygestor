@@ -2,17 +2,14 @@
 # -*- coding: utf-8 -*-
 
 
-import urwid
-import urwid.rawx_display
-
-
-import util
-
-import os, logging, datetime, time
-import conf, threading
-
-import signal
+import logging
+import time
+import threading
 import sys
+
+import urwid
+import util
+import conf
 
 
 ######################################################################
@@ -31,8 +28,10 @@ class tui:
         self.seslocker = threading.Lock()
 
         if not screen:
-            screen = urwid.raw_display.Screen()
-            screen.set_terminal_properties(256)
+            import urwid.curses_display
+            screen = urwid.curses_display.Screen()
+            # screen = urwid.raw_display.Screen()
+            # screen.set_terminal_properties(256)
 
         self.loop = urwid.MainLoop(mainframe, colors, screen=screen, unhandled_input=self._khdl,
                                    pop_ups=True, input_filter=self._inputfilter,event_loop=eventloop)
@@ -150,6 +149,7 @@ class session:
         self.PilhaWidget = util.pilha()
         self.PilhaDialogs = util.pilha()
         self.locker = None
+        self._seslocker = threading.Lock()
         self.inputhadler = inputhadler
         self.widget = widget
         self.mainframe = mainframe

@@ -12,6 +12,7 @@ from nsatw import *
 from urwid import *
 import math
 import urwid
+import tk
 
 
 class NumEdit(Edit):
@@ -638,6 +639,9 @@ class wgtFieldBoxDb(urwid.Pile, bindablefield):
             if x:
                 # nisk.util.paralelo(x, [self])
                 x(self)
+
+        elif key == "f2":
+            tk.window()
 
         elif key == "f5":
             self._widgetprocessa('dlg_statusbar_put',

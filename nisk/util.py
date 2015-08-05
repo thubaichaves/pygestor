@@ -282,17 +282,31 @@ def show(message, title='NeonGestor'):
 
 
 def imprimeLPR(cfg_prntxt, var_prnfile):
-    cmd = conf.cfg_prncmd.replace('%cfg_prntxt', cfg_prntxt).replace('%var_prnfile', var_prnfile).split(' ')
+    # cfg_prncmd_cyg = 'printer.sh %var_prnfile %cfg_prntxt'
+    # cfg_prncmd_win = 'lpr -d %cfg_prntxt %var_prnfile'
+    # cfg_prncmd_unix = 'cat $1 | smbclient $2 -c "print -" -N -U "nisk%000"'
+    #
+    cfg_prncmd_cyg = 'printer.sh %var_prnfile %cfg_prntxt'
+    cfg_prncmd_win = 'copy %var_prnfile %cfg_prntxt'
+    cfg_prncmd_unix = 'cat $1 | smbclient $2 -c "print -" -N -U "nisk%000"'
 
-    dump(['!!cmd!! ', cmd])
-    p1 = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    if sys.platform == "win32":
+        cmd = cfg_prncmd_win.replace('%cfg_prntxt', cfg_prntxt).replace('%var_prnfile', var_prnfile)
+        x = subprocess.check_output(cmd, shell=True)
 
-    stdout, stderr = p1.communicate()
+    else:
+        cmd = conf.cfg_prncmd.replace('%cfg_prntxt', cfg_prntxt).replace('%var_prnfile', var_prnfile).split(' ')
 
-    if len(stdout) > 0:
-        logging.debug('!!out!! ' + stdout)
-    if len(stderr) > 0:
-        logging.debug('!!out!! ' + stderr)
+        dump(['!!cmd!! ', cmd])
+        p1 = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        stdout, stderr = p1.communicate()
+
+        if len(stdout) > 0:
+            logging.debug('!!out!! ' + stdout)
+        if len(stderr) > 0:
+            logging.debug('!!out!! ' + stderr)
+
     '''
     import os
     os.name
