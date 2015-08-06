@@ -300,7 +300,7 @@ _keyconv = {
     339:'page up',
     343:'enter',    # on numpad
     350:'5',        # on numpad
-    360:'end',
+    360:'end',358:'end',
 }
 
 

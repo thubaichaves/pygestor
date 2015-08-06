@@ -50,6 +50,7 @@ class HelloUi(UrwidUi):
 
     def create_urwid_mainloop(self):
         eventloop = urwid.TwistedEventLoop(manage_reactor=False)
+        urwid.set_encoding("utf-8")
         t = nisk.TUI.tui(
             mainframe=self.toplevel, screen=self.screen, unhandled_input=self.unhandled_input, khdl_app=app.app.keyHandler,
             colors=self.palette, eventloop=eventloop

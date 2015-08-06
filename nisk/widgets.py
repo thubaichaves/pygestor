@@ -288,7 +288,7 @@ class wgtFieldBox(Columns, bindablefield):
         self.dirty = False
         self.caption = caption
         self._enterIsTab = enterIsTab
-        self.capField = urwid.Text( nisk.util.asUnicode(( u'\N{BULLET} ', caption)))
+        self.capField = urwid.Text( nisk.util.asUnicode(( u'* ', caption)))
         # self.capField = urwid.Text([('key', caption[:1]), caption[1:]])
         self.textField = urwid.Edit('')
         self.textField.multiline = not enterIsTab
@@ -383,7 +383,7 @@ class wgtIntFieldBox(Columns, bindablefield):
         self._TextValue = ''
         self.dirty = False
         self._enterIsTab = enterIsTab
-        self.capField = urwid.Text(nisk.util.asUnicode(( u'\N{BULLET} ', caption)))
+        self.capField = urwid.Text(nisk.util.asUnicode(( u'* ', caption)))
         self.textField = wgtIntEdit('')
         urwid.connect_signal(self.textField, 'valuechange', self.edit_changed)
 
@@ -441,7 +441,7 @@ class wgtDateFieldBox(Columns, bindablefield):
         self._TextValue = ''
         self.dirty = False
         self._enterIsTab = enterIsTab
-        self.capField = urwid.Text(nisk.util.asUnicode(( u'\N{BULLET} ', caption)))
+        self.capField = urwid.Text(nisk.util.asUnicode(( u'* ', caption)))
         self.textField = wgtDateEdit()
         self.dformat = dformat
         urwid.connect_signal(self.textField, 'valuechange', self.edit_changed)
@@ -536,7 +536,7 @@ class wgtFieldBoxDb(urwid.Pile, bindablefield):
         self._orm = None
         self._iniciado = False
 
-        self.capField = urwid.Text(nisk.util.asUnicode(( u'\N{BULLET} ', caption)))
+        self.capField = urwid.Text(nisk.util.asUnicode(( u'* ', caption)))
 
         self.codField = wgtIntEdit()
         self.lastCod = nisk.util.asInt(self.codField.value())
@@ -1175,17 +1175,17 @@ class HMenu(urwid.Columns):
                             # nisk.util.dump((norepeatlist, y))
                     # nisk.util.dump(('d',x))
                     if isinstance(caption, basestring):
-                        caption = [u'  \N{BULLET} ', x[0], yx, x[1]]
+                        caption = [u'  * ', x[0], yx, x[1]]
                         bulet = False
                     elif isinstance(caption, list) and len(caption) > 0:
                         del caption[0]
                         caption.insert(0, x[1])
                         caption.insert(0, yx)
                         caption.insert(0, x[0])
-                        caption.insert(0, u'  \N{BULLET} ')
+                        caption.insert(0, u'  * ')
                         bulet = False
             if bulet:
-                caption = [u'  \N{BULLET} ', caption]
+                caption = [u'  * ', caption]
             # logging.debug(str(caption))
             #
             # self._w = urwid.AttrMap(urwid.Text(
@@ -1196,7 +1196,7 @@ class HMenu(urwid.Columns):
     class SubMenu(urwid.WidgetWrap):
         def __init__(self, caption, choices, parent=None, norepeatlist=None):
             menubutton = HMenu.MenuButton(
-                [caption, u"\N{HORIZONTAL ELLIPSIS}"],
+                [caption, u"*"],
                 self.open_menu, norepeatlist=norepeatlist)
             super(HMenu.SubMenu, self).__init__(menubutton)
             self.shortcut = menubutton.shortkey
@@ -1205,7 +1205,7 @@ class HMenu(urwid.Columns):
             self.choices = choices
             listbox = urwid.ListBox(urwid.SimpleFocusListWalker([
                                                                     urwid.AttrMap(HMenu.MenuButton(
-                                                                        [caption, u"\N{HORIZONTAL ELLIPSIS}"],
+                                                                        [caption, u"*"],
                                                                         self.menu_back, showshort=False),
                                                                         'heading'),
                                                                     urwid.AttrMap(line, 'line'),
@@ -1230,7 +1230,7 @@ class HMenu(urwid.Columns):
     class Choice(urwid.WidgetWrap):
         def __init__(self, caption, cb=None, dados=None, parent=None, norepeatlist=None):
             h = HMenu.MenuButton(
-                [caption, u"\N{HORIZONTAL ELLIPSIS}"],
+                [caption, u"*"],
                 self.item_chosen, norepeatlist=norepeatlist)
 
             self.shortcut = h.shortkey
@@ -1243,7 +1243,7 @@ class HMenu(urwid.Columns):
 
             # listbox = urwid.ListBox(urwid.SimpleFocusListWalker([
             # urwid.AttrMap(HMenu.MenuButton(
-            # [caption, u"\N{HORIZONTAL ELLIPSIS}"],
+            # [caption, u"*"],
             # self.menu_back),
             # 'heading'),
             # urwid.AttrMap(line, 'line'),

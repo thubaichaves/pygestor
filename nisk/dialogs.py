@@ -217,7 +217,7 @@ class dlgInput(nisk.TUI.nestedwidget):
         self._widgetgetsession().ShowDialogWidget(overvars, self.khdl, lck, _nestedwidget=self, isDialog=isdialog)
 
     @staticmethod
-    def show(instrucions, _widgetpai, title='Neon Gestor', default_txt='', tocall=None, isdialog=True):
+    def show(instrucions, _widgetpai, title='Neon Gestor', default_txt='', tocall=None, isdialog=False):
         if isdialog:
             # log logging.debug('1 - %s' % util.timestampf())
             d = dlgInput(title, instrucions, _widgetpai=_widgetpai, default_txt=default_txt)

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+﻿#!/usr/bin/python
 #
 # Urwid curses output wrapper.. the horror..
 #    Copyright (C) 2004-2011  Ian Ward
@@ -37,7 +37,7 @@ from urwid.display_common import BaseScreen, RealTerminal, AttrSpec, \
 from urwid.compat import bytes, PYTHON3
 
 KEY_RESIZE = 410 # curses.KEY_RESIZE (sometimes not defined)
-KEY_MOUSE = 409 # curses.KEY_MOUSE
+KEY_MOUSE =539 # 409 # curses.KEY_MOUSE
 
 _curses_colours = {
     'default':        (-1,                    0),
@@ -90,6 +90,10 @@ class Screen(BaseScreen, RealTerminal):
             return
 
         if enable:
+            curses.mouseinterval(0)
+            curses.mousemask(curses.ALL_MOUSE_EVENTS
+                             )
+            '''
             curses.mousemask(0
                 | curses.BUTTON1_PRESSED | curses.BUTTON1_RELEASED
                 | curses.BUTTON2_PRESSED | curses.BUTTON2_RELEASED
@@ -101,10 +105,21 @@ class Screen(BaseScreen, RealTerminal):
                 | curses.BUTTON4_DOUBLE_CLICKED | curses.BUTTON4_TRIPLE_CLICKED
                 | curses.BUTTON_SHIFT | curses.BUTTON_ALT
                 | curses.BUTTON_CTRL)
+              '''
         else:
             raise NotImplementedError()
 
         self._mouse_tracking_enabled = enable
+
+
+    def process_keyqueue(self,codes, more_available):
+        code = codes[0]
+        if code >127 and code <256 and len(codes)==1:
+            key = chr(code)
+            key = key.decode('850')
+            return key, []
+        return escape.process_keyqueue(
+                    codes, more_available)
 
     def parse_input(self, event_loop, callback, codes, wait_for_more=True):
         """
@@ -129,7 +144,7 @@ class Screen(BaseScreen, RealTerminal):
         processed = []
         try:
             while codes:
-                run, codes = escape.process_keyqueue(
+                run, codes = self.process_keyqueue(
                     codes, wait_for_more)
                 processed.extend(run)
         except escape.MoreInputRequired:
@@ -185,10 +200,12 @@ class Screen(BaseScreen, RealTerminal):
         #todo
         curses.meta( None,1)
         curses.halfdelay(10) # use set_input_timeouts to adjust
-        self.stdscr.keypad(0)
+        self.stdscr.keypad(True)
 
         if not self._signal_keys_set:
             self._old_signal_keys = self.tty_signal_keys()
+            
+        self.set_mouse_tracking(True)
 
         super(Screen, self)._start()
 
@@ -378,6 +395,7 @@ class Screen(BaseScreen, RealTerminal):
         raw = []
         keys = []
 
+
         while key >= 0:
             raw.append(key)
             if key==KEY_RESIZE:
@@ -392,7 +410,7 @@ class Screen(BaseScreen, RealTerminal):
 
         try:
             while keys:
-                run, keys = escape.process_keyqueue(keys, True)
+                run, keys = self.process_keyqueue(keys, True)
                 processed += run
         except escape.MoreInputRequired:
             key = self._getch(self.complete_tenths)
@@ -406,7 +424,7 @@ class Screen(BaseScreen, RealTerminal):
                     keys.append(key)
                 key = self._getch_nodelay()
             while keys:
-                run, keys = escape.process_keyqueue(keys, False)
+                run, keys = self.process_keyqueue(keys, False)
                 processed += run
 
         if resize:

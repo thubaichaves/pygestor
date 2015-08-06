@@ -13,7 +13,7 @@ from pyGestorForms.frmListA import defaultPopupSelector_
 
 # TODO
 action_key_map = ActionMap(conf.keys)
-urwid.set_encoding("utf-8")
+#urwid.set_encoding("cp850")
 
 pyGestorModel.common.dbsession.configura_dburl(conf.cfg_dburl)
 for x in range(0,len(sys.argv)):
@@ -27,7 +27,7 @@ consultor = pyGestorModel.lists_a_consultor()
 nisk.widgets.wgtFieldBoxDb.defaultConsultor = consultor.consulta
 nisk.widgets.wgtFieldBoxDb.defaultPopupSelector = defaultPopupSelector_
 
-nisk.util.TerminalLogger.setup()
+#nisk.util.TerminalLogger.setup()
 logging.debug('''
 
 .

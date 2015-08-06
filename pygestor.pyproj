@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{a88f26dd-02d2-4d28-bf19-34e89f864e40}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>__init__.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId>{2af0f10d-7135-4994-9156-5d01c9c11b7e}</InterpreterId>
+    <InterpreterVersion>2.7</InterpreterVersion>
+    <CommandLineArguments>
+    </CommandLineArguments>
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+    <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="app.py" />
+    <Compile Include="appbase.py" />
+    <Compile Include="c.py" />
+    <Compile Include="conf.py" />
+    <Compile Include="controller.py" />
+    <Compile Include="crtl_contatos.py" />
+    <Compile Include="crtl_listas.py" />
+    <Compile Include="crtl_os.py" />
+    <Compile Include="debug.py" />
+    <Compile Include="escposx\constants.py" />
+    <Compile Include="escposx\escpos.py" />
+    <Compile Include="escposx\exceptions.py" />
+    <Compile Include="escposx\lpd.py" />
+    <Compile Include="escposx\printer.py" />
+    <Compile Include="escposx\__init__.py" />
+    <Compile Include="imprimir.py" />
+    <Compile Include="intallation.py" />
+    <Compile Include="miscwidgets.py" />
+    <Compile Include="morewidgets.py" />
+    <Compile Include="nisk\actionKeys.py" />
+    <Compile Include="nisk\browse.py" />
+    <Compile Include="nisk\datatable.py" />
+    <Compile Include="nisk\dialogs.py" />
+    <Compile Include="nisk\formmer.py" />
+    <Compile Include="nisk\ListBrowser.py" />
+    <Compile Include="nisk\nsatw.py" />
+    <Compile Include="nisk\TreeList.py" />
+    <Compile Include="nisk\TUI.py" />
+    <Compile Include="nisk\util.py" />
+    <Compile Include="nisk\widgets.py" />
+    <Compile Include="nisk\__init__.py" />
+    <Compile Include="palette_test.py" />
+    <Compile Include="pyGestorForms\enum.py" />
+    <Compile Include="pyGestorForms\frmContatos.py" />
+    <Compile Include="pyGestorForms\frmListA.py" />
+    <Compile Include="pyGestorForms\frmListContatos.py" />
+    <Compile Include="pyGestorForms\frmLogin.py" />
+    <Compile Include="pyGestorForms\frmMain.py" />
+    <Compile Include="pyGestorForms\__init__.py" />
+    <Compile Include="pyGestorModel\common.py" />
+    <Compile Include="pyGestorModel\orm_blobbank.py" />
+    <Compile Include="pyGestorModel\orm_contatos.py" />
+    <Compile Include="pyGestorModel\orm_listas.py" />
+    <Compile Include="pyGestorModel\orm_os.py" />
+    <Compile Include="pyGestorModel\proxies.py" />
+    <Compile Include="pyGestorModel\vo.py" />
+    <Compile Include="pyGestorModel\__init__.py" />
+    <Compile Include="rawx_display.py" />
+    <Compile Include="run.py" />
+    <Compile Include="run_tac.py" />
+    <Compile Include="signalx.py" />
+    <Compile Include="test.py" />
+    <Compile Include="test2.py" />
+    <Compile Include="test_colors.py" />
+    <Compile Include="tk.py" />
+    <Compile Include="txurwid.py" />
+    <Compile Include="urwidtrees\decoration.py" />
+    <Compile Include="urwidtrees\lru_cache.py" />
+    <Compile Include="urwidtrees\nested.py" />
+    <Compile Include="urwidtrees\tree.py" />
+    <Compile Include="urwidtrees\widgets.py" />
+    <Compile Include="urwidtrees\__init__.py" />
+    <Compile Include="urwid\canvas.py" />
+    <Compile Include="urwid\command_map.py" />
+    <Compile Include="urwid\compat.py" />
+    <Compile Include="urwid\container.py" />
+    <Compile Include="urwid\curses_display.py" />
+    <Compile Include="urwid\decoration.py" />
+    <Compile Include="urwid\display_common.py" />
+    <Compile Include="urwid\escape.py" />
+    <Compile Include="urwid\font.py" />
+    <Compile Include="urwid\graphics.py" />
+    <Compile Include="urwid\html_fragment.py" />
+    <Compile Include="urwid\lcd_display.py" />
+    <Compile Include="urwid\listbox.py" />
+    <Compile Include="urwid\main_loop.py" />
+    <Compile Include="urwid\monitored_list.py" />
+    <Compile Include="urwid\old_str_util.py" />
+    <Compile Include="urwid\raw_display.py" />
+    <Compile Include="urwid\signals.py" />
+    <Compile Include="urwid\split_repr.py" />
+    <Compile Include="urwid\tests\test_canvas.py" />
+    <Compile Include="urwid\tests\test_container.py" />
+    <Compile Include="urwid\tests\test_decoration.py" />
+    <Compile Include="urwid\tests\test_doctests.py" />
+    <Compile Include="urwid\tests\test_event_loops.py" />
+    <Compile Include="urwid\tests\test_graphics.py" />
+    <Compile Include="urwid\tests\test_listbox.py" />
+    <Compile Include="urwid\tests\test_str_util.py" />
+    <Compile Include="urwid\tests\test_text_layout.py" />
+    <Compile Include="urwid\tests\test_util.py" />
+    <Compile Include="urwid\tests\test_vterm.py" />
+    <Compile Include="urwid\tests\test_widget.py" />
+    <Compile Include="urwid\tests\util.py" />
+    <Compile Include="urwid\tests\__init__.py" />
+    <Compile Include="urwid\text_layout.py" />
+    <Compile Include="urwid\treetools.py" />
+    <Compile Include="urwid\util.py" />
+    <Compile Include="urwid\version.py" />
+    <Compile Include="urwid\vterm.py" />
+    <Compile Include="urwid\web_display.py" />
+    <Compile Include="urwid\widget.py" />
+    <Compile Include="urwid\wimp.py" />
+    <Compile Include="urwid\_curses_display.py" />
+    <Compile Include="urwid\__display_common.py" />
+    <Compile Include="urwid\__init__.py" />
+    <Compile Include="_txurwid.py" />
+    <Compile Include="__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="escposx" />
+    <Folder Include="nisk" />
+    <Folder Include="pyGestorForms" />
+    <Folder Include="pyGestorModel" />
+    <Folder Include="urwid" />
+    <Folder Include="urwidtrees" />
+    <Folder Include="urwid\tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="{2af0f10d-7135-4994-9156-5d01c9c11b7e}\2.7" />
+  </ItemGroup>
+  <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
+</Project>

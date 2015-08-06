@@ -5,11 +5,16 @@ import nisk
 import appbase
 import app
 import urwid
+import locale
 
 # if __name__ == '__main__':
 # try:
 
+
+#urwid.set_encoding("cp850")
+locale.setlocale(locale.LC_ALL, "")
 urwid.set_encoding("UTF-8")
+nisk.util.TerminalLogger.setup()
 app.app.Inicia()
 
 # except:

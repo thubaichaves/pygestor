@@ -50,6 +50,7 @@ def timestampf():
 
 
 def espera(lck):
+    raise 'espera/threads=obsoleto'
     def gett(lck):
         r = not lck.acquire(False)
         # logging.debug('gett - %s' % str(r))

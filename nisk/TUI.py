@@ -33,6 +33,7 @@ class tui:
             # screen = urwid.raw_display.Screen()
             # screen.set_terminal_properties(256)
 
+        import urwid
         self.loop = urwid.MainLoop(mainframe, colors, screen=screen, unhandled_input=self._khdl,
                                    pop_ups=True, input_filter=self._inputfilter,event_loop=eventloop)
 
@@ -100,8 +101,9 @@ class tui:
         return self.khdl(input)
 
     def _inputfilter(self, input, args):
+        self.currentsession._inputfilter(input, args)
         try:
-            self.currentsession._inputfilter(input, args)
+            pass
         except:
             logging.debug('_inputfilter')
 
@@ -208,6 +210,10 @@ class session:
         self._logout()
 
     def _inputfilter(self, input, args):
+        if input==['ctrl c']:            
+            #raise 'ctrl c'
+            raise urwid.ExitMainLoop()
+            sys.exit(0)
         self._logout_time = 30
         return input
 
