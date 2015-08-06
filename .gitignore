@@ -46,6 +46,9 @@ artifacts/
 *_p.c
 *_i.h
 *.ilk
+*.pyc
+*.fdb
+*.log
 *.meta
 *.obj
 *.pch
