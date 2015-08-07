@@ -6,6 +6,7 @@ import appbase
 import app
 import urwid
 import locale
+import logging
 
 # if __name__ == '__main__':
 # try:
@@ -15,6 +16,15 @@ import locale
 locale.setlocale(locale.LC_ALL, "")
 urwid.set_encoding("UTF-8")
 nisk.util.TerminalLogger.setup()
+logging.debug('''
+.
+.
+*************************************
+*****   INICIO               ********
+*************************************
+.
+.
+''')
 app.app.Inicia()
 
 # except:

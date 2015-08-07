@@ -187,3 +187,12 @@ class binder:
 
     def onCancel(self, evt):
         pass
+
+    def dado_get(self,field):
+        self.m = 1 if isinstance(self._dados, dict) else 0
+        if m:
+            return self._dados[field]
+        else:
+            return getattr(self._dados, field)
+        return
+

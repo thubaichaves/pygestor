@@ -129,6 +129,7 @@ class ListBrowserBase(dlger):
 
         del self.fn[:]
         self.fn.append((urwid.Text(":"), None))
+        self.fn.append((urwid.Text("-"), None))
 
         if needresort:
             dadosx = util.defaultv(consulta, 'dados', {})

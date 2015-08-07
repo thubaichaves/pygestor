@@ -5,19 +5,12 @@ from nisk import *
 from nisk.nsatw import *
 from nisk.formmer import tfld
 import nisk.dialogs
-# import nisk.util as util
-
 import imprimir
 import urwid
-#
-# import puremvc.patterns.facade
-# import puremvc.patterns.command
-# import puremvc.interfaces
 import puremvc.patterns.mediator
 import pyGestorModel
 import conf
 import app
-
 from nisk.TUI import nestedwidget
 import pyGestorForms.frmListContatos
 from pyGestorForms import frmListA
@@ -54,6 +47,7 @@ class crtl_os:
             crtl_os.os_new.smarca = step = step + 1
             crtl_os.os_new.sresp = step = step + 1
             crtl_os.os_new.sfim = step = step + 1
+            crtl_os.os_new.spos = step = step + 1
             #
             self.step = crtl_os.os_new.scliente
             self.r, self.s = None, None
@@ -71,6 +65,8 @@ class crtl_os:
                 (self.r, self.dados['marca'], z) = data
             elif self.step == crtl_os.os_new.sresp:
                 (self.r, self.dados['usrresp'], z) = data
+            elif self.step == crtl_os.os_new.sfim:
+                (self.r, self.dados['os'], z) = data
 
             if self.r == dlger.ok:
                 self.step = self.step + 1
@@ -96,11 +92,16 @@ class crtl_os:
             elif step == crtl_os.os_new.sresp:
                 w = frmListA.frmListAScreens2({'rtab': 'lists_a', 'ltab': 'sysus'})
                 w.Show(_widgetpai=self._widgetpai, isdialog=False, tocall=self.callback)
-
+                
             elif step == crtl_os.os_new.sfim:
                 w = formmer_os_new(params={'new': True, 'dados': self.dados}, dados=self.dados)
                 w._widgetregistrapai(self._widgetpai)
-                w.show(isdialog=False)
+                w.show(isdialog=False, tocall=self.callback)
+
+            elif step == crtl_os.os_new.spos:
+                w = formmer_os_edit(params={'os': self.dados['os']})
+                w._widgetregistrapai(self._widgetpai)
+                w.show()
 
             elif step == crtl_os.os_new.scancela:
                 self._widgetsession.UnShowWidget()
@@ -161,6 +162,8 @@ class formmer_os_new(formmer.formmer):
         self.params = params
         self.dados = dados
         self.cc = nisk.widgets.HMenu(conf.menu_os_add, None, defaultcb=self.callbacks, width=24, selfclose=True)
+        self.tocall=None
+        self.r = dlger.void
 
         formmer.formmer.__init__(self, [
             (tfld.itextbox, 'OS', 'os'),
@@ -185,9 +188,9 @@ class formmer_os_new(formmer.formmer):
 
     def callbacks(self, backref):
         if backref in ('concluir', 'f6'):
-            self.binder.handleCommand('concluir')
+            self.act_concluir()
             return True
-        elif backref in ('cancelar',):
+        elif backref in ('cancelar','esc'):
             self.binder.handleCommand('cancelar', )
             return True
         else:
@@ -196,19 +199,24 @@ class formmer_os_new(formmer.formmer):
                 logging.debug('Não Identificado: ' + str(backref))
             pass
         return False
+    
+    def act_concluir(self):
+        self._widgetsession.UnShowWidget()
+
+    def act_concluir(self):
+        self.binder.handleCommand('concluir')
+        self.r = dlger.ok
+        self.act_concluir()
+        
+    def _widgetonunshow(self):
+        dlger._widgetonunshow(self)
+        if self.tocall:
+            self.tocall((self.r, self.binder.dado_get('os'), self._params))
 
     def unhandled_input(self, k):
-        if k in ('esc',):
-            if self.binder.get_isdirty():
-                return True
-
         if k in ('f1', 'meta m'):
             self.cc.onmenuopen()
             return True
-
-        if k in ('f6',):
-            return True
-
         return self.callbacks(k)
         return False
 
@@ -243,7 +251,7 @@ class formmer_os_new(formmer.formmer):
         lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='Nova OS'), 'windowsborder', 'windowsborder_of', )
         return lb
 
-    def show(self, isdialog=True):
+    def show(self, isdialog=True, tocall=None):
         x = self.binder.consulta(self.params)
         if x:
             self._widgetsession.ShowDialogWidgetOverlay(self.get_frame(), v_hdlr=self.unhandled_input,

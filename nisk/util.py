@@ -220,6 +220,8 @@ class TerminalLogger(object):
         if TerminalLogger.logfile is None:
             TerminalLogger.logfile = filename
 
+        TerminalLogger.logfile = os.path.abspath(TerminalLogger.logfile)
+
         self.terminal = sys.stdout
         self.filename = filename
         self.iserr = iserr
@@ -228,7 +230,7 @@ class TerminalLogger(object):
     def PintOnScreen(self, txt):
         pass
 
-    def write(self, message):
+    def write(self, message,a=0,b=0):
         # self.terminal.write(message)
         if self.log is None:
             self.log = open(self.filename, "a")
@@ -251,7 +253,9 @@ class TerminalLogger(object):
         # logging.critical('this is critical')
         # TerminalLogger.logstream = open(TerminalLogger.logfile, "a")
         # logging.basicConfig(stream=TerminalLogger.TerminalLogger, level=logging.DEBUG)
-        logging.basicConfig(filename=TerminalLogger.logfile, level=logging.DEBUG)
+        # x = logging.FileHandler(TerminalLogger.logfile,  encoding=None, delay=False)
+        logging.basicConfig(stream =sys.stdout, level=logging.DEBUG)
+        logging.debug('''.*************************************.''')   
 
     @staticmethod
     def flush():

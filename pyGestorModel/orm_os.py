@@ -43,7 +43,7 @@ class os_os(Base):
     prazoorc = Column(String(20))
     ns = Column(String(20))
     #
-    dataent = Column(DateTime)
+    dataent = Column(DateTime,server_default=FetchedValue())
     dataok = Column(DateTime)
     datasai = Column(DateTime)
     dta = Column(DateTime)
@@ -83,7 +83,7 @@ class os_os(Base):
     # intb = Column(Integer)
     # intc = Column(Integer)
     # intd = Column(Integer)
-    inte = Column(Integer)
+    inte = Column(Integer,server_default="0")
     # intf = Column(Integer)
     # intg = Column(Integer)
     # inth = Column(Integer)

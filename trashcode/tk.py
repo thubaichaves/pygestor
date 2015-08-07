@@ -1,4 +1,4 @@
-from Tkinter import *
+﻿from Tkinter import *
 import ttk
 import nisk.util
 

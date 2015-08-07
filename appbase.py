@@ -26,20 +26,3 @@ for x in range(0,len(sys.argv)):
 consultor = pyGestorModel.lists_a_consultor()
 nisk.widgets.wgtFieldBoxDb.defaultConsultor = consultor.consulta
 nisk.widgets.wgtFieldBoxDb.defaultPopupSelector = defaultPopupSelector_
-
-#nisk.util.TerminalLogger.setup()
-logging.debug('''
-
-.
-.
-*************************************
-*****   INICIO               ********
-*************************************
-.
-.
-''')
-
-
-# sys.stdout = nisk.util.TerinalLogger()
-# sys.stderr = nisk.util.TerinalLogger(filename='err.log')
-

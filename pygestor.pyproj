@@ -26,13 +26,13 @@
   <ItemGroup>
     <Compile Include="app.py" />
     <Compile Include="appbase.py" />
-    <Compile Include="c.py" />
+    <Compile Include="trashcode\c.py" />
     <Compile Include="conf.py" />
     <Compile Include="controller.py" />
     <Compile Include="crtl_contatos.py" />
     <Compile Include="crtl_listas.py" />
     <Compile Include="crtl_os.py" />
-    <Compile Include="debug.py" />
+    <Compile Include="trashcode\debug.py" />
     <Compile Include="escposx\constants.py" />
     <Compile Include="escposx\escpos.py" />
     <Compile Include="escposx\exceptions.py" />
@@ -40,9 +40,9 @@
     <Compile Include="escposx\printer.py" />
     <Compile Include="escposx\__init__.py" />
     <Compile Include="imprimir.py" />
-    <Compile Include="intallation.py" />
-    <Compile Include="miscwidgets.py" />
-    <Compile Include="morewidgets.py" />
+    <Compile Include="trashcode\intallation.py" />
+    <Compile Include="trashcode\miscwidgets.py" />
+    <Compile Include="trashcode\morewidgets.py" />
     <Compile Include="nisk\actionKeys.py" />
     <Compile Include="nisk\browse.py" />
     <Compile Include="nisk\datatable.py" />
@@ -55,7 +55,7 @@
     <Compile Include="nisk\util.py" />
     <Compile Include="nisk\widgets.py" />
     <Compile Include="nisk\__init__.py" />
-    <Compile Include="palette_test.py" />
+    <Compile Include="trashcode\palette_test.py" />
     <Compile Include="pyGestorForms\enum.py" />
     <Compile Include="pyGestorForms\frmContatos.py" />
     <Compile Include="pyGestorForms\frmListA.py" />
@@ -75,10 +75,10 @@
     <Compile Include="run.py" />
     <Compile Include="run_tac.py" />
     <Compile Include="signalx.py" />
-    <Compile Include="test.py" />
-    <Compile Include="test2.py" />
-    <Compile Include="test_colors.py" />
-    <Compile Include="tk.py" />
+    <Compile Include="trashcode\test.py" />
+    <Compile Include="trashcode\test2.py" />
+    <Compile Include="trashcode\test_colors.py" />
+    <Compile Include="trashcode\tk.py" />
     <Compile Include="txurwid.py" />
     <Compile Include="urwidtrees\decoration.py" />
     <Compile Include="urwidtrees\lru_cache.py" />
@@ -127,14 +127,15 @@
     <Compile Include="urwid\web_display.py" />
     <Compile Include="urwid\widget.py" />
     <Compile Include="urwid\wimp.py" />
-    <Compile Include="urwid\_curses_display.py" />
-    <Compile Include="urwid\__display_common.py" />
+    <Compile Include="trashcode\_curses_display.py" />
+    <Compile Include="trashcode\__display_common.py" />
     <Compile Include="urwid\__init__.py" />
-    <Compile Include="_txurwid.py" />
+    <Compile Include="trashcode\_txurwid.py" />
     <Compile Include="__init__.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="escposx" />
+    <Folder Include="trashcode\" />
     <Folder Include="nisk" />
     <Folder Include="pyGestorForms" />
     <Folder Include="pyGestorModel" />
