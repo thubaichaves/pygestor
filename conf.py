@@ -100,42 +100,52 @@ const_PALETTE = [
     ('windowsborder', 'white', 'dark green','bold,underline','#668', '#035'),
     ('windowsborder_of', 'white', 'dark green','bold,underline','#ddf', '#06a'),
     ('foot', 'light gray', 'dark blue', 'standout'),
-    ('body', 'black', 'light gray'),
-    ('body_of', 'black', 'dark cyan'),
+    ('body', 'white', 'dark gray'),
+    ('body_of', 'black', 'dark gray'),
     ('key', 'dark blue', 'light gray'),
     ('title', 'white', 'black', 'bold'),
-    ('field', 'white', 'dark cyan','','#ffd', '#00a'),  # information fields, Search: etc.
-    ('field_of', 'white', 'dark blue', 'bold','#ff8', '#806'),  # information fields, Search: etc.
+
+    ('field', 'light gray', 'dark blue'),#'','#ffd', '#00a'),
+    # ('field', 'white', 'dark cyan'),#'','#ffd', '#00a'),  
+    ('field_of', 'white', 'light red'),# 'bold','#ff8', '#806'),  ,
+
+    ('fieldb',  'light gray', 'dark green'),#'','#ffd', '#00a'),
+    ('field_ofb', 'white', 'light red'),# 'bold','#ff8', '#806'),
+
+    ('field_cap', 'light gray', 'dark blue'),#'','#ffd', '#00a'),
+    ('fieldb_cap', 'light gray', 'dark green'),#'','#ffd', '#00a'),
+    ('field_cap_of', 'black', 'light gray'),# 'bold','#ff8', '#806'),  ,
+    ('field_cap_ofb', 'black', 'dark gray'),# 'bold','#ff8', '#806'),  
 
 
 
     #################################################################
-    ('menubar', 'white,bold', 'dark blue'),
-    ('menubar_focus', 'dark blue,bold', 'white'),
-    ('menuitem', 'white,bold', 'dark blue'),
-    ('menuitem_focus', 'dark blue,bold', 'white'),
+    ('menubar', 'white', 'dark blue'),
+    ('menubar_focus', 'dark blue', 'white'),
+    ('menuitem', 'white', 'dark blue'),
+    ('menuitem_focus', 'dark blue', 'white'),
     #################################################################
-    ('Field', 'dark green, bold', 'black'),  # information fields, Search: etc.
+    ('Field', 'dark green', 'black'),  
     ('OnFocusBg', 'black', 'light blue'),  # background when a widget is focused
     ('Info', 'white', 'light blue'),  # information in fields
     ('Bg', 'dark gray', 'black'),  # screen background
     ('InfoFooterText', 'white', 'dark blue'),  # footer text
-    ('InfoFooterHotkey', 'dark cyan, bold', 'dark blue'),  # hotkeys in footer text
-    ('InfoFooter', 'yellow, bold', 'dark blue'),  # footer background
-    ('InfoHeaderText', 'white, bold', 'dark blue'),  # header text
+    ('InfoFooterHotkey', 'white', 'light blue'),  # hotkeys in footer text
+    ('InfoFooter', 'yellow', 'dark blue'),  # footer background
+    ('InfoHeaderText', 'white', 'dark blue'),  # header text
     ('InfoHeader', 'black', 'dark blue'),  # header background
     ('GeneralInfo', 'brown', 'black'),  # main menu text
-    ('LastModifiedField', 'dark cyan, bold', 'black'),  # Last modified:
+    ('LastModifiedField', 'dark cyan', 'black'),  # Last modified:
     ('LastModifiedDate', 'dark cyan', 'black'),  # info in Last modified:
     ('PopupMessageText', 'black', 'dark cyan'),  # popup message text
-    ('SearchBoxHeaderText', 'light gray, bold', 'dark cyan'),  # field names in the search box
+    ('SearchBoxHeaderText', 'light gray', 'dark cyan'),  # field names in the search box
     ('SearchBoxHeaderBg', 'black', 'dark cyan'),  # field name background in the search box
-    ('Relogio', 'white, bold', 'dark red'),  # background when a widget is focused
+    ('Relogio', 'white', 'dark red'),  # background when a widget is focused
 
     ('flagged', 'black', 'dark green', ('bold', 'underline')),
     ('focus', 'light gray', 'dark blue', 'standout'),
     ('flagged focus', 'yellow', 'dark cyan',
-     ('bold', 'standout', 'underline')),
+    ('bold', 'standout', 'underline')),
     ('head', 'yellow', 'black', 'standout'),
     ('dirmark', 'black', 'dark cyan', 'bold'),
     ('flag', 'dark gray', 'light gray'),
@@ -171,8 +181,8 @@ menu_Menus = {
 
 sizes = {
     "ListBrowser1": ( ('fixed left', 8), 120, ('fixed top', 6), 40),
-    "wgtFieldBoxDb1": (14, 5  ),
-    "wgtFieldBox": 14,
+    "wgtFieldBoxDb1": (18, 5  ),
+    "wgtFieldBox": 18,
     "statusbarbuttonA": 20,
 
 

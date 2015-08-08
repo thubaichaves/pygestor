@@ -29,32 +29,61 @@ class formmer(urwid.ListBox, nisk.TUI.nestedwidget):
         self.lwlist = []
         self.isdirty = False
         self.divider = urwid.Divider(u' ')
+        self.dividerX = urwid.Divider(u' - ')
         self.lwlist.append(self.divider)
-
+        
+        estreitos_list = []
+        inv=0
         for x in campos:
             t = x[0]  # tipo
             c = x[1]  # caption
             b = x[2]  # binding
             o = x[3] if len(x) > 3 else {}  # options
             #
+            
+            estreito=util.defaultv(o, 'estreito', 0)
+            if estreito and len(estreitos_list)>1:
+                pass
+            else:
+                inv=inv+1
+
+
+            cor = ('field','field_of','field_cap') if inv % 2 else('fieldb','field_of','fieldb_cap')
+            
+
             if t == tfld.textbox:
-                tf = widgets.wgtFieldBox(caption=c, bindf=b)
+                tf = widgets.wgtFieldBox(caption=c, bindf=b,cor=cor)
 
             elif t == tfld.itextbox:
-                tf = widgets.wgtIntFieldBox(caption=c, bindf=b)
+                tf = widgets.wgtIntFieldBox(caption=c, bindf=b,
+                                            readonly=util.defaultv(o, 'readonly', 0))
 
             elif t == tfld.fieldbox:
                 tf = widgets.wgtFieldBoxDb(caption=c, bindf=b,
                                            ltabela=util.defaultv(o, 'ltab', ''),
-                                           tabela=util.defaultv(o, 'tab', ''))
+                                           tabela=util.defaultv(o, 'tab', ''),cor=cor)
             elif t == tfld.datepicker:
-                tf = widgets.wgtDateFieldBox(caption=c, bindf=b)
+                tf = widgets.wgtDateFieldBox(caption=c, bindf=b,cor=cor)
             else:
                 continue
                 #
             self.widgets[tf] = (c, b, o)
-            self.lwlist.append(tf)
-            self.lwlist.append(self.divider)
+
+            if estreito:            
+                estreitos_list.append(tf)
+                if len(estreitos_list)==1:
+                    estreitos_list.append((3,self.dividerX))
+                if len(estreitos_list)>2:
+                    self.lwlist.append( urwid.Columns(estreitos_list))
+                    estreitos_list=[]
+            else:
+                if estreitos_list:
+                    estreitos_list.append(self.divider)
+                    self.lwlist.append( urwid.Columns(estreitos_list))
+                    estreitos_list=[]
+                self.lwlist.append(tf)
+            
+            #self.lwlist.append(self.divider)
             #
             if self.fields.has_key(b):
                 self.fields[b][0].append(tf)
@@ -190,7 +219,7 @@ class binder:
 
     def dado_get(self,field):
         self.m = 1 if isinstance(self._dados, dict) else 0
-        if m:
+        if self.m:
             return self._dados[field]
         else:
             return getattr(self._dados, field)

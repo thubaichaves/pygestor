@@ -169,8 +169,8 @@ class formmer_os_new(formmer.formmer):
             (tfld.itextbox, 'OS', 'os'),
             (tfld.fieldbox, 'Tipo de Equip.', 'tipo', {'ltab': 'ostip'}),
             (tfld.fieldbox, 'Marca', 'marca', {'ltab': 'osfab'}),
-            (tfld.textbox, 'Modelo', 'modelo'),
-            (tfld.textbox, 'N° Série', 'ns'),
+            (tfld.textbox, 'Modelo', 'modelo', {'estreito': 2}),
+            (tfld.textbox, 'N° Série', 'ns', {'estreito': 2}),
             (tfld.fieldbox, 'Técnico Resp.', 'usrresp', {'ltab': 'sysus'}),
             (tfld.fieldbox, 'Cliente', 'cliente', {'tab': 'contatos'}),
             (tfld.datepicker, 'Data de Entrada', 'dataent',),
@@ -200,18 +200,18 @@ class formmer_os_new(formmer.formmer):
             pass
         return False
     
-    def act_concluir(self):
+    def act_sair(self):
         self._widgetsession.UnShowWidget()
 
     def act_concluir(self):
         self.binder.handleCommand('concluir')
         self.r = dlger.ok
-        self.act_concluir()
+        self.act_sair()
         
     def _widgetonunshow(self):
-        dlger._widgetonunshow(self)
         if self.tocall:
-            self.tocall((self.r, self.binder.dado_get('os'), self._params))
+            self.tocall((self.r, self.binder.dado_get('os'), self.params))
+        #nisk.TUI.nestedwidget._widgetonunshow(self)
 
     def unhandled_input(self, k):
         if k in ('f1', 'meta m'):
@@ -228,7 +228,7 @@ class formmer_os_new(formmer.formmer):
         # bkg = widgets.SBListBox(self, (u"\u2593", "handle"), (u"\u2592", "scrollbar_bg"))
         bkg = widgets.SBListBox(self, (u"#", "handle"), (u"-", "scrollbar_bg"))
         bkg = urwid.Padding(widgets.SBListBox(self), left=1, right=1)
-        bkg = urwid.AttrWrap(bkg, 'body', 'body_of')
+        bkg = urwid.AttrWrap(bkg, 'body')
 
         fw = urwid.Frame(bkg)
 
@@ -248,10 +248,11 @@ class formmer_os_new(formmer.formmer):
         self.cc.setwid(mt)
         self.cc.onmenuopen()
 
-        lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='Nova OS'), 'windowsborder', 'windowsborder_of', )
+        lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='Nova OS'), 'windowsborder' )
         return lb
 
     def show(self, isdialog=True, tocall=None):
+        self.tocall = tocall
         x = self.binder.consulta(self.params)
         if x:
             self._widgetsession.ShowDialogWidgetOverlay(self.get_frame(), v_hdlr=self.unhandled_input,
@@ -282,11 +283,12 @@ class formmer_os_edit(formmer.formmer, dlger):
         self.cc = nisk.widgets.HMenu(conf.menu_os_edit, None, defaultcb=self.callbacks, width=24, selfclose=True)
 
         formmer.formmer.__init__(self, [
+            (tfld.itextbox, 'OS', 'os', {'readonly': 1}),
             (tfld.fieldbox, 'Cliente', 'cliente', {'tab': 'contatos'}),
             (tfld.fieldbox, 'Tipo de Equip.', 'tipo', {'ltab': 'ostip'}),
             (tfld.fieldbox, 'Marca', 'marca', {'ltab': 'osfab'}),
-            (tfld.textbox, 'Modelo', 'modelo'),
-            (tfld.textbox, 'N° Série', 'ns'),
+            (tfld.textbox, 'Modelo', 'modelo', {'estreito': 2}),
+            (tfld.textbox, 'N° Série', 'ns', {'estreito': 2}),
             (tfld.textbox, 'Acessórios', 'acess'),
             (tfld.textbox, 'Estado de Conservação', 'conserva'),
             (tfld.textbox, 'Solicitação', 'solicita'),

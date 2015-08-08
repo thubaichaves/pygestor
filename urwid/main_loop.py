@@ -429,8 +429,9 @@ class MainLoop(object):
                     if sec <= 0:
                         break
 
-            if keys or raw:
-                keys = self.input_filter(keys, raw)
+            #if keys or raw:
+            #    keys = self.input_filter(keys, raw)
+            keys = self.input_filter(keys, raw)
 
             if keys:
                 self.process_input(keys)

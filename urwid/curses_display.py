@@ -39,7 +39,7 @@ from urwid.compat import bytes, PYTHON3
 KEY_RESIZE = 410 # curses.KEY_RESIZE (sometimes not defined)
 KEY_MOUSE =539 # 409 # curses.KEY_MOUSE
 
-_curses_colours = {
+__curses_colours = {
     'default':        (-1,                    0),
     'black':          (curses_.COLOR_BLACK,    0),
     'dark red':       (curses_.COLOR_RED,      0),
@@ -235,7 +235,7 @@ class Screen(BaseScreen, RealTerminal):
         """
         if not self.has_color:
             return
-
+        '''
         for fg in xrange(8):
             for bg in xrange(8):
                 # leave out white on black
@@ -244,6 +244,15 @@ class Screen(BaseScreen, RealTerminal):
                     continue
 
                 curses.init_pair(bg * 8 + 7 - fg, fg, bg)
+        '''
+        for fg in xrange(16):
+            for bg in xrange(16):
+                # leave out white on black
+                if fg == curses_.COLOR_WHITE and \
+                   bg == curses_.COLOR_BLACK:
+                    continue
+
+                curses.init_pair(bg * 16 + 15 - fg, fg, bg)
 
     def _curs_set(self,x):
         if self.cursor_state== "fixed" or x == self.cursor_state:
@@ -533,20 +542,28 @@ class Screen(BaseScreen, RealTerminal):
             a = p[0]
 
         if self.has_color:
+            
             if a.foreground_basic:
-                if a.foreground_number >= 8:
-                    fg = a.foreground_number - 8
+                if a.foreground_number >= 16:
+                    fg = a.foreground_number - 16
                 else:
                     fg = a.foreground_number
             else:
-                fg = 7
+                fg = 15
 
             if a.background_basic:
                 bg = a.background_number
             else:
                 bg = 0
 
-            attr = curses_.color_pair(bg * 8 + 7 - fg)
+            attr = curses_.color_pair(bg * 16 + 15 - fg)
+
+            '''
+            bg = _curses_colours[a.background][0]
+            fg = _curses_colours[a.foreground][0]+_curses_colours[a.foreground][1]*8
+            
+            attr = curses_.color_pair(bg * 16 +  fg)
+            '''
         else:
             attr = 0
 

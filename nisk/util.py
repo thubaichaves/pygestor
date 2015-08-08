@@ -251,11 +251,10 @@ class TerminalLogger(object):
         # logging.addHandler(handler)
         # logging.debug('this is debug')
         # logging.critical('this is critical')
-        # TerminalLogger.logstream = open(TerminalLogger.logfile, "a")
-        # logging.basicConfig(stream=TerminalLogger.TerminalLogger, level=logging.DEBUG)
-        # x = logging.FileHandler(TerminalLogger.logfile,  encoding=None, delay=False)
-        logging.basicConfig(stream =sys.stdout, level=logging.DEBUG)
-        logging.debug('''.*************************************.''')   
+        #TerminalLogger.logstream = open(TerminalLogger.logfile, "a")
+        #logging.basicConfig(stream=TerminalLogger.TerminalLogger, level=logging.DEBUG)
+        #logging.basicConfig(stream =sys.stderr, level=logging.DEBUG)
+        #logging.debug('''.*************************************.''')   
 
     @staticmethod
     def flush():

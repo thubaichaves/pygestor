@@ -112,22 +112,40 @@ LIGHT_MAGENTA = 'light magenta'
 LIGHT_CYAN = 'light cyan'
 WHITE = 'white'
 
+# _BASIC_COLORS = [
+#     BLACK,
+#     DARK_RED,
+#     DARK_GREEN,
+#     BROWN,
+#     DARK_BLUE,
+#     DARK_MAGENTA,
+#     DARK_CYAN,
+#     LIGHT_GRAY,
+#     DARK_GRAY,
+#     LIGHT_RED,
+#     LIGHT_GREEN,
+#     YELLOW,
+#     LIGHT_BLUE,
+#     LIGHT_MAGENTA,
+#     LIGHT_CYAN,
+#     WHITE,
+# ]
 _BASIC_COLORS = [
     BLACK,
-    DARK_RED,
-    DARK_GREEN,
-    BROWN,
     DARK_BLUE,
-    DARK_MAGENTA,
+    DARK_GREEN,
     DARK_CYAN,
+    DARK_RED,
+    DARK_MAGENTA,
+    BROWN,
     LIGHT_GRAY,
     DARK_GRAY,
-    LIGHT_RED,
-    LIGHT_GREEN,
-    YELLOW,
     LIGHT_BLUE,
-    LIGHT_MAGENTA,
+    LIGHT_GREEN,
     LIGHT_CYAN,
+    LIGHT_RED,
+    LIGHT_MAGENTA,
+    YELLOW,
     WHITE,
 ]
 

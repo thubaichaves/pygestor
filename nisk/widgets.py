@@ -85,7 +85,13 @@ class wgtIntEdit(urwid.IntEdit):
     def __init__(self, caption="", default=None):
         self._lastfocus = False
         self._recem = False
-        urwid.IntEdit.__init__(self, caption, default)
+        #self.readonly  =readonly
+        #if readonly:
+        #    defaultx=default if default else '' 
+        #    urwid.Text.__init__(self,defaultx)
+        #else:
+        urwid.IntEdit.__init__(self,caption,default)
+
         self._lastvalue = default
         self._lastlastvalue = default
 
@@ -125,7 +131,7 @@ class wgtIntEdit(urwid.IntEdit):
             self._recem = False
             self.set_edit_text('')
         (maxcol,) = size
-        unhandled = Edit.keypress(self, (maxcol,), key)
+        unhandled = urwid.IntEdit.keypress(self, (maxcol,), key)
         return unhandled
 
     def value(self):
@@ -281,24 +287,31 @@ class wgtFieldBox(Columns, bindablefield):
     signals = ['change']
 
     def __init__(self, caption=u'',
-                 width_cap=conf.sizes['wgtFieldBoxDb1'][0], bindf=None, enterIsTab=False):
+                 width_cap=conf.sizes['wgtFieldBoxDb1'][0], bindf=None, enterIsTab=False,cor=None):
 
         self._lastvalue = ''
         self._value = ''
         self.dirty = False
         self.caption = caption
         self._enterIsTab = enterIsTab
-        self.capField = urwid.Text( nisk.util.asUnicode(( u'* ', caption)))
+        self.capField = cap = urwid.Text( nisk.util.asUnicode(( u'* ', caption)))
         # self.capField = urwid.Text([('key', caption[:1]), caption[1:]])
         self.textField = urwid.Edit('')
         self.textField.multiline = not enterIsTab
         urwid.connect_signal(self.textField, 'change', self.edit_changed)
 
+        if not cor:
+            cor=( 'field', 'field_of')
+        if len(cor)==3:
+            cap = urwid.AttrWrap(cap,cor[2])
+        if len(cor)==4:
+            cap = urwid.AttrWrap(cap,cor[2],cor[3])
+
         self.__super.__init__([
-            ('fixed', width_cap, self.capField),
+            ('fixed', width_cap, cap),
             # ('fixed', width_cap, urwid.AttrWrap( self.capField,'menubar')),
             # ('fixed', 2, urwid.Text([('key', '|'), ' \n'])),
-            urwid.AttrWrap(self.textField, 'field', 'field_of')
+            urwid.AttrWrap(self.textField,cor[0],cor[1])
         ], dividechars=0, focus_column=1)
 
     def setValue(self, txt, writelast=True):
@@ -348,14 +361,37 @@ class wgtFieldBox(Columns, bindablefield):
 
         elif key == "shift tab":
             return 'up'
-
+        
         elif key == "f4":
             # nisk.util.paralelo(self.seleciona_popup)
+            pass
+        elif key == "f5":
+            nisk.util.paralelo(self.edit_tk)
             pass
 
         else:
             # key wasn't handled
             return key
+    def edit_tk(self):    
+        from Tkinter import *
+        import ttk
+
+        root = Tk()
+        mainframe = ttk.Frame(root, padding="3 3 12 12")
+        mainframe.grid(column=0, row=0, sticky=(N, W, E, S))
+        mainframe.columnconfigure(0, weight=1)
+        mainframe.rowconfigure(0, weight=1)
+
+        
+        feet = StringVar()
+        feet.set(self.GetValue())
+        feet_entry = ttk.Entry(mainframe, width=37, textvariable=feet)
+        feet_entry.grid(column=2, row=1, sticky=(W, E))
+
+        for child in mainframe.winfo_children(): child.grid_configure(padx=5, pady=5)
+
+        feet_entry.focus()
+        root.mainloop()
 
     def GetValue(self):
         x = self.textField.get_edit_text()
@@ -378,23 +414,32 @@ class wgtIntFieldBox(Columns, bindablefield):
     signals = ['change']
 
     def __init__(self, caption=u'',
-                 width_cap=conf.sizes['wgtFieldBoxDb1'][0], bindf=None, enterIsTab=False):
+                 width_cap=conf.sizes['wgtFieldBoxDb1'][0], bindf=None, enterIsTab=False,cor=None,readonly=False):
 
         self._TextValue = ''
         self.dirty = False
+        self.readonly=readonly
         self._enterIsTab = enterIsTab
         self.capField = urwid.Text(nisk.util.asUnicode(( u'* ', caption)))
         self.textField = wgtIntEdit('')
+        self.readonlyField = Text('')
         urwid.connect_signal(self.textField, 'valuechange', self.edit_changed)
+        if readonly:
+            field = urwid.AttrWrap(self.readonlyField, 'field', 'field_of')
+        else:
+            field = urwid.AttrWrap(self.textField, 'field', 'field_of')
 
         self.__super.__init__([
             ('fixed', width_cap, self.capField),
             # ('fixed', width_cap, urwid.AttrWrap( self.capField,'menubar')),
             # ('fixed', 2, urwid.Text([('key', '|'), ' \n'])),
-            urwid.AttrWrap(self.textField, 'field', 'field_of')
+            field
         ], dividechars=0, focus_column=1)
 
     def setValue(self, txt):
+        if self.readonly:
+            s = str(txt) if txt else ''
+            self.readonlyField.set_text(s)
         return self.textField.setvalue(txt)
 
     def edit_changed(self, x, d, *arg):
@@ -436,7 +481,7 @@ class wgtDateFieldBox(Columns, bindablefield):
     signals = ['change']
 
     def __init__(self, caption=u'',
-                 width_cap=conf.sizes['wgtFieldBoxDb1'][0], bindf=None, enterIsTab=False, dformat='%d/%m/%Y %H:%M'):
+                 width_cap=conf.sizes['wgtFieldBoxDb1'][0], bindf=None, enterIsTab=False, dformat='%d/%m/%Y %H:%M',cor=None):
 
         self._TextValue = ''
         self.dirty = False
@@ -510,7 +555,7 @@ class wgtFieldBoxDb(urwid.Pile, bindablefield):
     def __init__(self, ltabela='', tabela='', caption=u'',
                  consultor=None,
                  width_cap=conf.sizes['wgtFieldBoxDb1'][0],
-                 width_cod=conf.sizes['wgtFieldBoxDb1'][1], bindf=None, params=None):
+                 width_cod=conf.sizes['wgtFieldBoxDb1'][1], bindf=None, params=None,cor=None):
 
         self.params = params if params else {}
 
@@ -536,7 +581,7 @@ class wgtFieldBoxDb(urwid.Pile, bindablefield):
         self._orm = None
         self._iniciado = False
 
-        self.capField = urwid.Text(nisk.util.asUnicode(( u'* ', caption)))
+        self.capField = cap=urwid.Text(nisk.util.asUnicode(( u'* ', caption)))
 
         self.codField = wgtIntEdit()
         self.lastCod = nisk.util.asInt(self.codField.value())
@@ -546,12 +591,19 @@ class wgtFieldBoxDb(urwid.Pile, bindablefield):
         urwid.connect_signal(self.codField, 'focusIn', self._OnFocusIn)
         urwid.connect_signal(self.codField, 'focusOut', self._OnFocusOut)
 
+        if not cor:
+            cor=( 'field', 'field_of')
+        if len(cor)==3:
+            cap = urwid.AttrWrap(cap,cor[2])
+        if len(cor)==4:
+            cap = urwid.AttrWrap(cap,cor[2],cor[3])
+
         self._col = urwid.Columns([
-            ('fixed', width_cap, self.capField),
+            ('fixed', width_cap, cap),
             # ('fixed', 2, urwid.Text([('key', '|'), ' \n'])),
-            ('fixed', width_cod, urwid.AttrWrap(self.codField, 'field', 'field_of')),
+            ('fixed', width_cod, urwid.AttrWrap(self.codField, cor[0],cor[1])),
             ('fixed', 1, urwid.Text('-')),
-            urwid.AttrWrap(self.textField, 'field', 'field_of')
+            urwid.AttrWrap(self.textField, cor[0],cor[1])
         ], dividechars=0, focus_column=1)
 
         urwid.Pile.__init__(self, [('weight', 1, self._col),
