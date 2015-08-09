@@ -233,7 +233,7 @@ menu_os_edit = (
             (u'&Etiqueta',('imprime','etiq')),
             (u'Etiqueta &anotável',('imprime','etiqa')),
             (u'&Ficha de Análise',('imprime','fichaanalise')),
-            (u'&icha de &Q.C.',('imprime','fichaqc')),
+            (u'&Ficha de Q.C.',('imprime','fichaqc')),
             (u'&Orçamento',('imprime','orc')),
             (u'&Cupom de Saída',('imprime','saida'))]),
         (u'&Salvar', 'saveorabort'),

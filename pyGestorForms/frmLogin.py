@@ -36,7 +36,7 @@ class frmLoginA(nisk.TUI.nestedwidget):
         _linebox_ = urwid.AttrWrap(_linebox, 'windowsborder', 'windowsborder_of')
 
         self.widget = urwid.Overlay(_linebox_, self._widgetsession. mainframe.body,
-                                    'center', 40,
+                                    'center', 44,
                                     'middle', 12)
 
     def _widgetonshow(self):

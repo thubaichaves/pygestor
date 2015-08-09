@@ -63,7 +63,7 @@ class formmer(urwid.ListBox, nisk.TUI.nestedwidget):
                                            ltabela=util.defaultv(o, 'ltab', ''),
                                            tabela=util.defaultv(o, 'tab', ''),cor=cor)
             elif t == tfld.datepicker:
-                tf = widgets.wgtDateFieldBox(caption=c, bindf=b,cor=cor)
+                tf = widgets.wgtDateFieldBox(self,caption=c, bindf=b,cor=cor)
             else:
                 continue
                 #
@@ -135,8 +135,16 @@ class binder:
 
                 if isinstance(x, widgets.bindablefield):
                     b = x.get_bindf()
-
-                    v = dados[b] if self.m else getattr(dados, b)
+                    if util.isStr(b):
+                        v = dados[b] if self.m else getattr(dados, b)
+                    elif util.isTuple(b):
+                        v=dados
+                        for arg in b:
+                            try:
+                                v = getattr(v, arg)
+                            except:
+                                v=None
+                                util.dump(['erro nisk.formmer.binder.load',b,dados])
 
                     x.setValue(v)
                 else:
@@ -151,16 +159,17 @@ class binder:
             try:
                 if isinstance(x, widgets.bindablefield):
                     b = x.get_bindf()
-                    v = x.GetValue()
+                    if util.isStr(b):
+                        v = x.GetValue()
 
-                    if self.m:
-                        self._dados[b] = v
-                    else:
-                        # util.dump(self._dados)
-                        # util.dump(b)
-                        # util.dump(v)
-                        # util.dump(getattr(self._dados, b))
-                        setattr(self._dados, b, v)
+                        if self.m:
+                            self._dados[b] = v
+                        else:
+                            # util.dump(self._dados)
+                            # util.dump(b)
+                            # util.dump(v)
+                            # util.dump(getattr(self._dados, b))
+                            setattr(self._dados, b, v)
             except Exception, e:
                 logging.exception(e)
                 # b = x.get_bindf()

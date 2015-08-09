@@ -33,7 +33,7 @@ class crtl_os:
         if not osn:
             osn, rr = nisk.dialogs.dlgInput.show('Imprimir Cumpom de Entrada de OS', _widgetpai)
 
-        if util.isInt(osn):
+        if util.canBeInt(osn):
             osn = int(osn)
             imprimir.Imprimir_EntradaOS(osn)
         else:
@@ -173,6 +173,7 @@ class formmer_os_new(formmer.formmer):
             (tfld.textbox, 'N° Série', 'ns', {'estreito': 2}),
             (tfld.fieldbox, 'Técnico Resp.', 'usrresp', {'ltab': 'sysus'}),
             (tfld.fieldbox, 'Cliente', 'cliente', {'tab': 'contatos'}),
+            #(tfld.fieldbox, 'Telefones', 'cliente', {'tab': 'contatos'}),
             (tfld.datepicker, 'Data de Entrada', 'dataent',),
             (tfld.textbox, 'Solicitação', 'solicita'),
             (tfld.textbox, 'Acessórios', 'acess'),
@@ -283,12 +284,21 @@ class formmer_os_edit(formmer.formmer, dlger):
         self.cc = nisk.widgets.HMenu(conf.menu_os_edit, None, defaultcb=self.callbacks, width=24, selfclose=True)
 
         formmer.formmer.__init__(self, [
-            (tfld.itextbox, 'OS', 'os', {'readonly': 1}),
+            (tfld.itextbox, 'OS', 'os', {'readonly': 1,'estreito': 2}),
+            (tfld.datepicker, 'Data de Entrada', 'dataent', {'readonly': 1,'estreito': 2}),
+            
             (tfld.fieldbox, 'Cliente', 'cliente', {'tab': 'contatos'}),
-            (tfld.fieldbox, 'Tipo de Equip.', 'tipo', {'ltab': 'ostip'}),
-            (tfld.fieldbox, 'Marca', 'marca', {'ltab': 'osfab'}),
+            (tfld.textbox, 'Telefones', ('oscliente','t4a'), {'readonly': 1}),
+
+            (tfld.fieldbox, 'Status', 'status', {'ltab': 'osstt','estreito': 2}),
+            (tfld.fieldbox, 'Tarefa', 'ntarefa', {'ltab': 'osnxt','estreito': 2}),
+
+            (tfld.fieldbox, 'Tipo de Equip.', 'tipo', {'ltab': 'ostip','estreito': 2}),
+            (tfld.fieldbox, 'Marca', 'marca', {'ltab': 'osfab','estreito': 2}),
+
             (tfld.textbox, 'Modelo', 'modelo', {'estreito': 2}),
             (tfld.textbox, 'N° Série', 'ns', {'estreito': 2}),
+
             (tfld.textbox, 'Acessórios', 'acess'),
             (tfld.textbox, 'Estado de Conservação', 'conserva'),
             (tfld.textbox, 'Solicitação', 'solicita'),
@@ -297,9 +307,6 @@ class formmer_os_edit(formmer.formmer, dlger):
             (tfld.fieldbox, 'Técnico Resp.', 'usrresp', {'ltab': 'sysus'}),
             (tfld.textbox, 'Observações Impressas', 'obsos'),
             (tfld.textbox, 'Observações Internas', 'obsint'),
-            (tfld.fieldbox, 'Status', 'status', {'ltab': 'osstt'}),
-            (tfld.fieldbox, 'Tarefa', 'ntarefa', {'ltab': 'osnxt'}),
-            (tfld.datepicker, 'Data de Entrada', 'dataent'),
         ])
         self.binder = mediator_os(self)
 

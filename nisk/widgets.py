@@ -5,9 +5,11 @@ import threading
 import logging
 import conf
 import nisk
-import time, datetime
-import nisk.util
+import time
+import datetime
+import util
 import nisk.TUI
+import nisk.util
 from nsatw import *
 from urwid import *
 import math
@@ -85,9 +87,9 @@ class wgtIntEdit(urwid.IntEdit):
     def __init__(self, caption="", default=None):
         self._lastfocus = False
         self._recem = False
-        #self.readonly  =readonly
+        #self.readonly =readonly
         #if readonly:
-        #    defaultx=default if default else '' 
+        #    defaultx=default if default else ''
         #    urwid.Text.__init__(self,defaultx)
         #else:
         urwid.IntEdit.__init__(self,caption,default)
@@ -97,7 +99,8 @@ class wgtIntEdit(urwid.IntEdit):
 
     def render(self, size, focus=False):
         # if focus != self._lastfocus:
-        # # logging.debug('focus ' + str(focus) + ' -> ' + str(self._lastfocus))
+        # # logging.debug('focus ' + str(focus) + ' -> ' +
+        # str(self._lastfocus))
         # urwid.emit_signal(self, 'change', self, self.get_text())
         # pass
         (maxcol,) = size
@@ -106,7 +109,8 @@ class wgtIntEdit(urwid.IntEdit):
         try:
             # Entra
             if focus and not lastfocus:
-                # logging.debug('focus entra ' + str(self.edit_pos) + '/' + str(self.get_edit_text()))
+                # logging.debug('focus entra ' + str(self.edit_pos) + '/' +
+                # str(self.get_edit_text()))
                 self._salvalast()
                 self._recem = True
                 urwid.emit_signal(self, 'focusIn', self, None)
@@ -117,12 +121,14 @@ class wgtIntEdit(urwid.IntEdit):
                 self._doparse()
                 urwid.emit_signal(self, 'valuechange', self, self.value())
                 urwid.emit_signal(self, 'focusOut', self, None)
-                # logging.debug('focus sai ' + str(self.edit_pos) + '/' + str(self.get_edit_text()))
+                # logging.debug('focus sai ' + str(self.edit_pos) + '/' +
+                # str(self.get_edit_text()))
         except Exception, e:
             logging.exception(e)
 
         canv = Edit.render(self, (maxcol,), focus=focus)
-        # logging.debug('focus conclue ' + str(self.edit_pos) + '/' + str(self.get_edit_text()))
+        # logging.debug('focus conclue ' + str(self.edit_pos) + '/' +
+        # str(self.get_edit_text()))
         return canv
 
     def keypress(self, size, key):
@@ -151,7 +157,7 @@ class wgtIntEdit(urwid.IntEdit):
         self._lastvalue = v
         self._salvalast()
         t = ''
-        if nisk.util.isInt(v):
+        if nisk.util.canBeInt(v):
             t = str(v)
         if self.get_edit_text() != t:
             self.set_edit_text(t)
@@ -161,7 +167,7 @@ class wgtIntEdit(urwid.IntEdit):
 class wgtDateEdit(urwid.IntEdit):
     signals = ['valuechange', 'focusIn', 'focusOut']
 
-    def __init__(self, dformat='%d/%m/%Y %H:%M', default=None, ):
+    def __init__(self, dformat='%d/%m/%Y %H:%M', default=None,):
         # dformat='dd/mm/yyy HH:MM'
         self._lastfocus = False
         self._lastvalue = None
@@ -283,38 +289,48 @@ class bindablefield(nisk.TUI.nestedwidget):
 
 
 ######################################################################
-class wgtFieldBox(Columns, bindablefield):
+class wgtFieldBox(AttrWrap, bindablefield):
     signals = ['change']
 
     def __init__(self, caption=u'',
-                 width_cap=conf.sizes['wgtFieldBoxDb1'][0], bindf=None, enterIsTab=False,cor=None):
+                 width_cap=conf.sizes['wgtFieldBoxDb1'][0], bindf=None, enterIsTab=False,readonly=False,cor=None):
 
         self._lastvalue = ''
         self._value = ''
         self.dirty = False
         self.caption = caption
         self._enterIsTab = enterIsTab
-        self.capField = cap = urwid.Text( nisk.util.asUnicode(( u'* ', caption)))
+        self.capField = cap = urwid.Text(nisk.util.asUnicode((u'', caption)))
         # self.capField = urwid.Text([('key', caption[:1]), caption[1:]])
         self.textField = urwid.Edit('')
         self.textField.multiline = not enterIsTab
         urwid.connect_signal(self.textField, 'change', self.edit_changed)
 
         if not cor:
-            cor=( 'field', 'field_of')
-        if len(cor)==3:
+            cor = ('field', 'field_of')
+        if len(cor) == 3:
             cap = urwid.AttrWrap(cap,cor[2])
-        if len(cor)==4:
+        if len(cor) == 4:
             cap = urwid.AttrWrap(cap,cor[2],cor[3])
+        
+        self.readonly = readonly
+        self.readonlyField = Text('')
+        if readonly:
+            field = urwid.AttrWrap(self.readonlyField,cor[0],cor[1])
+        else:
+            field = urwid.AttrWrap(self.textField,cor[0],cor[1])
 
-        self.__super.__init__([
-            ('fixed', width_cap, cap),
-            # ('fixed', width_cap, urwid.AttrWrap( self.capField,'menubar')),
-            # ('fixed', 2, urwid.Text([('key', '|'), ' \n'])),
-            urwid.AttrWrap(self.textField,cor[0],cor[1])
-        ], dividechars=0, focus_column=1)
+        x = urwid.Columns([('fixed',  2, urwid.Text('* ')),('fixed',  width_cap,cap),
+            field]
+            , dividechars=0, focus_column=2)
+
+        self.__super.__init__(x,cor[0])
 
     def setValue(self, txt, writelast=True):
+        if self.readonly:
+            s = str(txt) if txt else ''
+            self.readonlyField.set_text(s)
+
         # nisk.util.dump([txt, type(txt)], self.caption)
         if isinstance(txt, unicode):
             try:
@@ -365,14 +381,17 @@ class wgtFieldBox(Columns, bindablefield):
         elif key == "f4":
             # nisk.util.paralelo(self.seleciona_popup)
             pass
-        elif key == "f5":
-            nisk.util.paralelo(self.edit_tk)
-            pass
-
+            '''
+            elif key == "f5":
+                nisk.util.paralelo(self.edit_tk)
+                pass
+            '''
         else:
             # key wasn't handled
             return key
+
     def edit_tk(self):    
+        '''
         from Tkinter import *
         import ttk
 
@@ -391,7 +410,10 @@ class wgtFieldBox(Columns, bindablefield):
         for child in mainframe.winfo_children(): child.grid_configure(padx=5, pady=5)
 
         feet_entry.focus()
+        print 'going-on'
         root.mainloop()
+        '''
+        print   'out ok'
 
     def GetValue(self):
         x = self.textField.get_edit_text()
@@ -410,7 +432,7 @@ class wgtFieldBox(Columns, bindablefield):
 
 
 ######################################################################
-class wgtIntFieldBox(Columns, bindablefield):
+class wgtIntFieldBox(AttrWrap, bindablefield):
     signals = ['change']
 
     def __init__(self, caption=u'',
@@ -418,23 +440,25 @@ class wgtIntFieldBox(Columns, bindablefield):
 
         self._TextValue = ''
         self.dirty = False
-        self.readonly=readonly
         self._enterIsTab = enterIsTab
-        self.capField = urwid.Text(nisk.util.asUnicode(( u'* ', caption)))
+        self.capField = urwid.Text(nisk.util.asUnicode((u'', caption)))
         self.textField = wgtIntEdit('')
-        self.readonlyField = Text('')
         urwid.connect_signal(self.textField, 'valuechange', self.edit_changed)
+        self.readonlyField = Text('')
+        
+        if not cor:
+            cor = ('field', 'field_of')
+        self.readonly = readonly
         if readonly:
-            field = urwid.AttrWrap(self.readonlyField, 'field', 'field_of')
+            field = urwid.AttrWrap(self.readonlyField,cor[0],cor[1])
         else:
-            field = urwid.AttrWrap(self.textField, 'field', 'field_of')
+            field = urwid.AttrWrap(self.textField,cor[0],cor[1])
 
-        self.__super.__init__([
-            ('fixed', width_cap, self.capField),
-            # ('fixed', width_cap, urwid.AttrWrap( self.capField,'menubar')),
-            # ('fixed', 2, urwid.Text([('key', '|'), ' \n'])),
-            field
-        ], dividechars=0, focus_column=1)
+        x = Columns([('fixed',  2, urwid.Text('* ')),
+                     ('fixed',  width_cap,self.capField),
+            urwid.AttrWrap(field,cor[0],cor[1])]            , dividechars=0, focus_column=2)
+
+        self.__super.__init__(x,cor[0])
 
     def setValue(self, txt):
         if self.readonly:
@@ -477,28 +501,37 @@ class wgtIntFieldBox(Columns, bindablefield):
 
 
 ######################################################################
-class wgtDateFieldBox(Columns, bindablefield):
+class wgtDateFieldBox(AttrWrap, bindablefield):
     signals = ['change']
 
-    def __init__(self, caption=u'',
-                 width_cap=conf.sizes['wgtFieldBoxDb1'][0], bindf=None, enterIsTab=False, dformat='%d/%m/%Y %H:%M',cor=None):
-
+    def __init__(self,_widgetpai, caption=u'',
+                 width_cap=conf.sizes['wgtFieldBoxDb1'][0], bindf=None, enterIsTab=False, dformat='%d/%m/%Y %H:%M',cor=None,readonly=False):
+        self._widgetpai = _widgetpai
         self._TextValue = ''
         self.dirty = False
         self._enterIsTab = enterIsTab
-        self.capField = urwid.Text(nisk.util.asUnicode(( u'* ', caption)))
+        self.capField = urwid.Text(nisk.util.asUnicode((u'', caption)))
         self.textField = wgtDateEdit()
         self.dformat = dformat
         urwid.connect_signal(self.textField, 'valuechange', self.edit_changed)
         urwid.connect_signal(self.textField, 'focusIn', self._OnFocusIn)
         urwid.connect_signal(self.textField, 'focusOut', self._OnFocusOut)
+        
+        self.readonly = readonly
+        if not cor:
+            cor = ('field', 'field_of')
 
-        self.__super.__init__([
-            ('fixed', width_cap, self.capField),
-            # ('fixed', width_cap, urwid.AttrWrap( self.capField,'menubar')),
-            # ('fixed', 2, urwid.Text([('key', '|'), ' \n'])),
-            urwid.AttrWrap(self.textField, 'field', 'field_of')
-        ], dividechars=0, focus_column=1)
+        self.readonlyField = Text('')
+        if readonly:
+            field = urwid.AttrWrap(self.readonlyField,cor[0],cor[1])
+        else:
+            field = urwid.AttrWrap(self.textField,cor[0],cor[1])
+        
+        x = Columns([('fixed',  2, urwid.Text('* ')),
+                     ('fixed',  width_cap,self.capField),
+            urwid.AttrWrap(field,cor[0],cor[1])]            , dividechars=0, focus_column=2)
+
+        self.__super.__init__(x,cor[0])
 
     def setValue(self, v):
         # r = self.lck.acquire()
@@ -543,11 +576,14 @@ class wgtDateFieldBox(Columns, bindablefield):
         return urwid.connect_signal(self, name, callback)
 
     def setvalue(self, v):
+        if self.readonly:
+            s = str(v) if txt else ''
+            self.readonlyField.set_text(s)
         return self.textField.setvalue(v)
 
 
 ######################################################################
-class wgtFieldBoxDb(urwid.Pile, bindablefield):
+class wgtFieldBoxDb(AttrWrap, bindablefield):
     signals = ['change']
     defaultPopupSelector = None
     defaultConsultor = None
@@ -555,7 +591,7 @@ class wgtFieldBoxDb(urwid.Pile, bindablefield):
     def __init__(self, ltabela='', tabela='', caption=u'',
                  consultor=None,
                  width_cap=conf.sizes['wgtFieldBoxDb1'][0],
-                 width_cod=conf.sizes['wgtFieldBoxDb1'][1], bindf=None, params=None,cor=None):
+                 width_cod=conf.sizes['wgtFieldBoxDb1'][1], bindf=None, params=None,cor=None,readonly=False):
 
         self.params = params if params else {}
 
@@ -581,7 +617,7 @@ class wgtFieldBoxDb(urwid.Pile, bindablefield):
         self._orm = None
         self._iniciado = False
 
-        self.capField = cap=urwid.Text(nisk.util.asUnicode(( u'* ', caption)))
+        self.capField = cap = urwid.Text(nisk.util.asUnicode((u'', caption)))
 
         self.codField = wgtIntEdit()
         self.lastCod = nisk.util.asInt(self.codField.value())
@@ -591,24 +627,28 @@ class wgtFieldBoxDb(urwid.Pile, bindablefield):
         urwid.connect_signal(self.codField, 'focusIn', self._OnFocusIn)
         urwid.connect_signal(self.codField, 'focusOut', self._OnFocusOut)
 
+        
+        self.readonly = readonly
         if not cor:
-            cor=( 'field', 'field_of')
-        if len(cor)==3:
+            cor = ('field', 'field_of')
+
+        self.readonlyField = urwid.Text('')
+        if readonly:
+            field = urwid.AttrWrap(self.readonlyField,cor[0],cor[1])
+        else:
+            field = urwid.AttrWrap(self.codField,cor[0],cor[1])
+
+        if len(cor) == 3:
             cap = urwid.AttrWrap(cap,cor[2])
-        if len(cor)==4:
+        if len(cor) == 4:
             cap = urwid.AttrWrap(cap,cor[2],cor[3])
 
-        self._col = urwid.Columns([
-            ('fixed', width_cap, cap),
-            # ('fixed', 2, urwid.Text([('key', '|'), ' \n'])),
-            ('fixed', width_cod, urwid.AttrWrap(self.codField, cor[0],cor[1])),
+        self._col = urwid.Columns([('fixed',  2, urwid.Text('* ')),('fixed', width_cap, cap),
+            ('fixed', width_cod, urwid.AttrWrap(field, cor[0],cor[1])),
             ('fixed', 1, urwid.Text('-')),
-            urwid.AttrWrap(self.textField, cor[0],cor[1])
-        ], dividechars=0, focus_column=1)
-
-        urwid.Pile.__init__(self, [('weight', 1, self._col),
-                                   # ('weight', 1, urwid.Divider())
-                                   ])
+            urwid.AttrWrap(self.textField, cor[0],cor[1])], dividechars=0, focus_column=2)
+        
+        self.__super.__init__(self._col,cor[0])
 
     def _OnFocusIn(self, x=None, y=None):
         if nisk.util.defaultv(self.params, 'showstatusbartext', True):
@@ -624,7 +664,8 @@ class wgtFieldBoxDb(urwid.Pile, bindablefield):
         if self.codField.value() != self.codField._lastlastvalue:
             self.load(self.codField.value())
             # urwid.emit_signal(self, 'change', self, d)
-        # nisk.util.dump((self.codField.value(), self.codField._lastlastvalue), 'change')
+        # nisk.util.dump((self.codField.value(), self.codField._lastlastvalue),
+        # 'change')
         pass
 
     def setValue(self, cod, force=False):
@@ -636,9 +677,11 @@ class wgtFieldBoxDb(urwid.Pile, bindablefield):
     def load(self, cod, force=False):
         c, t, r, o = self.consulta(cod)
         self.codField.setvalue(c)
+        self.readonlyField.set_text(nisk.util.asstr(c))
         self._orm = o
         if r:
             self.textField.set_text(t)
+            self.readonlyField.set_text(t)
             if self.lastCod != c:
                 self.lastCod = c
                 # logging.debug('l1')
@@ -646,7 +689,9 @@ class wgtFieldBoxDb(urwid.Pile, bindablefield):
                     urwid.emit_signal(self, 'change', self, self.GetValue())
         elif force:
             self.codField.setvalue(None)
+            self.readonlyField.set_text(nisk.util.asstr(None))
             self.textField.set_text('')
+            self.readonlyField.set_text('')
             self.lastCod = None
             if 1:  # self._iniciado:
                 urwid.emit_signal(self, 'change', self, self.GetValue())
@@ -795,7 +840,7 @@ def hamilton_allocation(counts, alloc):
     alloc -- total amount to be allocated ('total amount of seats')
     """
 
-    total_counts = sum(counts);
+    total_counts = sum(counts)
     quotas = [float(count) * alloc / total_counts for count in counts]
 
     fracts = []
@@ -809,7 +854,7 @@ def hamilton_allocation(counts, alloc):
     remainder = alloc - sum(results)
 
     for i in range(remainder):
-        results[fracts[i][1]] += 1;
+        results[fracts[i][1]] += 1
 
     return results
 
@@ -840,16 +885,16 @@ class HScrollBar(urwid.BoxWidget):
         if background[1] is not None:
             self.background_widget = urwid.AttrWrap(self.background_widget,
                                                     background[1])
-        self.middle = middle;
-        self.top = top;
-        self.bottom = bottom;
+        self.middle = middle
+        self.top = top
+        self.bottom = bottom
 
-        self.handle_grab_pos = -1;
-        self.handle_moved = 0;
+        self.handle_grab_pos = -1
+        self.handle_moved = 0
 
     def selectable(self):
         "Not selectable."""
-        return False;
+        return False
 
     def mouse_event(self, (maxcol, maxrow), event, button, col, row, focus):
         """
@@ -857,23 +902,22 @@ class HScrollBar(urwid.BoxWidget):
         """
 
         (middle, top, bottom) = hamilton_allocation([self.middle, self.top,
-                                                     self.bottom], maxcol);
+                                                     self.bottom], maxcol)
 
-        if (event == "mouse press" and button == 1 and row >= top and
-                    row < middle + top):
+        if (event == "mouse press" and button == 1 and row >= top and row < middle + top):
 
             # User grabs handle with left mouse button
-            self.handle_grab_pos = row;
-            return True;
+            self.handle_grab_pos = row
+            return True
 
         elif self.handle_grab_pos >= 0 and event == "mouse release":
             # User releases handle
-            self.handle_moved += row - self.handle_grab_pos;
-            self.handle_grab_pos = -1;
-            return True;
+            self.handle_moved += row - self.handle_grab_pos
+            self.handle_grab_pos = -1
+            return True
 
         else:
-            return False;
+            return False
 
     def render(self, (maxcol, maxrow), focus=False):
         """
@@ -881,7 +925,7 @@ class HScrollBar(urwid.BoxWidget):
         """
 
         (middle, top, bottom) = hamilton_allocation([self.middle, self.top,
-                                                     self.bottom], maxcol);
+                                                     self.bottom], maxcol)
 
         # nisk.util.dump((maxcol, maxrow))
         # nisk.util.dump((middle, top, bottom))
@@ -902,20 +946,20 @@ class HScrollBar(urwid.BoxWidget):
 
         """
 
-        moved = int(float(self.handle_moved) / self.middle * length);
-        self.handle_moved = 0;
+        moved = int(float(self.handle_moved) / self.middle * length)
+        self.handle_moved = 0
 
         # Ensure that we stay in a correct range:
         if self.top + moved < 0:
-            moved -= self.top + moved;
+            moved -= self.top + moved
 
         if self.bottom - moved < 0:
-            moved += self.bottom - moved;
+            moved += self.bottom - moved
 
-        self.top += moved;
-        self.bottom -= moved;
+        self.top += moved
+        self.bottom -= moved
 
-        return moved;
+        return moved
 
 
 ######################################################################
@@ -945,16 +989,16 @@ class ScrollBar(urwid.BoxWidget):
             self.background_widget = urwid.AttrWrap(self.background_widget,
                                                     background[1])
 
-        self.middle = middle;
-        self.top = top;
-        self.bottom = bottom;
+        self.middle = middle
+        self.top = top
+        self.bottom = bottom
 
-        self.handle_grab_pos = -1;
-        self.handle_moved = 0;
+        self.handle_grab_pos = -1
+        self.handle_moved = 0
 
     def selectable(self):
         "Not selectable."""
-        return False;
+        return False
 
     def mouse_event(self, (maxcol, maxrow), event, button, col, row, focus):
         """
@@ -962,23 +1006,22 @@ class ScrollBar(urwid.BoxWidget):
         """
 
         (middle, top, bottom) = hamilton_allocation([self.middle, self.top,
-                                                     self.bottom], maxrow);
+                                                     self.bottom], maxrow)
 
-        if (event == "mouse press" and button == 1 and row >= top and
-                    row < middle + top):
+        if (event == "mouse press" and button == 1 and row >= top and row < middle + top):
 
             # User grabs handle with left mouse button
-            self.handle_grab_pos = row;
-            return True;
+            self.handle_grab_pos = row
+            return True
 
         elif self.handle_grab_pos >= 0 and event == "mouse release":
             # User releases handle
-            self.handle_moved += row - self.handle_grab_pos;
-            self.handle_grab_pos = -1;
-            return True;
+            self.handle_moved += row - self.handle_grab_pos
+            self.handle_grab_pos = -1
+            return True
 
         else:
-            return False;
+            return False
 
     def render(self, (maxcol, maxrow), focus=False):
         """
@@ -986,7 +1029,7 @@ class ScrollBar(urwid.BoxWidget):
         """
 
         (middle, top, bottom) = hamilton_allocation([self.middle, self.top,
-                                                     self.bottom], maxrow);
+                                                     self.bottom], maxrow)
 
         pile = urwid.Pile([('fixed', top, self.background_widget),
                            ('fixed', middle, self.handle_widget),
@@ -1005,20 +1048,20 @@ class ScrollBar(urwid.BoxWidget):
 
         """
 
-        moved = int(float(self.handle_moved) / self.middle * length);
-        self.handle_moved = 0;
+        moved = int(float(self.handle_moved) / self.middle * length)
+        self.handle_moved = 0
 
         # Ensure that we stay in a correct range:
         if self.top + moved < 0:
-            moved -= self.top + moved;
+            moved -= self.top + moved
 
         if self.bottom - moved < 0:
-            moved += self.bottom - moved;
+            moved += self.bottom - moved
 
-        self.top += moved;
-        self.bottom -= moved;
+        self.top += moved
+        self.bottom -= moved
 
-        return moved;
+        return moved
 
 
 ######################################################################
@@ -1042,36 +1085,35 @@ class SBListBox(urwid.WidgetWrap):
             self.length = len(body.body)
             self.listbox = body
         elif isinstance(body, list):
-            self.length = len(body);
-            self.listbox = urwid.ListBox(body);
+            self.length = len(body)
+            self.listbox = urwid.ListBox(body)
         else:
             raise Exception
 
-        self.scrollbar = ScrollBar(handle, background, 1, 0, 0);
+        self.scrollbar = ScrollBar(handle, background, 1, 0, 0)
         pscroll = Pile([('pack', Text(u'\u25b2')), ('weight', 1, self.scrollbar), ('pack', Text(u"\u25bc"))])
         # self.scrollbar = HScrollBar(handle, background, 1, 1, 1);
-        self.columns = urwid.Columns([
-            # ("fixed", 1, pscroll),
+        self.columns = urwid.Columns([# ("fixed", 1, pscroll),
             ("weight", 1, self.listbox),
             ("fixed", 1, pscroll)],
-            dividechars=1);
+            dividechars=1)
 
         # self.pile = urwid.Pile([
         # ('weight', 1, self.columns),
         # ( 1, self.scrollbar)]
         # );
 
-        urwid.WidgetWrap.__init__(self, self.columns);
+        urwid.WidgetWrap.__init__(self, self.columns)
 
     def calc_sb_midtopbot(self, size):
         """
         Calculate middle, top, bottom for the scrollbar.
         """
 
-        (middle, top, bottom) = self.listbox.calculate_visible(size);
-        self.scrollbar.middle = min(size[1], self.length);
-        self.scrollbar.top = middle[2] - len(top[1]);
-        self.scrollbar.bottom = self.length - middle[2] - len(bottom[1]) - 1;
+        (middle, top, bottom) = self.listbox.calculate_visible(size)
+        self.scrollbar.middle = min(size[1], self.length)
+        self.scrollbar.top = middle[2] - len(top[1])
+        self.scrollbar.bottom = self.length - middle[2] - len(bottom[1]) - 1
         self.scrollbar._invalidate()
 
     def render(self, size, focus=False):
@@ -1079,8 +1121,8 @@ class SBListBox(urwid.WidgetWrap):
         Render the SBListBox as a canvas and return it.
         """
 
-        self.calc_sb_midtopbot(size);
-        return self.columns.render(size, focus);
+        self.calc_sb_midtopbot(size)
+        return self.columns.render(size, focus)
 
     def mouse_event(self, size, event, button, col, row, focus):
         """
@@ -1090,23 +1132,23 @@ class SBListBox(urwid.WidgetWrap):
         if event == "mouse release" and self.scrollbar.handle_grab_pos >= 0:
             # If the handle is grabbed, pretend that every release is over the
             # scrollbar:
-            col = size[0] - 1;
+            col = size[0] - 1
 
         handled = self.columns.mouse_event(size, event, button, col, row,
-                                           focus);
+                                           focus)
 
         # Scroll the listbox according to handle movement:
-        moved = self.scrollbar.read_move(size[1], self.length);
+        moved = self.scrollbar.read_move(size[1], self.length)
 
-        position = self.listbox.get_focus()[1];
-        (offset, inset) = self.listbox.get_focus_offset_inset(size);
+        position = self.listbox.get_focus()[1]
+        (offset, inset) = self.listbox.get_focus_offset_inset(size)
 
         assert (position + moved >= 0) or (position + moved <= self.length), \
             "Move out of list range: %i\n" % (position + moved)
 
         self.listbox.change_focus(size, position + moved, offset)
 
-        return handled;
+        return handled
 
 
 ######################################################################
@@ -1128,27 +1170,19 @@ class LineBox(WidgetDecoration, WidgetWrap):
         blcorner, brcorner = Text(blcorner), Text(brcorner)
 
         self.title_widget = Text(self.format_title(title))
-        self.tline_widget = Columns([
-            tline,
+        self.tline_widget = Columns([tline,
             ('flow', self.title_widget),
-            tline,
-        ])
+            tline,])
 
-        top = Columns([
-            ('fixed', 1, tlcorner),
+        top = Columns([('fixed', 1, tlcorner),
             self.tline_widget,
-            ('fixed', 1, trcorner)
-        ])
+            ('fixed', 1, trcorner)])
 
-        middle = Columns([
-            ('fixed', 1, lline),
+        middle = Columns([('fixed', 1, lline),
             original_widget,
-            ('fixed', 1, rline),
-        ], box_columns=[0, 2], focus_column=1)
+            ('fixed', 1, rline),], box_columns=[0, 2], focus_column=1)
 
-        bottom = Columns([
-            ('fixed', 1, blcorner), bline, ('fixed', 1, brcorner)
-        ])
+        bottom = Columns([('fixed', 1, blcorner), bline, ('fixed', 1, brcorner)])
 
         pile = Pile([('flow', top), middle, ('flow', bottom)], focus_item=1)
 
@@ -1205,8 +1239,7 @@ class HMenu(urwid.Columns):
             self.shortkey = None
             bulet = True
 
-            x = caption if isinstance(caption, basestring) else (
-                caption[0] if isinstance(caption, list) and len(caption) > 0 else None)
+            x = caption if isinstance(caption, basestring) else (caption[0] if isinstance(caption, list) and len(caption) > 0 else None)
 
             if isinstance(x, basestring):
                 # nisk.util.dump(('a',x))
@@ -1242,22 +1275,18 @@ class HMenu(urwid.Columns):
             #
             # self._w = urwid.AttrMap(urwid.Text(
             # caption), 'options', 'selected')
-            self._w = urwid.AttrMap(urwid.SelectableIcon(
-                caption, 2), 'options', 'selected')
+            self._w = urwid.AttrMap(urwid.SelectableIcon(caption, 2), 'options', 'selected')
 
     class SubMenu(urwid.WidgetWrap):
         def __init__(self, caption, choices, parent=None, norepeatlist=None):
-            menubutton = HMenu.MenuButton(
-                [caption, u"*"],
+            menubutton = HMenu.MenuButton([caption, u" "],
                 self.open_menu, norepeatlist=norepeatlist)
             super(HMenu.SubMenu, self).__init__(menubutton)
             self.shortcut = menubutton.shortkey
             self.parent = parent
             line = urwid.Divider(u'-')
             self.choices = choices
-            listbox = urwid.ListBox(urwid.SimpleFocusListWalker([
-                                                                    urwid.AttrMap(HMenu.MenuButton(
-                                                                        [caption, u"*"],
+            listbox = urwid.ListBox(urwid.SimpleFocusListWalker([urwid.AttrMap(HMenu.MenuButton([caption, u" "],
                                                                         self.menu_back, showshort=False),
                                                                         'heading'),
                                                                     urwid.AttrMap(line, 'line'),
@@ -1281,8 +1310,7 @@ class HMenu(urwid.Columns):
 
     class Choice(urwid.WidgetWrap):
         def __init__(self, caption, cb=None, dados=None, parent=None, norepeatlist=None):
-            h = HMenu.MenuButton(
-                [caption, u"*"],
+            h = HMenu.MenuButton([caption, u" "],
                 self.item_chosen, norepeatlist=norepeatlist)
 
             self.shortcut = h.shortkey
@@ -1420,12 +1448,10 @@ class HMenu(urwid.Columns):
                     nicho.append(HMenu.SubMenu(trecho[0], o, parent=self.top, norepeatlist=norepeatlist))
                 elif len(trecho) > 1 and hasattr(trecho[1], '__call__'):
                     d = trecho[2] if len(trecho) > 2 else None
-                    nicho.append(
-                        HMenu.Choice(trecho[0], cb=trecho[1], dados=d, parent=self.top, norepeatlist=norepeatlist))
+                    nicho.append(HMenu.Choice(trecho[0], cb=trecho[1], dados=d, parent=self.top, norepeatlist=norepeatlist))
                 elif len(trecho) > 0:
                     d = trecho[1] if len(trecho) > 1 else None
-                    nicho.append(
-                        HMenu.Choice(trecho[0], cb=defaultcb, dados=d, parent=self.top, norepeatlist=norepeatlist))
+                    nicho.append(HMenu.Choice(trecho[0], cb=defaultcb, dados=d, parent=self.top, norepeatlist=norepeatlist))
 
         o = []
         l = []

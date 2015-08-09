@@ -67,7 +67,7 @@ def espera(lck):
             break
 
 
-def isInt(s):
+def canBeInt(s):
     try:
         int(s)
         return True
@@ -81,11 +81,19 @@ def isEquivalent(a, b):
     z = x == y
     return z
 
+def isTuple(v):
+    return type(v) == tuple
+    return False
+
+def isStr(v):
+    return type(v)==str
 
 def asstr(v):
-    if v:
-        return v
-    return ''
+    try:
+        v= str(v)
+    except:
+        v=''
+    return v
 
 
 def asInt(v):
