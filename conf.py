@@ -100,10 +100,12 @@ const_PALETTE = [
     ('windowsborder', 'white', 'dark green','bold,underline','#668', '#035'),
     ('windowsborder_of', 'white', 'dark green','bold,underline','#ddf', '#06a'),
     ('foot', 'light gray', 'dark blue', 'standout'),
-    ('body', 'white', 'dark gray'),
+    ('body', 'white', 'dark cyan'),
     ('body_of', 'black', 'dark gray'),
     ('key', 'dark blue', 'light gray'),
     ('title', 'white', 'black', 'bold'),
+
+    #################################################################
 
     ('field', 'light gray', 'dark blue'),#'','#ffd', '#00a'),
     # ('field', 'white', 'dark cyan'),#'','#ffd', '#00a'),  
@@ -118,6 +120,16 @@ const_PALETTE = [
     ('field_cap_ofb', 'black', 'dark gray'),# 'bold','#ff8', '#806'),  
 
 
+    ('gridrow', 'white', 'dark blue'),#'','#ffd', '#00a'),
+    ('gridrowb',  'white', 'dark blue'),#'','#ffd', '#00a'),
+    ('gridrow_of', 'white', 'light red'),# 'bold','#ff8', '#806'),  ,
+    ('gridrow_ofb', 'white', 'light red'),
+
+    ('heading', 'black', 'light red'),
+    ('line', 'light gray', 'white'),
+    ('options', 'white', 'dark blue','bold,underline','#fff', '#06a'),
+    ('options_nf', 'white', 'dark blue','bold,underline','#668', '#035'),
+    ('selected', 'white', 'light red'),
 
     #################################################################
     ('menubar', 'white', 'dark blue'),
@@ -152,14 +164,9 @@ const_PALETTE = [
     ('error', 'dark red', 'light gray'),
     (None, 'light gray', 'black'),
 
-    ('heading', 'black', 'light red'),
-    ('line', 'light gray', 'white'),
-    ('options', 'white', 'black','bold,underline','#fff', '#06a'),
-    ('options_nf', 'white', 'black','bold,underline','#668', '#035'),
     ('focus heading', 'white', 'light red'),
     ('focus line', 'black', 'light red'),
     ('focus options', 'black', 'light gray'),
-    ('selected', 'white', 'dark blue'),
 ]
 def mudacor():
     conf.const_PALETTE[3] = ('windowsborder', 'white', 'black')

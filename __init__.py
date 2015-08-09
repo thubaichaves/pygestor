@@ -16,6 +16,7 @@ if __name__ == '__main__':
         locale.setlocale(locale.LC_ALL, "")
         urwid.set_encoding("UTF-8")
         nisk.util.TerminalLogger.setup()
+        print 'iniciou'
         logging.debug('''
         .
         .

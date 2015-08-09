@@ -198,15 +198,15 @@ class session:
         if self._logout_time < 1:
             if isinstance(self.nestedwidget, nestedwidget):
                 self.nestedwidget._widgetprocessa(conf.cmds.cmd_checkLogin)
-            util.dump([self._logout_time, self._usr, 'loged out'])
+            #util.dump([self._logout_time, self._usr, 'loged out'])
         else:
             self._loop.set_alarm_at(time.time() + 10, self._logout)
-        util.dump([self._logout_time, self._usr, 'logout'])
+        #util.dump([self._logout_time, self._usr, 'logout'])
 
     def _login(self, usr):
         self._usr = usr
         self._logout_time = 30
-        util.dump([self._logout_time, self._usr, 'login'])
+        #util.dump([self._logout_time, self._usr, 'login'])
         self._logout()
 
     def _inputfilter(self, input, args):
@@ -214,7 +214,8 @@ class session:
             #raise 'ctrl c'
             raise urwid.ExitMainLoop()
             sys.exit(0)
-        self._logout_time = 30
+        if input:
+            self._logout_time = 30
         return input
 
     def ShowDialogWidget(self, v_wgt, v_hdlr, vlocker, _nestedwidget, isDialog=True):

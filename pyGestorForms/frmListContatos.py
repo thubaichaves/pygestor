@@ -32,6 +32,8 @@ class frmListContatos2(ListBrowserBase):
 
         q = s.query(contatos).order_by(contatos.nome).filter(contatos.exc != 1)
 
+        search = util.asUnicode(search)
+
         if len(search) > 0:
             searchx = search.split(' ')
             for s in searchx:

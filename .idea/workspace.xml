@@ -2,15 +2,18 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1dd4e0d8-4b82-4cab-bb3f-a89c01ce6ef3" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nisk/ListBrowser.py" afterPath="$PROJECT_DIR$/nisk/ListBrowser.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nisk/TUI.py" afterPath="$PROJECT_DIR$/nisk/TUI.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/__init__.py" afterPath="$PROJECT_DIR$/__init__.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/conf.py" afterPath="$PROJECT_DIR$/conf.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/crtl_os.py" afterPath="$PROJECT_DIR$/crtl_os.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/urwid/curses_display.py" afterPath="$PROJECT_DIR$/urwid/curses_display.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/urwid/display_common.py" afterPath="$PROJECT_DIR$/urwid/display_common.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nisk/formmer.py" afterPath="$PROJECT_DIR$/nisk/formmer.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyGestorForms/frmListA.py" afterPath="$PROJECT_DIR$/pyGestorForms/frmListA.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyGestorForms/frmListContatos.py" afterPath="$PROJECT_DIR$/pyGestorForms/frmListContatos.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/urwid/main_loop.py" afterPath="$PROJECT_DIR$/urwid/main_loop.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/urwid/text_layout.py" afterPath="$PROJECT_DIR$/urwid/text_layout.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/pygestor.iml" afterPath="$PROJECT_DIR$/.idea/pygestor.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nisk/util.py" afterPath="$PROJECT_DIR$/nisk/util.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nisk/widgets.py" afterPath="$PROJECT_DIR$/nisk/widgets.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/urwidtrees/widgets.py" afterPath="$PROJECT_DIR$/urwidtrees/widgets.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="pygestor.iws" />
@@ -32,21 +35,59 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="conf.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/conf.py">
+      <file leaf-file-name="crtl_os.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/crtl_os.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.8275862">
-              <caret line="117" column="71" selection-start-line="117" selection-start-column="71" selection-end-line="117" selection-end-column="71" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="288" column="32" selection-start-line="288" selection-start-column="32" selection-end-line="288" selection-end-column="32" />
+              <folding>
+                <element signature="e#370#5482#0" expanded="false" />
+                <element signature="e#434#531#0" expanded="false" />
+                <element signature="e#602#1009#0" expanded="false" />
+                <element signature="e#1051#4079#0" expanded="false" />
+                <element signature="e#1095#1620#0" expanded="false" />
+                <element signature="e#1674#2479#0" expanded="false" />
+                <element signature="e#2536#4014#0" expanded="false" />
+                <element signature="e#4057#4079#0" expanded="false" />
+                <element signature="e#4122#5482#0" expanded="false" />
+                <element signature="e#4166#4491#0" expanded="false" />
+                <element signature="e#4545#4918#0" expanded="false" />
+                <element signature="e#4975#5417#0" expanded="false" />
+                <element signature="e#5460#5482#0" expanded="false" />
+                <element signature="e#5761#7196#0" expanded="false" />
+                <element signature="e#8038#8181#0" expanded="false" />
+                <element signature="e#8225#8361#0" expanded="false" />
+                <element signature="e#8406#8410#0" expanded="false" />
+                <element signature="e#12105#13993#0" expanded="false" />
+                <element signature="e#14037#14415#0" expanded="false" />
+                <element signature="e#14460#14464#0" expanded="false" />
+                <element signature="e#17310#17505#0" expanded="false" />
+                <element signature="e#17556#17565#0" expanded="false" />
+                <element signature="e#17615#17619#0" expanded="false" />
+                <element signature="e#17947#18322#0" expanded="false" />
+                <element signature="e#18354#18545#0" expanded="false" />
+                <element signature="e#18581#18829#0" expanded="false" />
+                <element signature="e#18868#19173#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="widgets.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/nisk/widgets.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-7.862069">
+              <caret line="1277" column="90" selection-start-line="1277" selection-start-column="82" selection-end-line="1277" selection-end-column="90" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="display_common.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/urwid/display_common.py">
+      <file leaf-file-name="conf.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/conf.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="141" column="14" selection-start-line="141" selection-start-column="14" selection-end-line="142" selection-end-column="15" />
+            <state vertical-scroll-proportion="0.13866232">
+              <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -56,37 +97,7 @@
         <entry file="file://$PROJECT_DIR$/nisk/formmer.py">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="47" column="34" selection-start-line="47" selection-start-column="34" selection-end-line="47" selection-end-column="34" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="widgets.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/nisk/widgets.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.3448277">
-              <caret line="87" column="17" selection-start-line="87" selection-start-column="17" selection-end-line="87" selection-end-column="17" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="widget.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/urwid/widget.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.83153015">
-              <caret line="1693" column="29" selection-start-line="1693" selection-start-column="21" selection-end-line="1693" selection-end-column="29" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="crtl_os.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/crtl_os.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="285" column="54" selection-start-line="285" selection-start-column="54" selection-end-line="285" selection-end-column="54" />
+              <caret line="105" column="6" selection-start-line="105" selection-start-column="6" selection-end-line="105" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -118,10 +129,12 @@
         <option value="$PROJECT_DIR$/pyGestorModel/orm_os.py" />
         <option value="$PROJECT_DIR$/urwid/curses_display.py" />
         <option value="$PROJECT_DIR$/urwid/display_common.py" />
-        <option value="$PROJECT_DIR$/nisk/formmer.py" />
-        <option value="$PROJECT_DIR$/conf.py" />
-        <option value="$PROJECT_DIR$/crtl_os.py" />
         <option value="$PROJECT_DIR$/nisk/widgets.py" />
+        <option value="$PROJECT_DIR$/nisk/formmer.py" />
+        <option value="$PROJECT_DIR$/urwidtrees/widgets.py" />
+        <option value="$PROJECT_DIR$/nisk/ListBrowser.py" />
+        <option value="$PROJECT_DIR$/crtl_os.py" />
+        <option value="$PROJECT_DIR$/conf.py" />
       </list>
     </option>
   </component>
@@ -132,7 +145,7 @@
     <option name="x" value="66" />
     <option name="y" value="-8" />
     <option name="width" value="1308" />
-    <option name="height" value="784" />
+    <option name="height" value="772" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -238,8 +251,8 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="settings.editor.selected.configurable" value="vcs.Git" />
-    <property name="last_opened_file_path" value="C:/Python27/Lib/site-packages/unicurses/demos/test_keymenu.py" />
+    <property name="settings.editor.selected.configurable" value="preferences.editor" />
+    <property name="last_opened_file_path" value="O:/portable/PortableGit/bin/git.exe" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="recentsLimit" value="5" />
     <property name="restartRequiresConfirmation" value="true" />
@@ -480,28 +493,28 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="66" y="-8" width="1308" height="784" extended-state="6" />
-    <editor active="false" />
+    <frame x="66" y="-8" width="1308" height="772" extended-state="0" />
+    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16950464" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17244095" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3288889" sideWeight="0.5030675" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.53037035" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4948148" sideWeight="0.4969325" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3288889" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3448819" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.48085758" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3448819" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.53037035" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.47851852" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -586,13 +599,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/crtl_os.py</url>
-          <line>217</line>
+          <line>222</line>
           <option name="timeStamp" value="43" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/urwid/curses_display.py</url>
           <line>187</line>
           <option name="timeStamp" value="47" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="python-line">
+          <url>file://$PROJECT_DIR$/urwid/widget.py</url>
+          <line>1463</line>
+          <option name="timeStamp" value="48" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -602,11 +620,47 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="48" />
+      <option name="time" value="51" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/crtl_os.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="285" column="40" selection-start-line="285" selection-start-column="40" selection-end-line="285" selection-end-column="40" />
+          <folding>
+            <element signature="e#370#5482#0" expanded="false" />
+            <element signature="e#434#531#0" expanded="false" />
+            <element signature="e#602#1009#0" expanded="false" />
+            <element signature="e#1051#4079#0" expanded="false" />
+            <element signature="e#1095#1620#0" expanded="false" />
+            <element signature="e#1674#2479#0" expanded="false" />
+            <element signature="e#2536#4014#0" expanded="false" />
+            <element signature="e#4057#4079#0" expanded="false" />
+            <element signature="e#4122#5482#0" expanded="false" />
+            <element signature="e#4166#4491#0" expanded="false" />
+            <element signature="e#4545#4918#0" expanded="false" />
+            <element signature="e#4975#5417#0" expanded="false" />
+            <element signature="e#5460#5482#0" expanded="false" />
+            <element signature="e#5761#7196#0" expanded="false" />
+            <element signature="e#8038#8181#0" expanded="false" />
+            <element signature="e#8225#8361#0" expanded="false" />
+            <element signature="e#8406#8410#0" expanded="false" />
+            <element signature="e#12105#13993#0" expanded="false" />
+            <element signature="e#14037#14415#0" expanded="false" />
+            <element signature="e#14460#14464#0" expanded="false" />
+            <element signature="e#17310#17505#0" expanded="false" />
+            <element signature="e#17556#17565#0" expanded="false" />
+            <element signature="e#17615#17619#0" expanded="false" />
+            <element signature="e#17947#18322#0" expanded="false" />
+            <element signature="e#18354#18545#0" expanded="false" />
+            <element signature="e#18581#18829#0" expanded="false" />
+            <element signature="e#18868#19173#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/pyGestorForms/frmMain.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-5.342669">
@@ -640,20 +694,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="1.1153846">
           <caret line="550" column="0" selection-start-line="550" selection-start-column="0" selection-end-line="550" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pyGestorForms/frmListContatos.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="83" column="0" selection-start-line="83" selection-start-column="0" selection-end-line="83" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nisk/ListBrowser.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="163" column="0" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -763,14 +803,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/.PyCharm40/system/python_stubs/-762174762/__builtin__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="1767" column="8" selection-start-line="1767" selection-start-column="8" selection-end-line="1767" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Python27/Lib/site-packages/unicurses/demos/test_keymenu.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.1369863">
@@ -863,7 +895,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="628" column="55" selection-start-line="628" selection-start-column="55" selection-end-line="628" selection-end-column="55" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -885,9 +916,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="25" column="1" selection-start-line="25" selection-start-column="1" selection-end-line="25" selection-end-column="1" />
-          <folding>
-            <element signature="e#43#54#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -895,10 +923,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="244" column="8" selection-start-line="244" selection-start-column="8" selection-end-line="244" selection-end-column="8" />
-          <folding>
-            <marker date="1438977779592" expanded="true" signature="-1:-1" placeholder="..." />
-            <marker date="1438977779592" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -906,17 +931,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="23" column="5" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
-          <folding>
-            <element signature="e#0#28#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.PyCharm40/system/python_stubs/-762174762/_curses.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.45469254">
-          <caret line="470" column="9" selection-start-line="470" selection-start-column="9" selection-end-line="470" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -932,7 +946,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.33230293">
           <caret line="148" column="0" selection-start-line="147" selection-start-column="0" selection-end-line="168" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -950,14 +963,39 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="141" column="14" selection-start-line="141" selection-start-column="14" selection-end-line="142" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pyGestorForms/frmListContatos.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.41598696">
+          <caret line="26" column="49" selection-start-line="23" selection-start-column="40" selection-end-line="23" selection-end-column="49" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/conf.py">
+    <entry file="file://$PROJECT_DIR$/urwid/widget.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.8275862">
-          <caret line="117" column="71" selection-start-line="117" selection-start-column="71" selection-end-line="117" selection-end-column="71" />
+        <state vertical-scroll-proportion="-6.3013697">
+          <caret line="1221" column="23" selection-start-line="1221" selection-start-column="19" selection-end-line="1221" selection-end-column="23" />
+          <folding>
+            <element signature="e#892#923#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/urwidtrees/widgets.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="2.939641">
+          <caret line="111" column="25" selection-start-line="111" selection-start-column="25" selection-end-line="111" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nisk/ListBrowser.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7389886">
+          <caret line="201" column="63" selection-start-line="201" selection-start-column="63" selection-end-line="201" selection-end-column="63" />
           <folding />
         </state>
       </provider>
@@ -965,7 +1003,15 @@
     <entry file="file://$PROJECT_DIR$/nisk/formmer.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="47" column="34" selection-start-line="47" selection-start-column="34" selection-end-line="47" selection-end-column="34" />
+          <caret line="105" column="6" selection-start-line="105" selection-start-column="6" selection-end-line="105" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nisk/widgets.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.862069">
+          <caret line="1277" column="90" selection-start-line="1277" selection-start-column="82" selection-end-line="1277" selection-end-column="90" />
           <folding />
         </state>
       </provider>
@@ -973,23 +1019,43 @@
     <entry file="file://$PROJECT_DIR$/crtl_os.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="285" column="54" selection-start-line="285" selection-start-column="54" selection-end-line="285" selection-end-column="54" />
-          <folding />
+          <caret line="288" column="32" selection-start-line="288" selection-start-column="32" selection-end-line="288" selection-end-column="32" />
+          <folding>
+            <element signature="e#370#5482#0" expanded="false" />
+            <element signature="e#434#531#0" expanded="false" />
+            <element signature="e#602#1009#0" expanded="false" />
+            <element signature="e#1051#4079#0" expanded="false" />
+            <element signature="e#1095#1620#0" expanded="false" />
+            <element signature="e#1674#2479#0" expanded="false" />
+            <element signature="e#2536#4014#0" expanded="false" />
+            <element signature="e#4057#4079#0" expanded="false" />
+            <element signature="e#4122#5482#0" expanded="false" />
+            <element signature="e#4166#4491#0" expanded="false" />
+            <element signature="e#4545#4918#0" expanded="false" />
+            <element signature="e#4975#5417#0" expanded="false" />
+            <element signature="e#5460#5482#0" expanded="false" />
+            <element signature="e#5761#7196#0" expanded="false" />
+            <element signature="e#8038#8181#0" expanded="false" />
+            <element signature="e#8225#8361#0" expanded="false" />
+            <element signature="e#8406#8410#0" expanded="false" />
+            <element signature="e#12105#13993#0" expanded="false" />
+            <element signature="e#14037#14415#0" expanded="false" />
+            <element signature="e#14460#14464#0" expanded="false" />
+            <element signature="e#17310#17505#0" expanded="false" />
+            <element signature="e#17556#17565#0" expanded="false" />
+            <element signature="e#17615#17619#0" expanded="false" />
+            <element signature="e#17947#18322#0" expanded="false" />
+            <element signature="e#18354#18545#0" expanded="false" />
+            <element signature="e#18581#18829#0" expanded="false" />
+            <element signature="e#18868#19173#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nisk/widgets.py">
+    <entry file="file://$PROJECT_DIR$/conf.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.3448277">
-          <caret line="87" column="17" selection-start-line="87" selection-start-column="17" selection-end-line="87" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/urwid/widget.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.83153015">
-          <caret line="1693" column="29" selection-start-line="1693" selection-start-column="21" selection-end-line="1693" selection-end-column="29" />
+        <state vertical-scroll-proportion="0.13866232">
+          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
           <folding />
         </state>
       </provider>

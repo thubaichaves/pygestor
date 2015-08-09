@@ -130,14 +130,21 @@ def asDateTime(t, f=None):
     return d
 
 
-def asUnicode(s):
+def asUnicode(sx):
     u = u''
+    if not type(sx) in (tuple,list):
+        s=[sx]
+    else:
+        s=sx
     for t in s:
         try:
             x = t.decode('utf-8')
             u = u + x
-        except:
-            u = u + t
+        except: 
+            try:
+                u = u + t
+            except:
+                u = u + '?'
     return u
 
 
@@ -262,7 +269,7 @@ class TerminalLogger(object):
         #TerminalLogger.logstream = open(TerminalLogger.logfile, "a")
         #logging.basicConfig(stream=TerminalLogger.TerminalLogger, level=logging.DEBUG)
         #logging.basicConfig(stream =sys.stderr, level=logging.DEBUG)
-        #logging.debug('''.*************************************.''')   
+        logging.debug('''.*************************************.''')   
 
     @staticmethod
     def flush():

@@ -109,6 +109,7 @@ class TreeBox(WidgetWrap):
         :param focus: initially focussed position
         """
         self._tree = tree
+        self._size = None
         self._walker = TreeListWalker(tree)
         self._outer_list = ListBox(self._walker)
         if focus is not None:
@@ -127,7 +128,7 @@ class TreeBox(WidgetWrap):
         signals.emit_signal(self._walker, "modified")
 
     def keypress(self, size, key):
-        import logging
+        #import logging
         # logging.debug('tree'+str(key))
         key = self._outer_list.keypress(size, key)
         if key in ['left', 'right', '[', ']', '-', '+', 'C', 'E', ]:

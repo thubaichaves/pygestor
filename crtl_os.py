@@ -192,7 +192,7 @@ class formmer_os_new(formmer.formmer):
             self.act_concluir()
             return True
         elif backref in ('cancelar','esc'):
-            self.binder.handleCommand('cancelar', )
+            self.act_cancelar()
             return True
         else:
             # tui.mdi.ShowDialogText('Não Identificado: ' + str(backref))
@@ -203,6 +203,11 @@ class formmer_os_new(formmer.formmer):
     
     def act_sair(self):
         self._widgetsession.UnShowWidget()
+
+    def act_cancelar(self):
+        self.binder.handleCommand('cancelar')
+        self.r = dlger.cancel
+        self.act_sair()
 
     def act_concluir(self):
         self.binder.handleCommand('concluir')
@@ -249,7 +254,7 @@ class formmer_os_new(formmer.formmer):
         self.cc.setwid(mt)
         self.cc.onmenuopen()
 
-        lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='Nova OS'), 'windowsborder' )
+        lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='Nova OS'), 'windowsborder','windowsborder_of' )
         return lb
 
     def show(self, isdialog=True, tocall=None):
@@ -438,6 +443,9 @@ class mediator_os(puremvc.patterns.mediator.Mediator, puremvc.interfaces.IMediat
 
     def handleCommand(self, cmd, par=None):
         if cmd == 'concluir':
+            self.abort()
+
+        if cmd == 'cancelar':
             self._dados.inte = 0
             self.update()
 

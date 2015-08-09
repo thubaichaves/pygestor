@@ -34,7 +34,7 @@ class frmListAScreens2(nisk.ListBrowser.ListBrowserBase):
     def FoolLoader(self, params):
         rtab = params['rtab']
         ltab = params['ltab']
-        search = params['search']
+        search =util.asUnicode( util.defaultv(params, 'search', ''))
         tree = util.defaultv(params, 'tree', None)
         quantos = util.defaultv(params, 'quantos', 50)
 

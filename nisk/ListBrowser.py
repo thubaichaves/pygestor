@@ -18,11 +18,12 @@ import nisk.dialogs
 class FocusableText(urwid.WidgetWrap):
     """Selectable Text used for nodes in our example"""
 
-    def __init__(self, txt):
+    def __init__(self, txt,cor=None):
+        if not cor:
+            cor = ('gridrow', 'gridrow_of')
         t = urwid.Text(txt)
-        w = urwid.AttrMap(t, 'body', 'focus')
+        w = urwid.AttrMap(t,cor[0],cor[1])
         urwid.WidgetWrap.__init__(self, w)
-        self.wor
 
     def selectable(self):
         return True
@@ -34,15 +35,16 @@ class FocusableText(urwid.WidgetWrap):
 class FocusableRow(urwid.WidgetWrap):
     """Selectable Text used for nodes in our example"""
 
-    def __init__(self, txt):
+    def __init__(self, txt,cor=None):
+        if not cor:
+            cor = ('gridrow', 'gridrow_of')
         t = urwid.Text(util.defiter(txt, 0, ''))
-        t.wrap
         t2 = urwid.Text(str(util.defiter(txt, 1, '')))
         t.set_wrap_mode('clip')
         t2.set_wrap_mode('clip')
         c = urwid.Columns([('weight', 8, t), ('weight', 2, t2)], dividechars=1)
         # c = urwid.Columns([( 28, t), ( 12, t2)])
-        w = urwid.AttrMap(c, 'body', 'focus')
+        w = urwid.AttrMap(c,cor[0],cor[1])
         urwid.WidgetWrap.__init__(self, w)
 
     def selectable(self):
@@ -52,10 +54,19 @@ class FocusableRow(urwid.WidgetWrap):
         return key
 
 
+class Edit_searchfield(urwid.Edit):
+
+    def selectable(self): return False
+
+    def __init__(self, *arg,**kw):
+        super(self.__class__,self).__init__(*arg,**kw)
+
+        
 class TreeBoxx(TreeBox):
     def render(self, size, focus):
         # logging.debug('render size1:'+str(size))
         r = TreeBox.render(self, size, focus)
+        self._size = size
         # try:
         # logging.debug('render canvas r:'+str(r.rows()))
         # except:
@@ -77,12 +88,13 @@ class ListBrowserBase(dlger):
 
     txt_noresults = '-- sem resultados --'
     txt_listbox_nulo = '-- Nulo --'
-    txt_typetosearch = '...Digite para pesquisar...'
+    txt_typetosearch = '...Digite para pesquisar: '
 
     def __init__(self, params):
         self._params = params
 
-        self.header = urwid.Text(self.txt_typetosearch)
+        self.header = Edit_searchfield(self.txt_typetosearch)
+        urwid.connect_signal(self.header, 'change', self._searchfield_changed)
 
         self.rtab = util.defaultv(params, 'rtab', None)
         self.rtab_orm = util.defaultv(params, 'rtab_orm', None)
@@ -106,7 +118,36 @@ class ListBrowserBase(dlger):
             header=urwid.AttrWrap(self.header, 'head'),
             footer=self.footer, focus_part='body')
 
+        self.listbox.keypress=self.listkeypress
+        # self.header.keypress=self.editkeypress
+        self._dirty = False
+
         dlger.__init__(self)
+
+    def _setdirty(self):
+        if not self._dirty:
+            self.clear()
+        self._dirty=True
+
+    def _unsetdirty(self):
+        self._dirty=False
+
+    def _alarmcallback(self):
+        self._unsetdirty()
+        self.load()
+
+    def set_search(self, txt, remostra=True):
+        dirty = self.search != txt
+        self.search = txt
+        if remostra:
+            self.header.set_edit_text( self.search)
+
+        if dirty:
+            self._setdirty()
+
+    def _searchfield_changed(self,a=None,b=None, *arg):
+        self.set_search(b,remostra=False)
+
 
     def FoolLoader(self, params):
 
@@ -116,20 +157,29 @@ class ListBrowserBase(dlger):
         logging.debug(':(')
         return retorno
 
+    def listkeypress(self, size, key):
+        if len(key) == 1 or\
+            key in ('backspace','delete'):
+                urwid.Edit.keypress(self.header,(size[0],),key)
+                return 'up'
+        return TreeBoxx.keypress(self.listbox,size,key)
+
+    def editkeypress(self, size, key):
+        if key in ('down', 'enter','tab'):
+            return TreeBoxx.keypress(self.listbox,self.listbox._size,key)
+        return urwid.Edit.keypress(self.header,size,key)
+
     def load(self):
-
-        # pprint(self.listbox)
-        # pprint(vars(self.listbox))
-        # print(dir(self.listbox))
-        # self.params['quantos'] = self.listbox.
-
         self._params['search'] = self.search
+        if self.listbox._size:
+            self._params['quantos']= self.listbox._size[1]
         consulta = self.loader(self._params)
         needresort = util.defaultv(consulta, 'needresort', False)
 
         del self.fn[:]
-        self.fn.append((urwid.Text(":"), None))
-        self.fn.append((urwid.Text("-"), None))
+        self.fn.append((urwid.Text("."), None))
+        self.fn.append((urwid.Text("."), None))
+        self.fn.append((urwid.Text("."), None))
 
         if needresort:
             dadosx = util.defaultv(consulta, 'dados', {})
@@ -143,8 +193,14 @@ class ListBrowserBase(dlger):
                 self.fn.append((FocusableRow(dadosx[nomes[x]]['nome']), None))
         else:
             dados = util.defaultv(consulta, 'dados', [])
+            inv=0
             for x in dados:
-                self.fn.append((FocusableRow([x['nome'], str(x['tid'])]), None, x['tid']))
+                cor = ('gridrow','gridrow_of') if inv % 2 else('gridrowb','gridrow_of')
+                inv=inv+2
+                self.fn.append((FocusableRow([x['nome'], str(x['tid'])]
+                                             ,cor=cor), None, x['tid']))
+                self.fn.append((urwid.AttrWrap( urwid.Text(''),'gridrowb','gridrow_of'), None))
+
             try:
                 pass
             except:
@@ -152,6 +208,18 @@ class ListBrowserBase(dlger):
 
         if len(self.fn) == 0:
             self.fn.append((urwid.Text(self.txt_noresults), None))
+
+        self.listbox.refresh()
+        # self.listbox.focus_first_child()
+        self._unsetdirty()
+
+    def clear(self):
+        del self.fn[:]
+        self.fn.append((urwid.Text(" "), None))
+        self.fn.append((urwid.Text(" "), None))
+        self.fn.append((urwid.Text(" "), None))
+        self.fn.append((urwid.Text(" "), None))
+        self.fn.append((urwid.Edit("   Pressione TAB para Pesquisar  "), None))
 
         self.listbox.refresh()
         # self.listbox.focus_first_child()
@@ -165,32 +233,22 @@ class ListBrowserBase(dlger):
             self.tocall((self.r, self.rdata, self._params))
 
     def update(self, txtbox, changedtext):
-        set_search(changedtext)
-
-    def set_search(self, txt):
-        self.search = txt
-
-        self.header.set_text(
-            'pesquisa: %s' % self.search if len(self.search) > 0
-            else self.txt_typetosearch)
-
-        self.load()
+        self.set_search(changedtext)
 
     def unhandled_input(self, k):
         # logging.debug('lst ' + str(k))
         if len(k) == 1:
-            txt = self.search + k
-            self.set_search(txt)
-            return True
-
-        elif k == "backspace":
-            txt = self.search[:-1]
-            self.set_search(txt)
+            #txt = self.search + k
+            #self.set_search(txt)
             return True
 
         elif k == "esc":
             self.r = dlger.cancel
             self._widgetsession.UnShowWidget()
+            return True
+
+        elif k == "tab":
+            self.load()
             return True
 
         elif (k == 'enter'):

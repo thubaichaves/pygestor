@@ -248,9 +248,9 @@ class Screen(BaseScreen, RealTerminal):
         for fg in xrange(16):
             for bg in xrange(16):
                 # leave out white on black
-                if fg == curses_.COLOR_WHITE and \
-                   bg == curses_.COLOR_BLACK:
-                    continue
+                #if fg == curses_.COLOR_WHITE and \
+                #   bg == curses_.COLOR_BLACK:
+                #    continue
 
                 curses.init_pair(bg * 16 + 15 - fg, fg, bg)
 
