@@ -143,7 +143,7 @@ class crtl_os:
             self.step_x(self.step)
 
     class os_list(nestedwidget):
-        def __init__(self, _widgetpai,params=None):
+        def __init__(self, _widgetpai, params=None):
             crtl_os.os_new.scancela = step = 0
             crtl_os.os_new.sstart = step = step + 1
             crtl_os.os_new.sedita = step = step + 1
@@ -155,10 +155,10 @@ class crtl_os:
             nestedwidget.__init__(self, _widgetpai)
 
         def callback(self, data=None):
-            
+
             if self.step == crtl_os.os_new.sstart:
                 (self.r, rdata, z) = data
-                self.dados['os'] = util.defaultv(rdata,'tid',None)
+                self.dados['os'] = util.defaultv(rdata, 'tid', None)
 
             if self.step == crtl_os.os_new.sedita:
                 pass
@@ -262,11 +262,10 @@ class formmer_os_new(formmer.formmer):
             (tfld.fieldbox, 'Cliente', 'cliente', {'tab': 'contatos'}),
             (tfld.fieldbox, 'Telefones', ('oscliente', 't4a'), {'readonly': 1}),
 
-            (tfld.textbox, 'Solicitação', 'solicita'),
+            (tfld.textbox, 'Sintomas', 'sintoma'),
             (tfld.textbox, 'Acessórios', 'acess'),
             (tfld.textbox, 'Lembrete', 'lembrete'),
             (tfld.textbox, 'Estado de Conservação', 'conserva'),
-            (tfld.textbox, 'Sintomas', 'sintoma'),
             (tfld.textbox, 'Observações Internas', 'obsint'),
             (tfld.textbox, 'Observações Impressas', 'obsos'),
             (tfld.fieldbox, 'Técnico Resp.', 'usrresp', {'ltab': 'sysus'}),
@@ -586,17 +585,22 @@ class mediator_os(puremvc.patterns.mediator.Mediator, puremvc.interfaces.IMediat
 
 
 class frm_os_list(ListBrowserBase):
-    footer_text = []
+    # footer_text = []
 
     def __init__(self, params):
-        self.footer_text = ''  # todo conf.footer_frmListContatos2
+        # self.footer_text = ''
         ListBrowserBase.__init__(self, params)
+
+        self.headerlist = urwid.Pile([
+            urwid.AttrWrap(self.header, 'head'),
+
+            urwid.AttrWrap(wgtGridRow_oslist.getHeader(), 'head')
+        ])
+        self.view.set_header(self.headerlist)
 
     def FoolLoader(self, params):
         search = util.defaultv(params, 'search', '')
         quantos = util.defaultv(params, 'quantos', 50)
-
-        #
         s = pyGestorModel.dbsession.getsession()
         dados = []
         info = {}
@@ -605,47 +609,57 @@ class frm_os_list(ListBrowserBase):
 
         search = util.asUnicode(search)
 
-        #if len(search) > 0:
-        #    searchx = search.split(' ')
-        #    for s in searchx:
-        #        
         q = q.filter(os_os.oscliente.has(contatos.nome.like('%' + search + '%')))
 
         q = q.limit(quantos)
 
-        # nisk.util.dump(q)
         r = q.all()
 
         for a in r:
             try:
-                dados.append({'tid': a.os, 'id': a.os, 'nome': a.oscliente.nome, 't4a': a.oscliente.t4a})
-            except Exception,e:
+                dados.append({'tid': a.os, 'id': a.os, 'nome': a.oscliente.nome, 't4a': a.oscliente.t4a, 'orm': a})
+            except Exception, e:
                 nisk.util.dump(e)
-            # dados[a.tid] = {'tid': a.tid, 'dbid': a.id, 'nome': a.nome, 'pai': a.pai, 'level': a.nivel}
-
         return {'dados': dados}
+
+    def load(self):
+        self._params['search'] = self.search
+
+        if self.listbox._size:
+            self._params['quantos'] = self.listbox._size[1] / 2
+
+        consulta = self.loader(self._params)
+
+        del self.fn[:]
+        self.fn.append((urwid.Text("."), None))
+        self.fn.append((urwid.Text("."), None))
+        self.fn.append((urwid.Text("."), None))
+
+        dados = util.defaultv(consulta, 'dados', [])
+        inv = 0
+        for x in dados:
+            cor = ('gridrow', 'gridrow_of') if inv % 2 else('gridrowb', 'gridrow_of')
+            inv = inv + 2
+            self.fn.append(wgtGridRow_oslist(dados=x, cor=cor).toappend())
+
+        if len(self.fn) == 0:
+            self.fn.append((urwid.Text(self.txt_noresults), None))
+
+        self.listbox.refresh()
+        self._unsetdirty()
 
     def callback_acts(self, params={}):
         pass
 
-
     def _widgetonshow(self):
         ListBrowserBase._widgetonshow(self)
-        # self._widgetprocessa('dlg_statusbar_put', "Selecione o Cliente Para a Nova OS", self)
         self._widgetprocessa('dlg_statusbar_put', "Lista de OSs", self)
 
-    #
     def _widgetonunshow(self):
         ListBrowserBase._widgetonunshow(self)
         self._widgetprocessa('dlg_statusbar_pop')
 
     def unhandled_input(self, k):
-
-        #if k == "f2":
-        #    self._widgetprocessa(conf.cmds.dlg_frmlistcontatos_add,
-        #                         {'nome': self.search, 'callback': self.callback_acts})
-        #    return k
-
         if k == "enter":
             x = self.getTid()
             if x:
@@ -653,8 +667,49 @@ class frm_os_list(ListBrowserBase):
                 self._widgetsession.UnShowWidget()
                 return True
 
-        #if (k == 'home'):  # "crtl _" = backspace
-        #    self.r = nisk.dialogs.dlger.back
-        #    self._widgetsession.UnShowWidget()
-        #    return k
         return ListBrowserBase.unhandled_input(self, k)
+
+
+class wgtGridRow_oslist(nisk.ListBrowser.wgtGridRow):
+    def __init__(self, dados=None, cor=None):
+        self.cor = cor if cor else ('gridrow', 'gridrow_of')
+
+        self._dados = dados
+        if isinstance(self._dados, dict):
+            self._dadosorm = util.defaultv(self._dados, 'orm', None)
+        else:
+            self._dadosorm = self._dados
+        if not self._dadosorm:
+            raise 'data error'
+
+        self._nome = ''
+        self._tid = self._dadosorm.os
+        self.load()
+
+        urwid.AttrWrap.__init__(self, self._widget, cor)
+
+    def load(self):
+        self.f_os = nisk.ListBrowser.FocusableText(str(self._dadosorm.os), self.cor)
+
+        try:
+            self.f_nome = urwid.Text(
+                self._dadosorm.oscliente.nome)
+        except:
+            self.f_nome = nisk.ListBrowser.FocusableText('', self.cor)
+
+        self._widget = urwid.Pile([
+            urwid.Columns([
+                (1,urwid.Text('[')),(5,self.f_os),(2,urwid.Text('] ')),
+                self.f_nome
+            ]),
+            urwid.Columns([
+                urwid.Text('')
+            ])
+        ])
+
+    def toappend(self):
+        return self, None, self._tid
+
+    @staticmethod
+    def getHeader():
+        return nisk.ListBrowser.FocusableText('Nome', ('gridhead', 'head'))
