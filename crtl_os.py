@@ -1,19 +1,29 @@
 ﻿#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+
+import puremvc.patterns.mediator
+
+import nisk
+import nisk.TUI
+from nisk.ListBrowser import ListBrowserBase
+import nisk.widgets
+import nisk.dialogs
+import nisk.TreeList
+from pyGestorModel.orm_os import os_os
+from pyGestorModel.orm_contatos import *
 from nisk import *
 from nisk.nsatw import *
 from nisk.formmer import tfld
 import nisk.dialogs
 import imprimir
 import urwid
-import puremvc.patterns.mediator
 import pyGestorModel
 import conf
-import app
 from nisk.TUI import nestedwidget
 import pyGestorForms.frmListContatos
 from pyGestorForms import frmListA
+from sqlalchemy import *
 
 
 class crtl_os:
@@ -47,6 +57,8 @@ class crtl_os:
             crtl_os.os_new.smarca = step = step + 1
             crtl_os.os_new.sresp = step = step + 1
             crtl_os.os_new.sfim = step = step + 1
+            crtl_os.os_new.simpr_a = step = step + 1
+            crtl_os.os_new.simpr_b = step = step + 1
             crtl_os.os_new.spos = step = step + 1
             #
             self.step = crtl_os.os_new.scliente
@@ -67,6 +79,19 @@ class crtl_os:
                 (self.r, self.dados['usrresp'], z) = data
             elif self.step == crtl_os.os_new.sfim:
                 (self.r, self.dados['os'], z) = data
+
+            elif self.step == crtl_os.os_new.simpr_a:
+                (r, qtd, z) = data
+                self.r = dlger.ok
+                if r and qtd > 0 and qtd < 10:
+                    self._widgetprocessa(conf.cmds.cmd_os_impr, {'qtd': qtd, 'modelo': 'etiq', 'os': self.dados['os']})
+
+            elif self.step == crtl_os.os_new.simpr_b:
+                (r, qtd, z) = data
+                self.r = dlger.ok
+                if r and qtd > 0 and qtd < 10:
+                    self._widgetprocessa(conf.cmds.cmd_os_impr,
+                                         {'qtd': qtd, 'modelo': 'entrada', 'os': self.dados['os']})
 
             if self.r == dlger.ok:
                 self.step = self.step + 1
@@ -92,13 +117,69 @@ class crtl_os:
             elif step == crtl_os.os_new.sresp:
                 w = frmListA.frmListAScreens2({'rtab': 'lists_a', 'ltab': 'sysus'})
                 w.Show(_widgetpai=self._widgetpai, isdialog=False, tocall=self.callback)
-                
+
             elif step == crtl_os.os_new.sfim:
                 w = formmer_os_new(params={'new': True, 'dados': self.dados}, dados=self.dados)
                 w._widgetregistrapai(self._widgetpai)
                 w.show(isdialog=False, tocall=self.callback)
 
+            elif step == crtl_os.os_new.simpr_a:
+                nisk.dialogs.dlgInput.show('Imprimir quantas Etiquetas?', self._widgetpai, tocall=self.callback,
+                                           isdialog=False)
+
+            elif step == crtl_os.os_new.simpr_b:
+                nisk.dialogs.dlgInput.show('Imprimir quantos Cupons?', self._widgetpai, tocall=self.callback,
+                                           isdialog=False)
+
             elif step == crtl_os.os_new.spos:
+                w = formmer_os_edit(params={'os': self.dados['os']})
+                w._widgetregistrapai(self._widgetpai)
+                w.show()
+
+            elif step == crtl_os.os_new.scancela:
+                self._widgetsession.UnShowWidget()
+
+        def act_start(self):
+            self.step_x(self.step)
+
+    class os_list(nestedwidget):
+        def __init__(self, _widgetpai,params=None):
+            crtl_os.os_new.scancela = step = 0
+            crtl_os.os_new.sstart = step = step + 1
+            crtl_os.os_new.sedita = step = step + 1
+            #
+            self.step = crtl_os.os_new.sstart
+            self.r, self.s = None, None
+            self.dados = {}
+
+            nestedwidget.__init__(self, _widgetpai)
+
+        def callback(self, data=None):
+            
+            if self.step == crtl_os.os_new.sstart:
+                (self.r, rdata, z) = data
+                self.dados['os'] = util.defaultv(rdata,'tid',None)
+
+            if self.step == crtl_os.os_new.sedita:
+                pass
+
+            if self.r == dlger.ok:
+                self.step = self.step + 1
+            elif self.r == dlger.back:
+                self.step -= 1
+            elif self.r == dlger.cancel:
+                self.step = crtl_os.os_new.scancela
+
+            self.step_x(self.step)
+
+        def step_x(self, step, data=None):
+            if 0 > 1:
+                pass
+            elif step == crtl_os.os_new.sstart:
+                frmc = frm_os_list({})
+                frmc.Show(_widgetpai=self._widgetpai, isdialog=False, tocall=self.callback)
+
+            elif step == crtl_os.os_new.sedita:
                 w = formmer_os_edit(params={'os': self.dados['os']})
                 w._widgetregistrapai(self._widgetpai)
                 w.show()
@@ -162,19 +243,25 @@ class formmer_os_new(formmer.formmer):
         self.params = params
         self.dados = dados
         self.cc = nisk.widgets.HMenu(conf.menu_os_add, None, defaultcb=self.callbacks, width=24, selfclose=True)
-        self.tocall=None
+        self.tocall = None
         self.r = dlger.void
 
         formmer.formmer.__init__(self, [
-            (tfld.itextbox, 'OS', 'os'),
-            (tfld.fieldbox, 'Tipo de Equip.', 'tipo', {'ltab': 'ostip'}),
-            (tfld.fieldbox, 'Marca', 'marca', {'ltab': 'osfab'}),
+            (tfld.itextbox, 'OS', 'os', {'readonly': 1, 'estreito': 2}),
+            (tfld.datepicker, 'Data de Entrada', 'dataent', {'readonly': 1, 'estreito': 2}),
+
+            (tfld.fieldbox, 'Tipo de Equip.', 'tipo', {'ltab': 'ostip', 'estreito': 2}),
+            (tfld.fieldbox, 'Marca', 'marca', {'ltab': 'osfab', 'estreito': 2}),
+
             (tfld.textbox, 'Modelo', 'modelo', {'estreito': 2}),
             (tfld.textbox, 'N° Série', 'ns', {'estreito': 2}),
-            (tfld.fieldbox, 'Técnico Resp.', 'usrresp', {'ltab': 'sysus'}),
+
+            (tfld.fieldbox, 'Status', 'status', {'ltab': 'osstt', 'estreito': 2}),
+            (tfld.fieldbox, 'Tarefa', 'ntarefa', {'ltab': 'osnxt', 'estreito': 2}),
+
             (tfld.fieldbox, 'Cliente', 'cliente', {'tab': 'contatos'}),
-            #(tfld.fieldbox, 'Telefones', 'cliente', {'tab': 'contatos'}),
-            (tfld.datepicker, 'Data de Entrada', 'dataent',),
+            (tfld.fieldbox, 'Telefones', ('oscliente', 't4a'), {'readonly': 1}),
+
             (tfld.textbox, 'Solicitação', 'solicita'),
             (tfld.textbox, 'Acessórios', 'acess'),
             (tfld.textbox, 'Lembrete', 'lembrete'),
@@ -182,8 +269,7 @@ class formmer_os_new(formmer.formmer):
             (tfld.textbox, 'Sintomas', 'sintoma'),
             (tfld.textbox, 'Observações Internas', 'obsint'),
             (tfld.textbox, 'Observações Impressas', 'obsos'),
-            (tfld.fieldbox, 'Status', 'status', {'ltab': 'osstt'}),
-            (tfld.fieldbox, 'Tarefa', 'ntarefa', {'ltab': 'osnxt'}),
+            (tfld.fieldbox, 'Técnico Resp.', 'usrresp', {'ltab': 'sysus'}),
         ])
         self.binder = mediator_os(self)
 
@@ -191,7 +277,7 @@ class formmer_os_new(formmer.formmer):
         if backref in ('concluir', 'f6'):
             self.act_concluir()
             return True
-        elif backref in ('cancelar','esc'):
+        elif backref in ('cancelar', 'esc'):
             self.act_cancelar()
             return True
         else:
@@ -200,7 +286,7 @@ class formmer_os_new(formmer.formmer):
                 logging.debug('Não Identificado: ' + str(backref))
             pass
         return False
-    
+
     def act_sair(self):
         self._widgetsession.UnShowWidget()
 
@@ -213,11 +299,11 @@ class formmer_os_new(formmer.formmer):
         self.binder.handleCommand('concluir')
         self.r = dlger.ok
         self.act_sair()
-        
+
     def _widgetonunshow(self):
         if self.tocall:
             self.tocall((self.r, self.binder.dado_get('os'), self.params))
-        #nisk.TUI.nestedwidget._widgetonunshow(self)
+            # nisk.TUI.nestedwidget._widgetonunshow(self)
 
     def unhandled_input(self, k):
         if k in ('f1', 'meta m'):
@@ -232,7 +318,7 @@ class formmer_os_new(formmer.formmer):
     def get_frame(self):
 
         # bkg = widgets.SBListBox(self, (u"\u2593", "handle"), (u"\u2592", "scrollbar_bg"))
-        bkg = widgets.SBListBox(self, (u"#", "handle"), (u"-", "scrollbar_bg"))
+        bkg = nisk.widgets.SBListBox(self, (u"#", "handle"), (u"-", "scrollbar_bg"))
         bkg = urwid.Padding(widgets.SBListBox(self), left=1, right=1)
         bkg = urwid.AttrWrap(bkg, 'body')
 
@@ -254,7 +340,7 @@ class formmer_os_new(formmer.formmer):
         self.cc.setwid(mt)
         self.cc.onmenuopen()
 
-        lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='Nova OS'), 'windowsborder','windowsborder_of' )
+        lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='Nova OS'), 'windowsborder', 'windowsborder_of')
         return lb
 
     def show(self, isdialog=True, tocall=None):
@@ -289,17 +375,17 @@ class formmer_os_edit(formmer.formmer, dlger):
         self.cc = nisk.widgets.HMenu(conf.menu_os_edit, None, defaultcb=self.callbacks, width=24, selfclose=True)
 
         formmer.formmer.__init__(self, [
-            (tfld.itextbox, 'OS', 'os', {'readonly': 1,'estreito': 2}),
-            (tfld.datepicker, 'Data de Entrada', 'dataent', {'readonly': 1,'estreito': 2}),
-            
+            (tfld.itextbox, 'OS', 'os', {'readonly': 1, 'estreito': 2}),
+            (tfld.datepicker, 'Data de Entrada', 'dataent', {'readonly': 1, 'estreito': 2}),
+
             (tfld.fieldbox, 'Cliente', 'cliente', {'tab': 'contatos'}),
-            (tfld.textbox, 'Telefones', ('oscliente','t4a'), {'readonly': 1}),
+            (tfld.textbox, 'Telefones', ('oscliente', 't4a'), {'readonly': 1}),
 
-            (tfld.fieldbox, 'Status', 'status', {'ltab': 'osstt','estreito': 2}),
-            (tfld.fieldbox, 'Tarefa', 'ntarefa', {'ltab': 'osnxt','estreito': 2}),
+            (tfld.fieldbox, 'Status', 'status', {'ltab': 'osstt', 'estreito': 2}),
+            (tfld.fieldbox, 'Tarefa', 'ntarefa', {'ltab': 'osnxt', 'estreito': 2}),
 
-            (tfld.fieldbox, 'Tipo de Equip.', 'tipo', {'ltab': 'ostip','estreito': 2}),
-            (tfld.fieldbox, 'Marca', 'marca', {'ltab': 'osfab','estreito': 2}),
+            (tfld.fieldbox, 'Tipo de Equip.', 'tipo', {'ltab': 'ostip', 'estreito': 2}),
+            (tfld.fieldbox, 'Marca', 'marca', {'ltab': 'osfab', 'estreito': 2}),
 
             (tfld.textbox, 'Modelo', 'modelo', {'estreito': 2}),
             (tfld.textbox, 'N° Série', 'ns', {'estreito': 2}),
@@ -443,11 +529,11 @@ class mediator_os(puremvc.patterns.mediator.Mediator, puremvc.interfaces.IMediat
 
     def handleCommand(self, cmd, par=None):
         if cmd == 'concluir':
-            self.abort()
-
-        if cmd == 'cancelar':
             self._dados.inte = 0
             self.update()
+
+        if cmd == 'cancelar':
+            self.abort()
 
             return
         if cmd == 'salvar':
@@ -497,3 +583,78 @@ class mediator_os(puremvc.patterns.mediator.Mediator, puremvc.interfaces.IMediat
         # self.sendNotification(main.AppFacade.CANCEL_SELECTED)
         # self.clearForm()
         pass
+
+
+class frm_os_list(ListBrowserBase):
+    footer_text = []
+
+    def __init__(self, params):
+        self.footer_text = ''  # todo conf.footer_frmListContatos2
+        ListBrowserBase.__init__(self, params)
+
+    def FoolLoader(self, params):
+        search = util.defaultv(params, 'search', '')
+        quantos = util.defaultv(params, 'quantos', 50)
+
+        #
+        s = pyGestorModel.dbsession.getsession()
+        dados = []
+        info = {}
+
+        q = s.query(os_os).order_by(desc(os_os.os))
+
+        search = util.asUnicode(search)
+
+        #if len(search) > 0:
+        #    searchx = search.split(' ')
+        #    for s in searchx:
+        #        
+        q = q.filter(os_os.oscliente.has(contatos.nome.like('%' + search + '%')))
+
+        q = q.limit(quantos)
+
+        # nisk.util.dump(q)
+        r = q.all()
+
+        for a in r:
+            try:
+                dados.append({'tid': a.os, 'id': a.os, 'nome': a.oscliente.nome, 't4a': a.oscliente.t4a})
+            except Exception,e:
+                nisk.util.dump(e)
+            # dados[a.tid] = {'tid': a.tid, 'dbid': a.id, 'nome': a.nome, 'pai': a.pai, 'level': a.nivel}
+
+        return {'dados': dados}
+
+    def callback_acts(self, params={}):
+        pass
+
+
+    def _widgetonshow(self):
+        ListBrowserBase._widgetonshow(self)
+        # self._widgetprocessa('dlg_statusbar_put', "Selecione o Cliente Para a Nova OS", self)
+        self._widgetprocessa('dlg_statusbar_put', "Lista de OSs", self)
+
+    #
+    def _widgetonunshow(self):
+        ListBrowserBase._widgetonunshow(self)
+        self._widgetprocessa('dlg_statusbar_pop')
+
+    def unhandled_input(self, k):
+
+        #if k == "f2":
+        #    self._widgetprocessa(conf.cmds.dlg_frmlistcontatos_add,
+        #                         {'nome': self.search, 'callback': self.callback_acts})
+        #    return k
+
+        if k == "enter":
+            x = self.getTid()
+            if x:
+                self.r = dlger.ok
+                self._widgetsession.UnShowWidget()
+                return True
+
+        #if (k == 'home'):  # "crtl _" = backspace
+        #    self.r = nisk.dialogs.dlger.back
+        #    self._widgetsession.UnShowWidget()
+        #    return k
+        return ListBrowserBase.unhandled_input(self, k)

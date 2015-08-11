@@ -52,7 +52,7 @@ class formmer(urwid.ListBox, nisk.TUI.nestedwidget):
             
 
             if t == tfld.textbox:
-                tf = widgets.wgtFieldBox(caption=c, bindf=b,cor=cor)
+                tf = widgets.wgtFieldBox(caption=c, bindf=b,cor=cor,)
 
             elif t == tfld.itextbox:
                 tf = widgets.wgtIntFieldBox(caption=c, bindf=b,
@@ -68,6 +68,8 @@ class formmer(urwid.ListBox, nisk.TUI.nestedwidget):
                 continue
                 #
             self.widgets[tf] = (c, b, o)
+            
+            self._widgetregistrafilhos([tf])
 
             if estreito:            
                 estreitos_list.append(tf)
@@ -92,7 +94,6 @@ class formmer(urwid.ListBox, nisk.TUI.nestedwidget):
                 #
         # self.binder = binder(self.widgets,self.fields)
         #
-        self._widgetregistrafilhos(self.lwlist)
         self.lw = urwid.SimpleListWalker(self.lwlist)
         urwid.ListBox.__init__(self, self.lw)
         logging.debug('formmer ok')
@@ -141,10 +142,11 @@ class binder:
                         v=dados
                         for arg in b:
                             try:
-                                v = getattr(v, arg)
+                                if v:
+                                    v = getattr(v, arg)
                             except:
+                                util.dump(['erro nisk.formmer.binder.load',b,dados,v])
                                 v=None
-                                util.dump(['erro nisk.formmer.binder.load',b,dados])
 
                     x.setValue(v)
                 else:

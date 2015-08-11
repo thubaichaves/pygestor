@@ -15,6 +15,8 @@ from nisk import *
 from nisk.nsatw import *
 #
 import controller
+import pyGestorModel
+from appbase import conecta
 #
 from pyGestorForms import enum
 import tk
@@ -23,7 +25,14 @@ class WxApp(nisk.dialogs.widgetBase):
     def __init__(self):
         super(WxApp, self).__init__()
 
-    def _widgetonshow(self):
+    def _widgetonshow(self):        
+        if not pyGestorModel.common.dbsession.sessionconfname:
+            conecta(self,{'callback':self._widgetonshow_2})
+        else:
+            self._widgetonshow_2()
+
+    def _widgetonshow_2(self): 
+        self._widgetfacade.sendNotification(conf.cmds.STARTUP, nisk.tui.mdi)
         self.startclock()
         # self.startclockx()
         super(WxApp, self)._widgetonshow()

@@ -61,7 +61,7 @@ class pyGestorFacade(puremvc.patterns.facade.Facade, nisk.TUI.nestedwidget):
             (conf.cmds.STARTUP, pyGestorFacade.StartupCommand),
             (conf.cmds.OS_OPEN, pyGestorFacade._OS_OPEN),
             (conf.cmds.OS_ADD, pyGestorFacade._OS_ADD),
-            (conf.cmds.OS_ADD, pyGestorFacade._OS_ADD),
+            (conf.cmds.cmd_os_list, pyGestorFacade._cmd_os_list),
             (conf.cmds.OS_ADD, pyGestorFacade._OS_ADD),
             (conf.cmds.cmd_checkLogin, pyGestorFacade._cmd_checkLogin),
             (conf.cmds.cmd_os_impr, pyGestorFacade._cmd_os_impr),
@@ -142,6 +142,8 @@ class pyGestorFacade(puremvc.patterns.facade.Facade, nisk.TUI.nestedwidget):
                 #
             elif backref == 'os_nova':
                 pyGestorFacade.mainInstance().sendNotification(conf.cmds.OS_ADD, '')  #
+            elif backref == 'os_lista':
+                pyGestorFacade.mainInstance().sendNotification(conf.cmds.cmd_os_list, '')  #
             elif backref == 'os_create':
                 pyGestorFacade.mainInstance().sendNotification(conf.cmds.cmd_os_create, '')
                 #
@@ -208,6 +210,13 @@ class pyGestorFacade(puremvc.patterns.facade.Facade, nisk.TUI.nestedwidget):
         def execute(self, note):
             facade = note.facade if issubclass(type(note), pyGestorFacade.superNotification) else None
             x = crtl_os.crtl_os.os_new(facade)
+            x.act_start()
+
+    class _cmd_os_list(puremvc.patterns.command.SimpleCommand, puremvc.interfaces.ICommand):
+        def execute(self, note):
+            b = note.getBody()
+            facade = note.facade if issubclass(type(note), pyGestorFacade.superNotification) else None
+            x = crtl_os.crtl_os.os_list(facade, b)
             x.act_start()
 
     class _OS_OPEN(puremvc.patterns.command.SimpleCommand, puremvc.interfaces.ICommand):

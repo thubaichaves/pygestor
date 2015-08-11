@@ -15,6 +15,7 @@ from urwid import *
 import math
 import urwid
 import tk
+import urwidtrees
 
 
 class NumEdit(Edit):
@@ -582,6 +583,22 @@ class wgtDateFieldBox(AttrWrap, bindablefield):
         return self.textField.setvalue(v)
 
 
+class wgtFieldBoxDb_display(urwid.Text):
+    ''' TENTATIVA DE RESOLVER BUG DE RENDERIZAÇÃO'''
+    def __init__(self,*arg,**kw):
+        self._size = None
+        super(self.__class__, self).__init__(*arg,**kw)
+
+    def render(self, size, focus=False):
+        self._size = size
+        return super(self.__class__, self).render(size,focus)
+
+    def set_text(self,markup):
+        if self._size:
+            if len(markup)> self._size[0]:
+                markup = markup[0:self._size[0]]
+        return super(self.__class__, self).set_text(            markup)
+
 ######################################################################
 class wgtFieldBoxDb(AttrWrap, bindablefield):
     signals = ['change']
@@ -622,7 +639,7 @@ class wgtFieldBoxDb(AttrWrap, bindablefield):
         self.codField = wgtIntEdit()
         self.lastCod = nisk.util.asInt(self.codField.value())
 
-        self.textField = urwid.Text('')
+        self.textField =  wgtFieldBoxDb_display('')
         urwid.connect_signal(self.codField, 'valuechange', self.edit_changed)
         urwid.connect_signal(self.codField, 'focusIn', self._OnFocusIn)
         urwid.connect_signal(self.codField, 'focusOut', self._OnFocusOut)
@@ -696,6 +713,7 @@ class wgtFieldBoxDb(AttrWrap, bindablefield):
             if 1:  # self._iniciado:
                 urwid.emit_signal(self, 'change', self, self.GetValue())
         self._iniciado = True
+        # urwid.CanvasCache._widgets.clear()
 
     def consulta(self, cod):
         err = 1
@@ -1087,6 +1105,9 @@ class SBListBox(urwid.WidgetWrap):
         elif isinstance(body, list):
             self.length = len(body)
             self.listbox = urwid.ListBox(body)
+        elif isinstance(body, urwidtrees.TreeBox):
+            self.length = len(body._outer_list.body._tree._treelist)
+            self.listbox = body._outer_list
         else:
             raise Exception
 

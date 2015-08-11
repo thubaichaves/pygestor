@@ -22,7 +22,7 @@ class app:
         app_ = controller.pyGestorFacade.getInstance()
         app_._widgetregistrapai(mainform)
         mainform._widgetfacade = app_
-        app_.sendNotification(conf.cmds.STARTUP, nisk.tui.mdi)
+        #app_.sendNotification(conf.cmds.STARTUP, nisk.tui.mdi)
 
         nisk.tui.mdi.run()
 

@@ -14,6 +14,8 @@ Base = declarative_base()
 
 class dbsession:
     smaker = None
+    sessionconfname = None
+    _dburl = None
 
 
     def __init__(self):
@@ -28,8 +30,10 @@ class dbsession:
             # session = SessionMkr()
 
     @staticmethod
-    def configura_dburl(urlx):
+    def configura_dburl(urlx,sessionconfname):
+        dbsession.smaker = None
         if dbsession.smaker is None:
+            dbsession.sessionconfname=sessionconfname
             dbsession._dburl = urlx
 
     @staticmethod

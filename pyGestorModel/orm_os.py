@@ -6,7 +6,7 @@ class os_os(Base):
     __tablename__ = 'os_os'
 
     id = Column(Integer, primary_key=True, autoincrement=False, server_default=FetchedValue())
-    os = Column(Integer)
+    os = Column(Integer, server_default=FetchedValue())
     exc = Column(Integer)
     #
     cliente = Column(Integer, ForeignKey('contatos.id'))

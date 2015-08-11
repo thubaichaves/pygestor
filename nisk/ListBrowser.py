@@ -113,8 +113,11 @@ class ListBrowserBase(dlger):
         self._footertxb = urwid.Text(self.footer_text)
         self.footer = urwid.AttrWrap(self._footertxb, 'foot')
 
+        bkg = urwid.Padding(nisk.widgets.SBListBox(self.listbox), left=1, right=1)
+        bkg = urwid.AttrWrap(bkg, 'body')
+
         self.view = urwid.Frame(
-            urwid.AttrWrap(self.listbox, 'body'),
+            urwid.AttrWrap(bkg, 'body'),
             header=urwid.AttrWrap(self.header, 'head'),
             footer=self.footer, focus_part='body')
 

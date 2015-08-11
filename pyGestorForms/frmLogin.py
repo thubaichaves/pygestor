@@ -8,16 +8,16 @@ import nisk.TUI
 import nisk.widgets
 import pyGestorModel.proxies
 import nisk.dialogs
-import thread, threading
-from nisk import util
-import logging
+from appbase import conecta
 
 
 class frmLoginA(nisk.TUI.nestedwidget):
     def __init__(self, _widgetpai):
+
         self.edtUser = nisk.widgets.wgtFieldBoxDb(ltabela='sysus', tabela='lists_a', caption=u'Usuário',
                                                   params={"canedit": False})
         self.edtPass = urwid.Edit(caption = 'Senha: ',mask='*')
+        self.edtServ = urwid.Edit(caption = 'Servidor: ')
         nisk.TUI.nestedwidget.__init__(self, pai=_widgetpai, filhos=[self.edtUser, self.edtPass])
         self._constroi()
 
@@ -53,6 +53,8 @@ class frmLoginA(nisk.TUI.nestedwidget):
     def act_CheckLogin(self):
         _u = self.edtUser.GetValue()
         _p = self.edtPass.get_edit_text()
+        _s = self.edtServ.get_edit_text()
+
         _c = pyGestorModel.proxies.DB_Procedures.sproc_autenticalogin({'user': _u, 'pass': _p})
         if _c:
             self._widgetsession._login(_u)

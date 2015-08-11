@@ -10,6 +10,8 @@ import nisk.widgets
 import nisk.dialogs
 import nisk.util as util
 import nisk.TreeList
+import pyGestorModel
+from pyGestorModel.orm_contatos import contatos
 
 
 class frmListContatos2(ListBrowserBase):
@@ -23,8 +25,6 @@ class frmListContatos2(ListBrowserBase):
         search = util.defaultv(params, 'search', '')
         quantos = util.defaultv(params, 'quantos', 50)
 
-        import pyGestorModel
-        from pyGestorModel.orm_contatos import contatos
         #
         s = pyGestorModel.dbsession.getsession()
         dados = []

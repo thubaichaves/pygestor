@@ -173,19 +173,6 @@ def mudacor():
     tui.mdi.loop.screen.register_palette(conf.const_PALETTE)
     pass
 
-menu_Items = {
-    'novaOS': ('Nova OS', None),
-    'printOS': ('Imprimir OS', None),
-    'abrirOS': ('Abrir OS', None),
-
-}
-menu_Menus = {
-    'OS': ('OSs', None),
-    'Ajuda': ('Ajuda', None),
-    'abrirOS': ('Abrir OS', None),
-
-}
-
 sizes = {
     "ListBrowser1": ( ('fixed left', 8), 120, ('fixed top', 6), 40),
     "wgtFieldBoxDb1": (18, 5  ),
@@ -197,7 +184,7 @@ sizes = {
 menu_top = (
     u'Neon Gestor', [
         (u'&Ordem de Serviço', [
-            (u'&Nova OS', 'os_nova'),
+            (u'&Listar OSs', 'os_lista'),
             (u'&Criar OS', 'os_create'),
             (u'&Abrir OS', 'os_abrir'),
             (u'Imprimir Entrada OS', 'os_print_ent'),
@@ -294,6 +281,7 @@ class cmds:
     cmd_checkLogin = "cmd_checkLogin"
     cmd_os_impr = "cmd_os_impr"
     cmd_os_create= "cmd_os_create"
+    cmd_os_list= "cmd_os_list"
 
     dlg_frmlistsA_add = "dlg_frmlistsA_add"
     dlg_frmlistsA_open = "dlg_frmlistsA_open"
