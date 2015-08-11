@@ -14,7 +14,7 @@ from nsatw import *
 from urwid import *
 import math
 import urwid
-import tk
+# import tk
 import urwidtrees
 
 
@@ -244,6 +244,8 @@ class wgtDateEdit(urwid.IntEdit):
         return self._lastvalue
 
     def setvalue(self, v):
+        if v:
+            v = v.replace(second=0,microsecond=0)
         self._lastvalue = v
         self._salvalast()
         self._show()
@@ -1133,8 +1135,11 @@ class SBListBox(urwid.WidgetWrap):
 
         (middle, top, bottom) = self.listbox.calculate_visible(size)
         self.scrollbar.middle = min(size[1], self.length)
-        self.scrollbar.top = middle[2] - len(top[1])
-        self.scrollbar.bottom = self.length - middle[2] - len(bottom[1]) - 1
+        middle2 = middle[2]
+        if type(middle2) is tuple:
+           middle2 = 0# middle2[0]
+        self.scrollbar.top = middle2 - len(top[1])
+        self.scrollbar.bottom = self.length - middle2 - len(bottom[1]) - 1
         self.scrollbar._invalidate()
 
     def render(self, size, focus=False):

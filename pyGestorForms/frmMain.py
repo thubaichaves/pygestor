@@ -19,7 +19,7 @@ import pyGestorModel
 from appbase import conecta
 #
 from pyGestorForms import enum
-import tk
+# import tk
 
 class WxApp(nisk.dialogs.widgetBase):
     def __init__(self):

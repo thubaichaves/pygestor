@@ -79,6 +79,27 @@ class TreeBoxx(TreeBox):
         # pass
         return r
 
+    
+class wgtGridRow(urwid.AttrWrap):
+    def __init__(self, dados=None, cor=None):
+        self.cor = cor if cor else ('gridrow','gridrow_of')
+        self._dados = dados
+        
+        self._nome = ''
+        self._tid = None
+
+        self._widget =  FocusableText('Nome',cor)
+        #self._widget = FocusableRow( [x['nome'], str(x['tid'])],cor=cor)
+        
+        self.__super.__init__(self._widget,cor[0],cor[1])
+
+    def toappend(self):
+        return (self,None,self._tid)
+
+    @staticmethod
+    def getHearder():
+        return urwid.AttrWrap(FocusableText('Nome'))
+
 
 class ListBrowserBase(dlger):
     footer_text = [
@@ -94,6 +115,8 @@ class ListBrowserBase(dlger):
         self._params = params
 
         self.header = Edit_searchfield(self.txt_typetosearch)
+        self.headerlist = urwid.Pile([urwid.AttrWrap(self.header, 'head')])
+
         urwid.connect_signal(self.header, 'change', self._searchfield_changed)
 
         self.rtab = util.defaultv(params, 'rtab', None)
@@ -112,13 +135,13 @@ class ListBrowserBase(dlger):
 
         self._footertxb = urwid.Text(self.footer_text)
         self.footer = urwid.AttrWrap(self._footertxb, 'foot')
-
-        bkg = urwid.Padding(nisk.widgets.SBListBox(self.listbox), left=1, right=1)
+        bkg = self.listbox#nisk.widgets.SBListBox(self.listbox)
+        #bkg = urwid.Padding(bkg, left=1, right=1)
         bkg = urwid.AttrWrap(bkg, 'body')
 
         self.view = urwid.Frame(
             urwid.AttrWrap(bkg, 'body'),
-            header=urwid.AttrWrap(self.header, 'head'),
+            header= self.headerlist,
             footer=self.footer, focus_part='body')
 
         self.listbox.keypress=self.listkeypress
@@ -175,7 +198,7 @@ class ListBrowserBase(dlger):
     def load(self):
         self._params['search'] = self.search
         if self.listbox._size:
-            self._params['quantos']= self.listbox._size[1]
+            self._params['quantos']= self.listbox._size[1]/2
         consulta = self.loader(self._params)
         needresort = util.defaultv(consulta, 'needresort', False)
 
@@ -217,6 +240,10 @@ class ListBrowserBase(dlger):
         self._unsetdirty()
 
     def clear(self):
+        try:
+            self.listbox.focus_first_child()
+        except Exception,e:
+            util.dump(('clear',e))
         del self.fn[:]
         self.fn.append((urwid.Text(" "), None))
         self.fn.append((urwid.Text(" "), None))
@@ -225,7 +252,6 @@ class ListBrowserBase(dlger):
         self.fn.append((urwid.Edit("   Pressione TAB para Pesquisar  "), None))
 
         self.listbox.refresh()
-        # self.listbox.focus_first_child()
 
     def _widgetonshow(self):
         dlger._widgetonshow(self)

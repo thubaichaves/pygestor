@@ -211,13 +211,13 @@ class binder:
                 else:
                     setattr(self._dados, b, v)
             else:
-                logging.debug('binder wid error3')
+                util.dump('binder wid error3')
         except Exception, e:
             logging.exception(e)
 
         self.set_isdirty(True)
-        logging.debug('dirty setado')
-        # util.dump((x,d,x.get_bindf()),'cod setado')
+        #logging.debug('dirty setado')
+        util.dump((x,d,x.get_bindf()),'cod setado')
 
     def onAdd(self, evt):
         pass

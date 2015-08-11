@@ -12,7 +12,7 @@ cfg_dburl = "firebird+fdb://sysdba:masterkey@localhost:3050/o:\\prog\\pygestor\\
 
 cfg_dburl_list = {
     'dev': "firebird+fdb://sysdba:masterkey@localhost:3050/c:\\neon\\banco.gdb?charset=WIN1252",
-    'serv': "firebird+fdb://sysdba:masterkey@172.72.0.5:3050/c:\\neon\\banco.gdb?charset=WIN1252",
+    'server': "firebird+fdb://sysdba:masterkey@172.72.0.5:3050/c:\\neon\\banco.gdb?charset=WIN1252",
     'nb': "firebird+fdb://sysdba:masterkey@172.73.0.1:3050/c:\\neon\\banco.gdb?charset=WIN1252",
     'linux': "firebird+fdb://sysdba:masterkey@localhost:3050//srv/banco.fdb?charset=WIN1252",
 }
@@ -121,6 +121,7 @@ const_PALETTE = [
 
 
     ('gridrow', 'white', 'dark blue'),#'','#ffd', '#00a'),
+    ('gridhead', 'white', 'black'),
     ('gridrowb',  'white', 'dark blue'),#'','#ffd', '#00a'),
     ('gridrow_of', 'white', 'light red'),# 'bold','#ff8', '#806'),  ,
     ('gridrow_ofb', 'white', 'light red'),
