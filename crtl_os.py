@@ -393,6 +393,8 @@ class formmer_os_edit(formmer.formmer, dlger):
             (tfld.textbox, 'Estado de Conservação', 'conserva'),
             (tfld.textbox, 'Solicitação', 'solicita'),
             (tfld.textbox, 'Sintomas', 'sintoma'),
+            (tfld.textbox, u'Diagnóstico', 'diag'),
+            (tfld.textbox, u'Orçamento', 'orc'),
             (tfld.textbox, 'Lembrete', 'lembrete'),
             (tfld.fieldbox, 'Técnico Resp.', 'usrresp', {'ltab': 'sysus'}),
             (tfld.textbox, 'Observações Impressas', 'obsos'),
