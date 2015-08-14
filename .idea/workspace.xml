@@ -6,14 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="1dd4e0d8-4b82-4cab-bb3f-a89c01ce6ef3" name="Default" comment="">
       <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/MiniFrame.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nisk/ListBrowser.py" afterPath="$PROJECT_DIR$/nisk/ListBrowser.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/conf.py" afterPath="$PROJECT_DIR$/conf.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/crtl_os.py" afterPath="$PROJECT_DIR$/crtl_os.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/escposx/escpos.py" afterPath="$PROJECT_DIR$/escposx/escpos.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/imprimir.py" afterPath="$PROJECT_DIR$/imprimir.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pyGestorModel/orm_os.py" afterPath="$PROJECT_DIR$/pyGestorModel/orm_os.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nisk/util.py" afterPath="$PROJECT_DIR$/nisk/util.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/urwidtrees/widgets.py" afterPath="$PROJECT_DIR$/urwidtrees/widgets.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="pygestor.iws" />
@@ -38,7 +30,7 @@
       <file leaf-file-name="imprimir.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/imprimir.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6528">
+            <state vertical-scroll-proportion="0.65384614">
               <caret line="142" column="0" selection-start-line="142" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
               <folding>
                 <element signature="e#41#68#0" expanded="true" />
@@ -501,7 +493,13 @@
       <option name="project" value="LOCAL" />
       <updated>1439393893573</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="melhorado uso do grid">
+      <created>1439536983471</created>
+      <option name="number" value="00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1439536983471</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -510,6 +508,7 @@
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.17480315" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3287037" sideWeight="0.5030675" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23312883" sideWeight="0.4969325" order="7" side_tool="false" content_ui="tabs" />
@@ -518,7 +517,6 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -565,7 +563,8 @@
     <MESSAGE value="testes de serviço ssh/twist&#10;" />
     <MESSAGE value="pequena alteração no conf.py&#10;" />
     <MESSAGE value="adicionados campos na os&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="adicionados campos na os&#10;" />
+    <MESSAGE value="melhorado uso do grid" />
+    <option name="LAST_COMMIT_MESSAGE" value="melhorado uso do grid" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1025,7 +1024,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/imprimir.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6528">
+        <state vertical-scroll-proportion="0.65384614">
           <caret line="142" column="0" selection-start-line="142" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
           <folding>
             <element signature="e#41#68#0" expanded="true" />
