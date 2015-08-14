@@ -1,4 +1,4 @@
-#!/usr/bin/python
+﻿#!/usr/bin/python
 # -*- coding: utf-8 -*-
 
 cfg_prntxt = "\\\\terminal1\\vox"
@@ -12,7 +12,7 @@ cfg_dburl = "firebird+fdb://sysdba:masterkey@localhost:3050/o:\\prog\\pygestor\\
 
 cfg_dburl_list = {
     'dev': "firebird+fdb://sysdba:masterkey@localhost:3050/c:\\neon\\banco.gdb?charset=WIN1252",
-    'server': "firebird+fdb://sysdba:masterkey@172.72.0.5:3050/c:\\neon\\banco.gdb?charset=WIN1252",
+    'server': "firebird+fdb://sysdba:masterkey@server:3050/c:\\neon\\banco.gdb?charset=WIN1252",
     'nb': "firebird+fdb://sysdba:masterkey@172.73.0.1:3050/c:\\neon\\banco.gdb?charset=WIN1252",
     'linux': "firebird+fdb://sysdba:masterkey@localhost:3050//srv/banco.fdb?charset=WIN1252",
 }
@@ -120,9 +120,9 @@ const_PALETTE = [
     ('field_cap_ofb', 'black', 'dark gray'),# 'bold','#ff8', '#806'),  
 
 
-    ('gridrow', 'black', 'light blue'),#'','#ffd', '#00a'),
-    ('gridhead', 'white', 'dark blue'),
-    ('gridrowb',  'black', 'light gray'),#'','#ffd', '#00a'),
+    ('gridrow', 'white', 'dark blue'),#'','#ffd', '#00a'),
+    ('gridhead', 'yellow', 'dark blue'),
+    ('gridrowb',  'white', 'dark blue'),#'','#ffd', '#00a'),
     ('gridrow_of', 'white', 'light red'),# 'bold','#ff8', '#806'),  ,
     ('gridrow_ofb', 'white', 'light red'),
 

@@ -141,7 +141,7 @@ class ListBrowserBase(dlger):
         bkg = urwid.AttrWrap(bkg, 'body')
 
         self.view = urwid.Frame(
-            urwid.LineBox(urwid.AttrWrap(bkg, 'body')),
+            bkg,#urwid.LineBox(urwid.AttrWrap(bkg, 'body')),
             header= urwid.LineBox( self.headerlist),
             footer=self.footer, focus_part='body')
 

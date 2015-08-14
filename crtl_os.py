@@ -598,6 +598,7 @@ class frm_os_list(ListBrowserBase):
 
             urwid.AttrWrap(wgtGridRow_oslist.getHeader(), 'head')
         ])
+        self.rowheight = 3
         self.view.set_header(self.headerlist)
 
     def FoolLoader(self, params):
@@ -628,7 +629,7 @@ class frm_os_list(ListBrowserBase):
         self._params['search'] = self.search
 
         if self.listbox._size:
-            self._params['quantos'] = self.listbox._size[1] / 2
+            self._params['quantos'] = self.listbox._size[1] / self.rowheight
 
         consulta = self.loader(self._params)
 
@@ -748,7 +749,8 @@ class wgtGridRow_oslist(nisk.ListBrowser.wgtGridRow):
                 #
                 (15,self.f_dataent),(1,urwid.Text('|')),
                 (15,self.f_datasai)
-            ])
+            ]),
+            urwid.Divider()
         ])
 
     def toappend(self):

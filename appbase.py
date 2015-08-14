@@ -20,6 +20,12 @@ class conecta:
         self._widgetpai=_widgetpai
         self.dados={}
         self.stepcallback = util.defaultv(params,'callback',None)
+
+        conecta.sstart = step = 0
+        conecta.s_1 = step = step + 1
+        conecta.sfim = step = step + 1
+        self.step=conecta.sstart
+
         for x in range(0,len(sys.argv)):
             if sys.argv[x] == '-db':
                 if len(sys.argv)> x+1 and sys.argv[x+1] and conf.cfg_dburl_list.has_key(sys.argv[x+1]):
@@ -27,11 +33,9 @@ class conecta:
                 else:
                     raise "Configuração Inválida "+sys.argv[0]
 
-        conecta.sstart = step = 0
-        conecta.s_1 = step = step + 1
-        conecta.sfim = step = step + 1
-        self.step=conecta.sstart
-        if not pyGestorModel.common.dbsession.sessionconfname:
+        if pyGestorModel.common.dbsession.sessionconfname:
+            self.stepcallback()
+        else:
             self.step_x(self.step)
 
     def callback(self, data=None):
