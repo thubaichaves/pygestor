@@ -12,7 +12,7 @@ import nisk.util as util
 import nisk.widgets
 import datetime
 from nisk.util import asstr
-import MiniFrame
+# import MiniFrame
 
 
 def consultaOS(osn):
