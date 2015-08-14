@@ -1,6 +1,5 @@
 ﻿#!/usr/bin/python
 # -*- coding: utf-8 -*-
-from odbc import noError
 
 import sys
 
@@ -11,7 +10,6 @@ import logging
 import os
 import subprocess
 import thread
-from threading import Thread
 from pprint import pprint
 
 
