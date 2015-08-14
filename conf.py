@@ -107,11 +107,11 @@ const_PALETTE = [
 
     #################################################################
 
-    ('field', 'light gray', 'dark blue'),#'','#ffd', '#00a'),
-    # ('field', 'white', 'dark cyan'),#'','#ffd', '#00a'),  
+    ('field', 'white', 'dark blue'),#'','#ffd', '#00a'),
+    # ('field', 'white', 'dark cyan'),#'','#ffd', '#00a'),
     ('field_of', 'white', 'light red'),# 'bold','#ff8', '#806'),  ,
 
-    ('fieldb',  'light gray', 'dark green'),#'','#ffd', '#00a'),
+    ('fieldb',  'white', 'dark green'),#'','#ffd', '#00a'),
     ('field_ofb', 'white', 'light red'),# 'bold','#ff8', '#806'),
 
     ('field_cap', 'light gray', 'dark blue'),#'','#ffd', '#00a'),
@@ -120,9 +120,9 @@ const_PALETTE = [
     ('field_cap_ofb', 'black', 'dark gray'),# 'bold','#ff8', '#806'),  
 
 
-    ('gridrow', 'white', 'dark blue'),#'','#ffd', '#00a'),
-    ('gridhead', 'white', 'black'),
-    ('gridrowb',  'white', 'dark blue'),#'','#ffd', '#00a'),
+    ('gridrow', 'black', 'light blue'),#'','#ffd', '#00a'),
+    ('gridhead', 'white', 'dark blue'),
+    ('gridrowb',  'black', 'light gray'),#'','#ffd', '#00a'),
     ('gridrow_of', 'white', 'light red'),# 'bold','#ff8', '#806'),  ,
     ('gridrow_ofb', 'white', 'light red'),
 

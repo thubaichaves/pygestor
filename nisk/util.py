@@ -1,5 +1,6 @@
 ﻿#!/usr/bin/python
 # -*- coding: utf-8 -*-
+from odbc import noError
 
 import sys
 
@@ -95,6 +96,30 @@ def asstr(v):
         v=''
     return v
 
+def noExcept():
+    pass
+
+def astext(v, limit=None, exact=None):
+    if  isinstance(v , list):
+        v = coal(v)
+    try:
+        if isinstance(v, unicode):
+            pass
+        elif isinstance(v, str):
+            pass
+        elif not v:
+            v = ''
+        else:
+            v= str(v)
+    except:
+        noExcept()
+        v=''
+    if limit and len(v)>limit:
+        exact = limit
+    if exact:
+        v = v + '                                   '
+        return v[:exact]
+    return v
 
 def asInt(v):
     i = None
@@ -202,9 +227,11 @@ class pilha:
             return None
 
 
-def paralelo(function, args=[]):
-    Thread(target=function, args=tuple(args)).start()
-    # return thread.start_new (function,())
+def paralelo(function, args=None):
+    # Thread(target=function, args=tuple(args)).start()
+    if not isinstance(args,tuple):
+        args = ()
+    return thread.start_new(function,args)
     pass
 
 
@@ -220,6 +247,31 @@ def getlogfilename(fileformat="log-%s.log"):
     p = os.path.join(dir, fileformat % file)
     return os.path.abspath(p)
 
+def coal(*args):
+    ''' Retorno primeiro argumento válido, ou faz busca recursiva
+    em objeto contido em tupla, seguido de seus atributos'''
+    if len(args)==1 and  isinstance(args[0] , list):
+        args=args[0]
+    for arg in args:
+        if arg:
+            breakaway=0
+            if isinstance(arg , tuple):
+                d=arg[0]
+                for v in arg[1:]:
+                    try:
+                        if v:
+                            d = getattr(d, v)
+                    except:
+                        breakaway=1
+                        break
+                    if not d:
+                        breakaway=1
+                        break
+                if breakaway or not d:
+                    break
+                return d
+            else:
+                return arg
 
 class TerminalLogger(object):
     errinfo = ''
@@ -301,53 +353,42 @@ def show(message, title='NeonGestor'):
 
 
 def imprimeLPR(cfg_prntxt, var_prnfile):
-    # cfg_prncmd_cyg = 'printer.sh %var_prnfile %cfg_prntxt'
-    # cfg_prncmd_win = 'lpr -d %cfg_prntxt %var_prnfile'
-    # cfg_prncmd_unix = 'cat $1 | smbclient $2 -c "print -" -N -U "nisk%000"'
-    #
-    cfg_prncmd_cyg = 'printer.sh %var_prnfile %cfg_prntxt'
-    cfg_prncmd_win = 'copy %var_prnfile %cfg_prntxt'
-    cfg_prncmd_unix = 'cat $1 | smbclient $2 -c "print -" -N -U "nisk%000"'
+    try:
+        # cfg_prncmd_cyg = 'printer.sh %var_prnfile %cfg_prntxt'
+        # cfg_prncmd_win = 'lpr -d %cfg_prntxt %var_prnfile'
+        # cfg_prncmd_unix = 'cat $1 | smbclient $2 -c "print -" -N -U "nisk%000"'
+        #
+        cfg_prncmd_cyg = 'printer.sh %var_prnfile %cfg_prntxt'
+        cfg_prncmd_win = 'copy %var_prnfile %cfg_prntxt'
+        cfg_prncmd_unix = 'cat $1 | smbclient $2 -c "print -" -N -U "nisk%000"'
 
-    if sys.platform == "win32":
-        cmd = cfg_prncmd_win.replace('%cfg_prntxt', cfg_prntxt).replace('%var_prnfile', var_prnfile)
-        x = subprocess.check_output(cmd, shell=True)
+        if sys.platform == "win32":
+            cmd = cfg_prncmd_win.replace('%cfg_prntxt', cfg_prntxt).replace('%var_prnfile', var_prnfile)
+            x = subprocess.check_output(cmd, shell=True)
 
-    else:
-        cmd = conf.cfg_prncmd.replace('%cfg_prntxt', cfg_prntxt).replace('%var_prnfile', var_prnfile).split(' ')
+        else:
+            cmd = conf.cfg_prncmd.replace('%cfg_prntxt', cfg_prntxt).replace('%var_prnfile', var_prnfile).split(' ')
 
-        dump(['!!cmd!! ', cmd])
-        p1 = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            dump(['!!cmd!! ', cmd])
+            p1 = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-        stdout, stderr = p1.communicate()
+            stdout, stderr = p1.communicate()
 
-        if len(stdout) > 0:
-            logging.debug('!!out!! ' + stdout)
-        if len(stderr) > 0:
-            logging.debug('!!out!! ' + stderr)
+            if len(stdout) > 0:
+                logging.debug('!!out!! ' + stdout)
+            if len(stderr) > 0:
+                logging.debug('!!out!! ' + stderr)
 
-    '''
-    import os
-    os.name
-    import platform
-    platform.system()
-    import sys
-    sys.platform
-    '''
-    # os.system(cmd)
-
-    #
-    # p1 = subprocess.Popen(["lpr", "-d", cfg_prntxt, var_prnfile], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    # stdout, stderr = p1.communicate()
-    #
-    # # print('Got stdout:', stdout)
-    # # print('Got stderr:', stderr)
-    #
-    # if len(stdout) > 0:
-    #     logging.debug('!!out!! ' + stdout)
-    # if len(stderr) > 0:
-    #     logging.debug('!!out!! ' + stderr)
-
+        '''
+        import os
+        os.name
+        import platform
+        platform.system()
+        import sys
+        sys.platform
+        '''
+    except:
+        pass
 
 def abreGestor():
     p1 = subprocess.Popen(["/home/dingo/neon/GESTOR.exe"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)

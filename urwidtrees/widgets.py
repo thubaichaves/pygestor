@@ -89,6 +89,14 @@ class TreeListWalker(urwid.ListWalker):
         return self._tree.positions(reverse)
     # end of List Walker API
 
+class SpecialListBox(ListBox):
+    def __init__(self, *arg,**kw):
+        self.size = None
+        super(self.__class__,self).__init__(*arg,**kw)
+
+    def pgup(self):
+        if self.size:
+            self.keypress(self.size,'page up')
 
 class TreeBox(WidgetWrap):
     """
@@ -111,7 +119,7 @@ class TreeBox(WidgetWrap):
         self._tree = tree
         self._size = None
         self._walker = TreeListWalker(tree)
-        self._outer_list = ListBox(self._walker)
+        self._outer_list = SpecialListBox(self._walker)
         if focus is not None:
             self._outer_list.set_focus(focus)
         self.__super.__init__(self._outer_list)
@@ -246,3 +254,14 @@ class TreeBox(WidgetWrap):
         prev = self._tree.prev_position(focuspos)
         if prev is not None:
             self.set_focus(prev)
+
+class GridBox(WidgetWrap):
+    """
+    """
+
+    def __init__(self, tree, focus=None):
+        self._tree = tree
+        self._size = None
+        self._walker = tree
+        self._outer_list = ListBox(self._walker)
+        self.__super.__init__(self._outer_list)

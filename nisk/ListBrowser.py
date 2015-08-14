@@ -6,7 +6,7 @@ import logging, threading
 import urwid
 #
 from urwidtrees.tree import SimpleTree
-from urwidtrees.widgets import TreeBox
+from urwidtrees.widgets import TreeBox,GridBox
 #
 import conf
 import nisk
@@ -130,6 +130,7 @@ class ListBrowserBase(dlger):
         self.fn = [(urwid.Text(self.txt_noresults), [])]
         self.tw = SimpleTree(self.fn)
         self.listbox = TreeBoxx(self.tw)
+        # self.listbox = TreeBoxx(self.fn)
 
         self.listbox.offset_rows = 3
 
@@ -140,8 +141,8 @@ class ListBrowserBase(dlger):
         bkg = urwid.AttrWrap(bkg, 'body')
 
         self.view = urwid.Frame(
-            urwid.AttrWrap(bkg, 'body'),
-            header= self.headerlist,
+            urwid.LineBox(urwid.AttrWrap(bkg, 'body')),
+            header= urwid.LineBox( self.headerlist),
             footer=self.footer, focus_part='body')
 
         self.listbox.keypress=self.listkeypress
@@ -203,9 +204,6 @@ class ListBrowserBase(dlger):
         needresort = util.defaultv(consulta, 'needresort', False)
 
         del self.fn[:]
-        self.fn.append((urwid.Text("."), None))
-        self.fn.append((urwid.Text("."), None))
-        self.fn.append((urwid.Text("."), None))
 
         if needresort:
             dadosx = util.defaultv(consulta, 'dados', {})
@@ -235,23 +233,31 @@ class ListBrowserBase(dlger):
         if len(self.fn) == 0:
             self.fn.append((urwid.Text(self.txt_noresults), None))
 
+        
+        self.completa(50)
         self.listbox.refresh()
+        self.pgup()
         # self.listbox.focus_first_child()
         self._unsetdirty()
 
-    def clear(self):
-        try:
-            self.listbox.focus_first_child()
-        except Exception,e:
-            util.dump(('clear',e))
-        del self.fn[:]
-        self.fn.append((urwid.Text(" "), None))
-        self.fn.append((urwid.Text(" "), None))
-        self.fn.append((urwid.Text(" "), None))
-        self.fn.append((urwid.Text(" "), None))
-        self.fn.append((urwid.Edit("   Pressione TAB para Pesquisar  "), None))
+    def pgup(self):
+        self.listbox._outer_list.pgup()
 
+    def clear(self):
+        #try:
+        #except Exception,e:
+        #    util.dump(('clear',e))
+        self.pgup()
+        del self.fn[:]
+        self.completa()
+        self.fn.append((urwid.Edit("   Pressione TAB para Pesquisar  "), None))
+        self.completa(50)
         self.listbox.refresh()
+
+    def completa(self,n=10):
+        return
+        for x in range(n):
+            self.fn.append((urwid.Text(" "), None))
 
     def _widgetonshow(self):
         dlger._widgetonshow(self)
@@ -275,9 +281,15 @@ class ListBrowserBase(dlger):
             self.r = dlger.cancel
             self._widgetsession.UnShowWidget()
             return True
-
+        
         elif k == "tab":
             self.load()
+            return True
+        elif k == "home":
+            try:
+                self.listbox.focus_first_child()
+            except Exception,e:
+                util.dump(('home',e))
             return True
 
         elif (k == 'enter'):

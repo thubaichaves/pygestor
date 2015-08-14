@@ -380,7 +380,8 @@ class Escpos(object):
         elif ctl.upper() == "VT":
             self._raw(CTL_VT)
 
-    def close(self):
-        self._raw(RESET)
+    def close(self, reset=1):
+        if reset:
+            self._raw(RESET)
         self.__del__()
 

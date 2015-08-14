@@ -633,21 +633,19 @@ class frm_os_list(ListBrowserBase):
         consulta = self.loader(self._params)
 
         del self.fn[:]
-        self.fn.append((urwid.Text("."), None))
-        self.fn.append((urwid.Text("."), None))
-        self.fn.append((urwid.Text("."), None))
-
         dados = util.defaultv(consulta, 'dados', [])
         inv = 0
         for x in dados:
             cor = ('gridrow', 'gridrow_of') if inv % 2 else('gridrowb', 'gridrow_of')
-            inv = inv + 2
+            inv = inv + 1
             self.fn.append(wgtGridRow_oslist(dados=x, cor=cor).toappend())
 
         if len(self.fn) == 0:
             self.fn.append((urwid.Text(self.txt_noresults), None))
 
+        self.completa(50)
         self.listbox.refresh()
+        self.pgup()
         self._unsetdirty()
 
     def callback_acts(self, params={}):
@@ -682,30 +680,74 @@ class wgtGridRow_oslist(nisk.ListBrowser.wgtGridRow):
         else:
             self._dadosorm = self._dados
         if not self._dadosorm:
-            raise 'data error'
+            pass
+            #raise 'data error'
+        else:
+            self._tid = self._dadosorm.os
+
 
         self._nome = ''
-        self._tid = self._dadosorm.os
+
         self.load()
 
-        urwid.AttrWrap.__init__(self, self._widget, cor)
+        urwid.AttrWrap.__init__(self, self._widget, cor[0],cor[1])
 
     def load(self):
-        self.f_os = nisk.ListBrowser.FocusableText(str(self._dadosorm.os), self.cor)
+        hasdata= 1 if self._dadosorm else 0
+        if hasdata:
+            p_os = util.astext( [(self._dadosorm,'os'),'  OS'],exact=6)
+            p_cliente = util.astext( [(self._dadosorm,'oscliente','nome'),'[ Cliente]'],30)
+            p_status = util.astext( [(self._dadosorm,'osstatus','nome'),'[ Cliente]'],15)
+            p_tarefa = util.astext( [(self._dadosorm,'ostarefa','nome'),'[ Cliente]'],15)
+            p_resp = util.astext( [(self._dadosorm,'osresp','nome'),'[ Cliente]'],15)
+            p_tipo = util.astext( [(self._dadosorm,'ostipo','nome'),'[ Cliente]'],15)
+            p_marca = util.astext( [(self._dadosorm,'osmarca','nome'),'[ Cliente]'],15)
+            p_modelo =  util.astext( [(self._dadosorm,'osmodelo','nome'),'[ Cliente]'],15)
+            p_ns  = util.astext( [(self._dadosorm,'ns'),'[ Cliente]'],10)
+            p_dataent  =util.astext( [(self._dadosorm,'dataent'),'[ Cliente]'],10)
+            p_datasai  =util.astext( [(self._dadosorm,'datasai'),'[ Cliente]'],10)
+        else:            
+            p_os = util.astext( ['  OS'],exact=6)
+            p_cliente = util.astext( ['[ Cliente]'],30)
+            p_status = util.astext( ['[ Situação ]'],15)
+            p_tarefa = util.astext( ['[ Tarefa ]'],15)
+            p_resp = util.astext( ['[ Responsável]'],15)
+            p_tipo = util.astext( ['[ Tipo ]'],15)
+            p_marca = util.astext( ['[ Marca ]'],15)
+            p_modelo =  util.astext( ['[ Modelo]'],15)
+            p_ns  = util.astext( ['[ Serial ]'],10)
+            p_dataent  =util.astext( ['[ Entrada ]'],10)
+            p_datasai  =util.astext( ['[ Saída ]'],10)
 
-        try:
-            self.f_nome = urwid.Text(
-                self._dadosorm.oscliente.nome)
-        except:
-            self.f_nome = nisk.ListBrowser.FocusableText('', self.cor)
+        self.f_os = nisk.ListBrowser.FocusableText(p_os, self.cor)
+        self.f_cliente = urwid.Text(p_cliente)
+        self.f_status = urwid.Text(p_status)
+        self.f_tarefa = urwid.Text(p_tarefa)
+        self.f_resp = urwid.Text(p_resp)
+        self.f_tipo = urwid.Text(p_tipo)
+        self.f_marca = urwid.Text(p_marca)
+        self.f_modelo =  urwid.Text(p_modelo)
+        self.f_ns  = urwid.Text(p_ns)
+        self.f_dataent  = urwid.Text(p_dataent)
+        self.f_datasai  = urwid.Text(p_datasai)
 
         self._widget = urwid.Pile([
             urwid.Columns([
-                (1,urwid.Text('[')),(5,self.f_os),(2,urwid.Text('] ')),
-                self.f_nome
+                (1,urwid.Text('[')),(6,self.f_os),(2,urwid.Text('] ')),
+                #
+                (15,self.f_tipo),(1,urwid.Text('|')),
+                (15,self.f_marca),
+                #
+                self.f_cliente
             ]),
             urwid.Columns([
-                urwid.Text('')
+                (9,urwid.Text(' ')),
+                #
+                (15,self.f_status),(1,urwid.Text('|')),
+                (15,self.f_tarefa),
+                #
+                (15,self.f_dataent),(1,urwid.Text('|')),
+                (15,self.f_datasai)
             ])
         ])
 
@@ -714,4 +756,4 @@ class wgtGridRow_oslist(nisk.ListBrowser.wgtGridRow):
 
     @staticmethod
     def getHeader():
-        return nisk.ListBrowser.FocusableText('Nome', ('gridhead', 'head'))
+        return wgtGridRow_oslist(None,cor= ('gridhead', 'head'))

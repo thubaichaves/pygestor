@@ -67,6 +67,7 @@ class os_os(Base):
                             backref='osstatusx')
     osntarefa = relationship("lists_a", primaryjoin="and_(lists_a.tab=='osnxt',os_os.ntarefa==lists_a.tid)",
                              backref='osntarefax')
+
     #
     # lst_lista1 = (
     # 'os',

@@ -12,6 +12,7 @@ import nisk.util as util
 import nisk.widgets
 import datetime
 from nisk.util import asstr
+import MiniFrame
 
 
 def consultaOS(osn):
@@ -38,10 +39,19 @@ def getBlob(fn):
         return f.dados
     return ''
 
+def win():
+    m = MiniFrame.WxApp()
+    m.MainLoop()
+    # m.ExitMainLoop()
+    wins.append( m)
+
+wins = []
 
 class imprimir_OS:
     @staticmethod
     def imprimir_OS(params):
+
+
         modelo = nisk.util.defaultv(params, 'modelo', None)
 
         if modelo == 'entrada':
@@ -126,51 +136,47 @@ class imprimir_OS:
 
         util.imprimeLPR(cfg_prntxt, var_prnfile)
 
-
-
     @staticmethod
     def imprimir_OS_etiq(params):
-        '''
-                   var printer =
-                new Matrixer(Settings.Default.impetq);
-            printer.StartJob();
 
-            string s = u.CoalesceS(LocalConf.GetBlobBank(p["_pattern"] as string));
+        # util.paralelo(win)
 
-            printer.Replace(ref s, "<##OS##>", u.RecStr(p["OS"]));
-            printer.Replace(ref s, "<##E##>", u.RecStr(p["OS"]));
-            printer.Replace(ref s, "<##L1##>", u.limit(u.CoalesceS(p["T3XD"]), 27));
-            printer.Replace(ref s, "<##L2##>", u.limit(u.CoalesceS(p["T4D"]), 27));
-            printer.Replace(ref s, "<##L3##>",
-                            u.CoalesceS(p["T1XC"]) + " _ " + u.CoalesceS(p["T1XD"]));
-            printer.Replace(ref s, "<##L4##>",
-                            u.CoalesceS(p["MODELO"] as String) +
-                            ((!string.IsNullOrEmpty(p["NS"] as String)) ? (" _ NS: " + p["NS"]) : ""));
-            printer.Replace(ref s, "<##L5##>",
-                            "Entrada: " +
-                            (p["DATAENT"] is DateTime
-                                 ? ((DateTime) p["DATAENT"]).ToString("dd/MM/yyyy HH:mm")
-                                 : ""));
+        osn = nisk.util.defaultv(params, 'os', None)
+        sos = consultaOS(osn)
 
-            printer.Replace(ref s, "<##L7##>",
-                            u.limit(
-                                u.CoalesceS(p["SINTOMA"]) + " " + u.CoalesceS(p["SOLICITA"]),
-                                27));
+        if not sos: return
 
-            var cx = p["_copias"] as int?;
-            cx = cx.HasValue ? cx : 0;
-            printer.Replace(ref s, "<##C##>", cx.Value.ToString());
+        var_prnfile = util.getprintfilename()
+        prn = printer.File(devfile=var_prnfile)
 
-            printer.InternalText = s;
-            printer.CleanText("<##", "##>");
-            printer.PrintJob();
-        :param params:
-        :return:
-        '''
-        pass
+        prn._codepage =  cfg_codepage
 
+        v_cabec = getBlob('etiqos01')
+        v_cabec = v_cabec.replace("<##OS##>", util.astext([(sos, 'os')]))
 
+        v_cabec = v_cabec.replace("<##L1##>", util.astext([(sos, 'oscliente', 'nome'), '.'], 27))
+        v_cabec = v_cabec.replace("<##L2##>", util.astext([(sos, 'oscliente', 't4a'), '.'], 27))
 
+        v_cabec = v_cabec.replace("<##L3##>", util.astext([(sos, 'ostipo', 'nome'), ' - '], 15) + \
+                                  util.astext([(sos, 'osmarca', 'nome'), ' - '], 15))
+
+        v_cabec = v_cabec.replace("<##L4##>", util.astext([(sos, 'modelo'), ' - '], 15) + \
+                                  util.astext([(sos, 'ns'), ' - '], 15))
+
+        v_cabec = v_cabec.replace("<##L5##>", "Entrada: " + util.astext([(sos, 'dataent'), ' - '], 15))
+
+        v_cabec = v_cabec.replace("<##L6##>", '')
+
+        v_cabec = v_cabec.replace("<##L7##>", '')
+
+        v_cabec = v_cabec.replace("<##C##>", util.astext(util.defaultv(params, 'qtd', 1)))
+
+        v_cabec = v_cabec.replace("<##", '').replace("##>", '')
+
+        prn.text(v_cabec+'\n', 1)
+        prn.close(reset=0)
+
+        util.imprimeLPR(cfg_prnetq, var_prnfile)
 
     @staticmethod
     def imprimir_OS_etiqa(params):
@@ -213,8 +219,6 @@ class imprimir_OS:
         '''
         pass
 
-
-
     @staticmethod
     def imprimir_OS_fichaanalise(params):
         osn = nisk.util.defaultv(params, 'os', None)
@@ -233,7 +237,6 @@ class imprimir_OS:
         prn.textline("--------------------")
         prn.set(bold=0, size='normal', align='left')
 
-
         prn.textline("Padrão de Verificação: Notebook")
         prn.pulal()
 
@@ -249,7 +252,6 @@ class imprimir_OS:
         # prn.pulal()
         prn.textline("  (  ) Sim   (  ) Não (________________________)")
 
-
         prn.pulal()
 
         # prn.pulal(10)
@@ -259,7 +261,6 @@ class imprimir_OS:
         prn.close()
 
         util.imprimeLPR(cfg_prntxt, var_prnfile)
-
 
     @staticmethod
     def imprimir_OS_fichaqc(params):
@@ -328,8 +329,6 @@ class imprimir_OS:
 
         util.imprimeLPR(cfg_prntxt, var_prnfile)
 
-
-
     @staticmethod
     def imprimir_OS_orc(params):
         osn = nisk.util.defaultv(params, 'os', None)
@@ -397,7 +396,6 @@ class imprimir_OS:
 
         util.imprimeLPR(cfg_prntxt, var_prnfile)
 
-
     @staticmethod
     def imprimir_OS_saida(params):
         osn = nisk.util.defaultv(params, 'os', None)
@@ -464,5 +462,3 @@ class imprimir_OS:
         prn.close()
 
         util.imprimeLPR(cfg_prntxt, var_prnfile)
-
-
