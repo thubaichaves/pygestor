@@ -11,7 +11,7 @@ from escposx.constants import *
 import nisk.util as util
 import nisk.widgets
 import datetime
-from nisk.util import asstr,profile,timed
+from nisk.util import astext,profile,timed
 # import MiniFrame
 
 
@@ -113,19 +113,19 @@ class imprimir_OS:
         prn.textline("N° Modelo:\t  %s " % str(sos.ns))
 
         if util.slen(sos.nf) > 0:
-            prn.textline("NF:\t  %s " % asstr(str(sos.nf)))
+            prn.textline("NF:\t  %s " % astext(str(sos.nf)))
 
-        prn.textline(u"Solicitação:\t  %s " % asstr(sos.solicita))
+        prn.textline(u"Solicitação:\t  %s " % astext(sos.solicita))
 
-        prn.textline(u"Acessorios:\t  %s " % asstr(sos.acess))
+        prn.textline(u"Acessorios:\t  %s " % astext(sos.acess))
 
-        prn.textline(u"Estado de Conservação:\t  %s " % asstr(sos.conserva))
+        prn.textline(u"Estado de Conservação:\t  %s " % astext(sos.conserva))
 
-        prn.textline(u"Prazo de Orçamento:\t  %s " % asstr(sos.prazoorc))
+        prn.textline(u"Prazo de Orçamento:\t  %s " % astext(sos.prazoorc))
 
-        prn.textline(u"Lembrete:\t  %s " % asstr(sos.lembrete))
+        prn.textline(u"Lembrete:\t  %s " % astext(sos.lembrete))
 
-        prn.textline(u"Observações:  %s " % asstr(sos.obsos))
+        prn.textline(u"Observações:  %s " % astext(sos.obsos))
 
         prn.text(getBlob('termoentradaos'), 1)
         prn.text(getBlob('rodape'), 1)
@@ -307,19 +307,19 @@ class imprimir_OS:
         prn.textline("N° Serial:\t  %s " % str(sos.ns))
 
         if util.slen(sos.nf) > 0:
-            prn.textline("NF:\t  %s " % asstr(str(sos.nf)))
+            prn.textline("NF:\t  %s " % astext(str(sos.nf)))
 
-        prn.textline(u"Solicitação:\t  %s " % asstr(sos.solicita))
+        prn.textline(u"Solicitação:\t  %s " % astext(sos.solicita))
 
-        prn.textline(u"Acessorios:\t  %s " % asstr(sos.acess))
+        prn.textline(u"Acessorios:\t  %s " % astext(sos.acess))
 
-        prn.textline(u"Estado de Conservação:\t  %s " % asstr(sos.conserva))
+        prn.textline(u"Estado de Conservação:\t  %s " % astext(sos.conserva))
 
-        prn.textline(u"Prazo de Orçamento:\t  %s " % asstr(sos.prazoorc))
+        prn.textline(u"Prazo de Orçamento:\t  %s " % astext(sos.prazoorc))
 
-        prn.textline(u"Lembrete:\t  %s " % asstr(sos.lembrete))
+        prn.textline(u"Lembrete:\t  %s " % astext(sos.lembrete))
 
-        prn.textline(u"Observações:  %s " % asstr(sos.obsos))
+        prn.textline(u"Observações:  %s " % astext(sos.obsos))
 
         prn.text(getBlob('termoentradaos'), 1)
         prn.text(getBlob('rodape'), 1)
@@ -374,19 +374,19 @@ class imprimir_OS:
         prn.textline("N° Serial:\t  %s " % str(sos.ns))
 
         if util.slen(sos.nf) > 0:
-            prn.textline("NF:\t  %s " % asstr(str(sos.nf)))
+            prn.textline("NF:\t  %s " % astext(str(sos.nf)))
 
-        prn.textline(u"Solicitação:\t  %s " % asstr(sos.solicita))
+        prn.textline(u"Solicitação:\t  %s " % astext(sos.solicita))
 
-        prn.textline(u"Acessorios:\t  %s " % asstr(sos.acess))
+        prn.textline(u"Acessorios:\t  %s " % astext(sos.acess))
 
-        prn.textline(u"Estado de Conservação:\t  %s " % asstr(sos.conserva))
+        prn.textline(u"Estado de Conservação:\t  %s " % astext(sos.conserva))
 
-        prn.textline(u"Prazo de Orçamento:\t  %s " % asstr(sos.prazoorc))
+        prn.textline(u"Prazo de Orçamento:\t  %s " % astext(sos.prazoorc))
 
-        prn.textline(u"Lembrete:\t  %s " % asstr(sos.lembrete))
+        prn.textline(u"Lembrete:\t  %s " % astext(sos.lembrete))
 
-        prn.textline(u"Observações:  %s " % asstr(sos.obsos))
+        prn.textline(u"Observações:  %s " % astext(sos.obsos))
 
         prn.text(getBlob('termoentradaos'), 1)
         prn.text(getBlob('rodape'), 1)
@@ -441,19 +441,19 @@ class imprimir_OS:
         prn.textline("N° Modelo:\t  %s " % str(sos.ns))
 
         if util.slen(sos.nf) > 0:
-            prn.textline("NF:\t  %s " % asstr(str(sos.nf)))
+            prn.textline("NF:\t  %s " % astext(str(sos.nf)))
 
-        prn.textline(u"Solicitação:\t  %s " % asstr(sos.solicita))
+        prn.textline(u"Solicitação:\t  %s " % astext(sos.solicita))
 
-        prn.textline(u"Acessorios:\t  %s " % asstr(sos.acess))
+        prn.textline(u"Acessorios:\t  %s " % astext(sos.acess))
 
-        prn.textline(u"Estado de Conservação:\t  %s " % asstr(sos.conserva))
+        prn.textline(u"Estado de Conservação:\t  %s " % astext(sos.conserva))
 
-        prn.textline(u"Prazo de Orçamento:\t  %s " % asstr(sos.prazoorc))
+        prn.textline(u"Prazo de Orçamento:\t  %s " % astext(sos.prazoorc))
 
-        prn.textline(u"Lembrete:\t  %s " % asstr(sos.lembrete))
+        prn.textline(u"Lembrete:\t  %s " % astext(sos.lembrete))
 
-        prn.textline(u"Observações:  %s " % asstr(sos.obsos))
+        prn.textline(u"Observações:  %s " % astext(sos.obsos))
 
         prn.text(getBlob('termoentradaos'), 1)
         prn.text(getBlob('rodape'), 1)
