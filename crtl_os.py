@@ -586,9 +586,24 @@ class mediator_os(puremvc.patterns.mediator.Mediator, puremvc.interfaces.IMediat
         pass
 
 
+
+from functools import wraps
+from time import time
+
+def timed(f):
+  @wraps(f)
+  def wrapper(*args, **kwds):
+    start = time()
+    result = f(*args, **kwds)
+    elapsed = time() - start
+    print "%s took %f time to finish" % (f.__name__, elapsed)
+    return result
+  return wrapper
+
 class frm_os_list(ListBrowserBase):
     # footer_text = []
 
+    @timed
     def __init__(self, params):
         # self.footer_text = ''
         ListBrowserBase.__init__(self, params)
@@ -601,6 +616,7 @@ class frm_os_list(ListBrowserBase):
         self.rowheight = 3
         self.view.set_header(self.headerlist)
 
+    @timed
     def FoolLoader(self, params):
         search = util.defaultv(params, 'search', '')
         quantos = util.defaultv(params, 'quantos', 50)
@@ -625,6 +641,7 @@ class frm_os_list(ListBrowserBase):
                 nisk.util.dump(e)
         return {'dados': dados}
 
+    @timed
     def load(self):
         self._params['search'] = self.search
 
