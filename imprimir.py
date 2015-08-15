@@ -11,7 +11,7 @@ from escposx.constants import *
 import nisk.util as util
 import nisk.widgets
 import datetime
-from nisk.util import asstr
+from nisk.util import asstr,profile,timed
 # import MiniFrame
 
 
@@ -49,6 +49,8 @@ wins = []
 
 class imprimir_OS:
     @staticmethod
+    @timed
+    @profile(print_stats=10, dump_stats=True)
     def imprimir_OS(params):
 
 

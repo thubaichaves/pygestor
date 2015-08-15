@@ -5,7 +5,6 @@ import sys
 
 import conf
 import datetime
-import time
 import logging
 import os
 import subprocess
@@ -13,6 +12,7 @@ import thread
 from pprint import pprint
 
 from functools import wraps
+from profilestats import profile
 from time import time
 
 
@@ -128,14 +128,17 @@ def astext(v, limit=None, exact=None):
         return v[:exact]
     return v
 
-
 def asInt(v):
     i = None
-    try:
-        # if not v is None:
-        i = int(v)
-    except:
+    if not v:
         pass
+    elif isinstance(v, int):
+        i = v
+    elif isinstance(v, (str, unicode)):
+        try:
+            i = int(v)
+        except:
+            pass
     return i
 
 
@@ -414,7 +417,6 @@ def abreGestor():
         logging.debug('!!out!! ' + stdout)
     if len(stderr) > 0:
         logging.debug('!!out!! ' + stderr)
-
 
 
 def timed(f):

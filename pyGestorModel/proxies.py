@@ -11,7 +11,7 @@ from sqlalchemy.ext.declarative import DeclarativeMeta
 import nisk
 import nisk.TUI
 import nisk.util
-from nisk.util import timed
+from nisk.util import timed,profile
 import json
 import logging
 import common
@@ -372,6 +372,7 @@ listas_orm = {
 class lists_a_consultor(common.consultor):
     # @staticmethod
     @timed
+    @profile(print_stats=10, dump_stats=True)
     def consulta(self, tid, tab='', ltab=''):
         session = common.dbsession.getsession()
         #

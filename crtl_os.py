@@ -10,9 +10,13 @@ from nisk.ListBrowser import ListBrowserBase
 import nisk.widgets
 import nisk.dialogs
 import nisk.TreeList
+import pyGestorModel
 from pyGestorModel.orm_os import os_os
 from pyGestorModel.orm_listas import lists_a
 from pyGestorModel.orm_contatos import *
+import pyGestorForms
+import pyGestorForms.frmListA as frmListA
+import pyGestorForms.frmListContatos
 from nisk import *
 from nisk.nsatw import *
 from nisk.formmer import tfld
@@ -20,13 +24,8 @@ import nisk.dialogs
 import imprimir
 import urwid
 from nisk.util import timed
-import pyGestorModel
 import conf
 from nisk.TUI import nestedwidget
-import pyGestorForms.frmListContatos
-from pyGestorForms import frmListA
-from sqlalchemy import *
-
 
 class crtl_os:
     @staticmethod
@@ -85,12 +84,14 @@ class crtl_os:
             elif self.step == crtl_os.os_new.simpr_a:
                 (r, qtd, z) = data
                 self.r = dlger.ok
+                qtd = util.asInt2(qtd)
                 if r and qtd > 0 and qtd < 10:
                     self._widgetprocessa(conf.cmds.cmd_os_impr, {'qtd': qtd, 'modelo': 'etiq', 'os': self.dados['os']})
 
             elif self.step == crtl_os.os_new.simpr_b:
                 (r, qtd, z) = data
                 self.r = dlger.ok
+                qtd = util.asInt2(qtd)
                 if r and qtd > 0 and qtd < 10:
                     self._widgetprocessa(conf.cmds.cmd_os_impr,
                                          {'qtd': qtd, 'modelo': 'entrada', 'os': self.dados['os']})
@@ -108,7 +109,7 @@ class crtl_os:
             if 0 > 1:
                 pass
             elif step == crtl_os.os_new.scliente:
-                frmc = pyGestorForms.frmListContatos.frmListContatos2({})
+                frmc = pyGestorForms.frmListContatos.frmListContatos2({'onNew_callback_parent':True})
                 frmc.Show(_widgetpai=self._widgetpai, isdialog=False, tocall=self.callback)
             elif step == crtl_os.os_new.stipo:
                 w = frmListA.frmListAScreens2({'rtab': 'lists_a', 'ltab': 'ostip'})

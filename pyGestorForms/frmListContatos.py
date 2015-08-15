@@ -52,8 +52,13 @@ class frmListContatos2(ListBrowserBase):
 
     def callback_acts(self, params={}):
         if util.defaultv(params, 'act', '') == 'add':
-            txt = util.defaultv(params, 'nome', '')
-            self.set_search(txt)
+            if util.defaultv(self._params, 'onNew_callback_parent', False):
+                self.r = nisk.dialogs.dlger.ok
+                self.rdata['tid'] = util.defaultv(params, 'id', '')
+                self._widgetsession.UnShowWidget()
+            else:
+                txt = util.defaultv(params, 'nome', '')
+                self.set_search(txt)
 
         if util.defaultv(params, 'act', '') == 'open':
             txt = util.defaultv(params, 'nome', '')

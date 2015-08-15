@@ -51,7 +51,8 @@ class contatos_new(nestedwidget):
                 self.step = self.step + 1
             #
         elif self.step == contatos_new.sedita:
-            (self.r, self.dados['nome'],z) = data
+            (self.r, self.dados['dados'],z) = data
+            self.r = dlger.ok
             #
 
 
@@ -92,12 +93,12 @@ class contatos_new(nestedwidget):
                 params={'new': True, 'dados': self.dados},
                 dados=self.dados)
             w._widgetregistrapai(self._widgetpai)
-            w.show(isdialog=False)
+            w.show(isdialog=False, tocall=self.callback)
             return
             #
         elif step == contatos_new.sfim:
             if self._p_cb:
-                self._p_cb({'act': 'add', 'nome': self._p_nome})
+                self._p_cb({'act': 'add', 'dados': self.dados['dados'], 'id': util.coal([(self.dados,'dados','id')])})
             self.step = None
             return
             #
@@ -164,12 +165,13 @@ class contatos_open(nestedwidget):
             nome = None
             try:
                 nome = self.w.binder._dados.nome
+                id = self.w.binder._dados.id
             except:
                 pass
 
             cb = util.defaultv(self.params, 'callback', None)
             if cb:
-                cb({'act': 'open', 'nome': nome})
+                cb({'act': 'open', 'nome': nome, 'id': id})
             return
 
         if step == contatos_open._cancela:
@@ -195,6 +197,7 @@ class formmer_contatos_edit(formmer.formmer, dlger):
             (tfld.textbox, 'Nome Completo', 'nomec'),
             (tfld.fieldbox, 'Grupo', 'intc', {'ltab': 'contgrupo'}),
         ])
+        dlger.__init__(self)
         self.binder = mediator_contatos(self)
 
     def callbacks(self, backref):
@@ -272,8 +275,15 @@ class formmer_contatos_edit(formmer.formmer, dlger):
 
         lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='Contato'), 'windowsborder','windowsborder_of',)
         return lb
+    
 
-    def show(self, isdialog=False):
+    def _widgetonunshow(self):
+        if self.tocall:
+            self.tocall((self.r, self.binder._dados, self.params))
+            # nisk.TUI.nestedwidget._widgetonunshow(self)
+
+    def show(self, isdialog=False, tocall=None):
+        self.tocall = tocall
         x = self.binder.consulta(self.params)
         if x:
             # sx = conf.sizes['ListBrowser1']
