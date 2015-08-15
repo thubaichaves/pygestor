@@ -136,7 +136,8 @@ class imprimir_OS:
 
         prn.close()
 
-        util.imprimeLPR(cfg_prntxt, var_prnfile)
+        for i in range(util.defaultv(params, 'qtd', 1)):
+            util.imprimeLPR(cfg_prntxt, var_prnfile)
 
     @staticmethod
     def imprimir_OS_etiq(params):

@@ -84,14 +84,14 @@ class crtl_os:
             elif self.step == crtl_os.os_new.simpr_a:
                 (r, qtd, z) = data
                 self.r = dlger.ok
-                qtd = util.asInt2(qtd)
+                qtd = util.asInt(qtd)
                 if r and qtd > 0 and qtd < 10:
                     self._widgetprocessa(conf.cmds.cmd_os_impr, {'qtd': qtd, 'modelo': 'etiq', 'os': self.dados['os']})
 
             elif self.step == crtl_os.os_new.simpr_b:
                 (r, qtd, z) = data
                 self.r = dlger.ok
-                qtd = util.asInt2(qtd)
+                qtd = util.asInt(qtd)
                 if r and qtd > 0 and qtd < 10:
                     self._widgetprocessa(conf.cmds.cmd_os_impr,
                                          {'qtd': qtd, 'modelo': 'entrada', 'os': self.dados['os']})
