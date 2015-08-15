@@ -11,6 +11,7 @@ import nisk.widgets
 import nisk.dialogs
 import nisk.TreeList
 from pyGestorModel.orm_os import os_os
+from pyGestorModel.orm_listas import lists_a
 from pyGestorModel.orm_contatos import *
 from nisk import *
 from nisk.nsatw import *
@@ -18,6 +19,7 @@ from nisk.formmer import tfld
 import nisk.dialogs
 import imprimir
 import urwid
+from nisk.util import timed
 import pyGestorModel
 import conf
 from nisk.TUI import nestedwidget
@@ -516,6 +518,7 @@ class formmer_os_edit(formmer.formmer, dlger):
 class mediator_os(puremvc.patterns.mediator.Mediator, puremvc.interfaces.IMediator, nisk.formmer.binder):
     NAME = 'OSCreate'
 
+    @timed
     def __init__(self, f):
         super(mediator_os, self).__init__(mediator_os.NAME, viewComponent=None)
         nisk.formmer.binder.__init__(self, f.widgets, f.fields)
@@ -541,6 +544,7 @@ class mediator_os(puremvc.patterns.mediator.Mediator, puremvc.interfaces.IMediat
             self.update()
             return
 
+    @timed
     def consulta(self, params={}):
         if params.has_key('new') and params.has_key('dados'):
             r = self.consultor.getNovo(params, params['dados'])
@@ -556,6 +560,7 @@ class mediator_os(puremvc.patterns.mediator.Mediator, puremvc.interfaces.IMediat
 
         return False
 
+    @timed
     def update(self):
         # logging.debug('update')
         nisk.formmer.binder.update(self)
@@ -586,20 +591,6 @@ class mediator_os(puremvc.patterns.mediator.Mediator, puremvc.interfaces.IMediat
         pass
 
 
-
-from functools import wraps
-from time import time
-
-def timed(f):
-  @wraps(f)
-  def wrapper(*args, **kwds):
-    start = time()
-    result = f(*args, **kwds)
-    elapsed = time() - start
-    print "%s took %f time to finish" % (f.__name__, elapsed)
-    return result
-  return wrapper
-
 class frm_os_list(ListBrowserBase):
     # footer_text = []
 
@@ -619,12 +610,33 @@ class frm_os_list(ListBrowserBase):
     @timed
     def FoolLoader(self, params):
         search = util.defaultv(params, 'search', '')
-        quantos = util.defaultv(params, 'quantos', 50)
+        quantos = util.defaultv(params, 'quantos', 5)
         s = pyGestorModel.dbsession.getsession()
         dados = []
         info = {}
 
-        q = s.query(os_os).order_by(desc(os_os.os))
+        ltipo = aliased(lists_a)
+        lmarca = aliased(lists_a)
+        lstatus = aliased(lists_a)
+        lntarefa = aliased(lists_a)
+        lresp = aliased(lists_a)
+
+        q = s.query(os_os,
+                    contatos.nome,
+                    contatos.t4a,
+                    ltipo.nome,
+                    lmarca.nome,
+                    lstatus.nome,
+                    lntarefa.nome,
+                    lresp.nome,
+                    ). \
+            outerjoin(ltipo, and_(os_os.tipo == ltipo.tid, ltipo.tab == 'ostip')). \
+            outerjoin(lmarca, and_(os_os.marca == lmarca.tid, lmarca.tab == 'osfab')). \
+            outerjoin(lstatus, and_(os_os.status == lstatus.tid, lstatus.tab == 'osstt')). \
+            outerjoin(lntarefa, and_(os_os.ntarefa == lntarefa.tid, lntarefa.tab == 'osnxt')). \
+            outerjoin(lresp, and_(os_os.usrresp == lresp.tid, lresp.tab == 'sysus')). \
+            outerjoin(contatos). \
+            order_by(desc(os_os.os))
 
         search = util.asUnicode(search)
 
@@ -636,9 +648,23 @@ class frm_os_list(ListBrowserBase):
 
         for a in r:
             try:
-                dados.append({'tid': a.os, 'id': a.os, 'nome': a.oscliente.nome, 't4a': a.oscliente.t4a, 'orm': a})
+                d = {'tid': a[0].os, 'id': a[0].os, 'os': a[0].os, 'orm': a[0],
+                     'dataent': a[0].dataent,
+                     'datasai': a[0].datasai
+                     }
+                d['nome'] = a[1]
+                d['t4a'] = a[2]
+                d['_tipo'] = a[3]
+                d['_marca'] = a[4]
+                d['_status'] = a[5]
+                d['_ntarefa'] = a[6]
+                d['_resp'] = a[7]
+
+                dados.append(d)
+
             except Exception, e:
                 nisk.util.dump(e)
+
         return {'dados': dados}
 
     @timed
@@ -693,79 +719,72 @@ class wgtGridRow_oslist(nisk.ListBrowser.wgtGridRow):
         self.cor = cor if cor else ('gridrow', 'gridrow_of')
 
         self._dados = dados
-        if isinstance(self._dados, dict):
-            self._dadosorm = util.defaultv(self._dados, 'orm', None)
-        else:
-            self._dadosorm = self._dados
-        if not self._dadosorm:
-            pass
-            #raise 'data error'
-        else:
-            self._tid = self._dadosorm.os
-
+        if self._dados:
+            self._tid = self._dados['os']
 
         self._nome = ''
 
-        self.load()
+        self.loadx()
 
-        urwid.AttrWrap.__init__(self, self._widget, cor[0],cor[1])
+        urwid.AttrWrap.__init__(self, self._widget, cor[0], cor[1])
 
-    def load(self):
-        hasdata= 1 if self._dadosorm else 0
+
+    def loadx(self):
+        hasdata = 1 if self._dados  else 0
         if hasdata:
-            p_os = util.astext( [(self._dadosorm,'os'),'  OS'],exact=6)
-            p_cliente = util.astext( [(self._dadosorm,'oscliente','nome'),'[ Cliente]'],30)
-            p_status = util.astext( [(self._dadosorm,'osstatus','nome'),'[ Cliente]'],15)
-            p_tarefa = util.astext( [(self._dadosorm,'ostarefa','nome'),'[ Cliente]'],15)
-            p_resp = util.astext( [(self._dadosorm,'osresp','nome'),'[ Cliente]'],15)
-            p_tipo = util.astext( [(self._dadosorm,'ostipo','nome'),'[ Cliente]'],15)
-            p_marca = util.astext( [(self._dadosorm,'osmarca','nome'),'[ Cliente]'],15)
-            p_modelo =  util.astext( [(self._dadosorm,'osmodelo','nome'),'[ Cliente]'],15)
-            p_ns  = util.astext( [(self._dadosorm,'ns'),'[ Cliente]'],10)
-            p_dataent  =util.astext( [(self._dadosorm,'dataent'),'[ Cliente]'],10)
-            p_datasai  =util.astext( [(self._dadosorm,'datasai'),'[ Cliente]'],10)
-        else:            
-            p_os = util.astext( ['  OS'],exact=6)
-            p_cliente = util.astext( ['[ Cliente]'],30)
-            p_status = util.astext( ['[ Situação ]'],15)
-            p_tarefa = util.astext( ['[ Tarefa ]'],15)
-            p_resp = util.astext( ['[ Responsável]'],15)
-            p_tipo = util.astext( ['[ Tipo ]'],15)
-            p_marca = util.astext( ['[ Marca ]'],15)
-            p_modelo =  util.astext( ['[ Modelo]'],15)
-            p_ns  = util.astext( ['[ Serial ]'],10)
-            p_dataent  =util.astext( ['[ Entrada ]'],10)
-            p_datasai  =util.astext( ['[ Saída ]'],10)
+            p_os = util.astext([(self._dados, 'os'), ' '], exact=6)
+            p_cliente = util.astext([(self._dados, 'nome'), ''], 30)
+            p_status = util.astext([(self._dados, '_status'), ''], 15)
+            p_ntarefa = util.astext([(self._dados, '_ntarefa'), ''], 15)
+            p_resp = util.astext([(self._dados, '_resp'), ''], 15)
+            p_tipo = util.astext([(self._dados, '_tipo'), ''], 15)
+            p_marca = util.astext([(self._dados, '_marca'), ''], 15)
+            p_modelo = util.astext([(self._dados, 'orm', '_modelo'), ''], 15)
+            p_ns = util.astext([(self._dados, 'orm', 'ns'), ''], 10)
+            p_dataent = util.astext([(self._dados, 'orm', 'dataent'), ''], 10)
+            p_datasai = util.astext([(self._dados, 'orm', 'datasai'), ''], 10)
+        else:
+            p_os = util.astext(['  OS'], exact=6)
+            p_cliente = util.astext(['[ Cliente]'], 30)
+            p_status = util.astext(['[ Situação ]'], 15)
+            p_ntarefa = util.astext(['[ Tarefa ]'], 15)
+            p_resp = util.astext(['[ Responsável]'], 15)
+            p_tipo = util.astext(['[ Tipo ]'], 15)
+            p_marca = util.astext(['[ Marca ]'], 15)
+            p_modelo = util.astext(['[ Modelo]'], 15)
+            p_ns = util.astext(['[ Serial ]'], 10)
+            p_dataent = util.astext(['[ Entrada ]'], 10)
+            p_datasai = util.astext(['[ Saída ]'], 10)
 
         self.f_os = nisk.ListBrowser.FocusableText(p_os, self.cor)
         self.f_cliente = urwid.Text(p_cliente)
         self.f_status = urwid.Text(p_status)
-        self.f_tarefa = urwid.Text(p_tarefa)
+        self.f_ntarefa = urwid.Text(p_ntarefa)
         self.f_resp = urwid.Text(p_resp)
         self.f_tipo = urwid.Text(p_tipo)
         self.f_marca = urwid.Text(p_marca)
-        self.f_modelo =  urwid.Text(p_modelo)
-        self.f_ns  = urwid.Text(p_ns)
-        self.f_dataent  = urwid.Text(p_dataent)
-        self.f_datasai  = urwid.Text(p_datasai)
+        self.f_modelo = urwid.Text(p_modelo)
+        self.f_ns = urwid.Text(p_ns)
+        self.f_dataent = urwid.Text(p_dataent)
+        self.f_datasai = urwid.Text(p_datasai)
 
         self._widget = urwid.Pile([
             urwid.Columns([
-                (1,urwid.Text('[')),(6,self.f_os),(2,urwid.Text('] ')),
+                (1, urwid.Text('[')), (6, self.f_os), (2, urwid.Text('] ')),
                 #
-                (15,self.f_tipo),(1,urwid.Text('|')),
-                (15,self.f_marca),
+                (15, self.f_tipo), (1, urwid.Text('|')),
+                (15, self.f_marca),
                 #
                 self.f_cliente
             ]),
             urwid.Columns([
-                (9,urwid.Text(' ')),
+                (9, urwid.Text(' ')),
                 #
-                (15,self.f_status),(1,urwid.Text('|')),
-                (15,self.f_tarefa),
+                (15, self.f_status), (1, urwid.Text('|')),
+                (15, self.f_ntarefa),
                 #
-                (15,self.f_dataent),(1,urwid.Text('|')),
-                (15,self.f_datasai)
+                (15, self.f_dataent), (1, urwid.Text('|')),
+                (15, self.f_datasai)
             ]),
             urwid.Divider()
         ])
@@ -775,4 +794,4 @@ class wgtGridRow_oslist(nisk.ListBrowser.wgtGridRow):
 
     @staticmethod
     def getHeader():
-        return wgtGridRow_oslist(None,cor= ('gridhead', 'head'))
+        return wgtGridRow_oslist(None, cor=('gridhead', 'head'))

@@ -199,7 +199,7 @@ class Screen(BaseScreen, RealTerminal):
         # curses.meta(None, 1)
         #todo
         curses.meta( None,1)
-        curses.halfdelay(10) # use set_input_timeouts to adjust
+        curses.halfdelay(1) # use set_input_timeouts to adjust
         self.stdscr.keypad(True)
 
         if not self._signal_keys_set:
@@ -291,7 +291,7 @@ class Screen(BaseScreen, RealTerminal):
 
         return self.stdscr.getch()
 
-    def set_input_timeouts(self, max_wait=None, complete_wait=0.1,
+    def set_input_timeouts(self, max_wait=None, complete_wait=0,
         resize_wait=0.1):
         """
         Set the get_input timeout values.  All values have a granularity

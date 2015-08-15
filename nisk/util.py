@@ -12,6 +12,9 @@ import subprocess
 import thread
 from pprint import pprint
 
+from functools import wraps
+from time import time
+
 
 def stringExactLen(txt, lenx):
     return str(str(txt) + '                                   ')[:lenx]
@@ -50,6 +53,7 @@ def timestampf():
 
 def espera(lck):
     raise 'espera/threads=obsoleto'
+
     def gett(lck):
         r = not lck.acquire(False)
         # logging.debug('gett - %s' % str(r))
@@ -80,25 +84,30 @@ def isEquivalent(a, b):
     z = x == y
     return z
 
+
 def isTuple(v):
     return type(v) == tuple
     return False
 
+
 def isStr(v):
-    return type(v)==str
+    return type(v) == str
+
 
 def asstr(v):
     try:
-        v= str(v)
+        v = str(v)
     except:
-        v=''
+        v = ''
     return v
+
 
 def noExcept():
     pass
 
+
 def astext(v, limit=None, exact=None):
-    if  isinstance(v , list):
+    if isinstance(v, list):
         v = coal(v)
     try:
         if isinstance(v, unicode):
@@ -108,16 +117,17 @@ def astext(v, limit=None, exact=None):
         elif not v:
             v = ''
         else:
-            v= str(v)
+            v = str(v)
     except:
         noExcept()
-        v=''
-    if limit and len(v)>limit:
+        v = ''
+    if limit and len(v) > limit:
         exact = limit
     if exact:
         v = v + '                                   '
         return v[:exact]
     return v
+
 
 def asInt(v):
     i = None
@@ -155,15 +165,15 @@ def asDateTime(t, f=None):
 
 def asUnicode(sx):
     u = u''
-    if not type(sx) in (tuple,list):
-        s=[sx]
+    if not type(sx) in (tuple, list):
+        s = [sx]
     else:
-        s=sx
+        s = sx
     for t in s:
         try:
             x = t.decode('utf-8')
             u = u + x
-        except: 
+        except:
             try:
                 u = u + t
             except:
@@ -227,9 +237,9 @@ class pilha:
 
 def paralelo(function, args=None):
     # Thread(target=function, args=tuple(args)).start()
-    if not isinstance(args,tuple):
+    if not isinstance(args, tuple):
         args = ()
-    return thread.start_new(function,args)
+    return thread.start_new(function, args)
     pass
 
 
@@ -245,31 +255,35 @@ def getlogfilename(fileformat="log-%s.log"):
     p = os.path.join(dir, fileformat % file)
     return os.path.abspath(p)
 
+
 def coal(*args):
     ''' Retorno primeiro argumento válido, ou faz busca recursiva
     em objeto contido em tupla, seguido de seus atributos'''
-    if len(args)==1 and  isinstance(args[0] , list):
-        args=args[0]
+    if len(args) == 1 and isinstance(args[0], list):
+        args = args[0]
     for arg in args:
         if arg:
-            breakaway=0
-            if isinstance(arg , tuple):
-                d=arg[0]
+            breakaway = 0
+            if isinstance(arg, tuple):
+                d = arg[0]
                 for v in arg[1:]:
                     try:
-                        if v:
+                        if isinstance(d, dict):
+                            d = d[v]
+                        else:
                             d = getattr(d, v)
                     except:
-                        breakaway=1
+                        breakaway = 1
                         break
                     if not d:
-                        breakaway=1
+                        breakaway = 1
                         break
                 if breakaway or not d:
                     break
                 return d
             else:
                 return arg
+
 
 class TerminalLogger(object):
     errinfo = ''
@@ -295,7 +309,7 @@ class TerminalLogger(object):
     def PintOnScreen(self, txt):
         pass
 
-    def write(self, message,a=0,b=0):
+    def write(self, message, a=0, b=0):
         # self.terminal.write(message)
         if self.log is None:
             self.log = open(self.filename, "a")
@@ -316,10 +330,10 @@ class TerminalLogger(object):
         # logging.addHandler(handler)
         # logging.debug('this is debug')
         # logging.critical('this is critical')
-        #TerminalLogger.logstream = open(TerminalLogger.logfile, "a")
-        #logging.basicConfig(stream=TerminalLogger.TerminalLogger, level=logging.DEBUG)
-        #logging.basicConfig(stream =sys.stderr, level=logging.DEBUG)
-        logging.debug('''.*************************************.''')   
+        # TerminalLogger.logstream = open(TerminalLogger.logfile, "a")
+        # logging.basicConfig(stream=TerminalLogger.TerminalLogger, level=logging.DEBUG)
+        # logging.basicConfig(stream =sys.stderr, level=logging.DEBUG)
+        logging.debug('''.*************************************.''')
 
     @staticmethod
     def flush():
@@ -388,6 +402,7 @@ def imprimeLPR(cfg_prntxt, var_prnfile):
     except:
         pass
 
+
 def abreGestor():
     p1 = subprocess.Popen(["/home/dingo/neon/GESTOR.exe"], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = p1.communicate()
@@ -399,3 +414,16 @@ def abreGestor():
         logging.debug('!!out!! ' + stdout)
     if len(stderr) > 0:
         logging.debug('!!out!! ' + stderr)
+
+
+
+def timed(f):
+    @wraps(f)
+    def wrapper(*args, **kwds):
+        start = time()
+        result = f(*args, **kwds)
+        elapsed = time() - start
+        print "%s took %f time to finish\n" % (f.__name__, elapsed)
+        return result
+
+    return wrapper
