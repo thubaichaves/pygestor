@@ -39,13 +39,6 @@ def getBlob(fn):
         return f.dados
     return ''
 
-def win():
-    m = MiniFrame.WxApp()
-    m.MainLoop()
-    # m.ExitMainLoop()
-    wins.append( m)
-
-wins = []
 
 class imprimir_OS:
     @staticmethod

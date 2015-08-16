@@ -62,7 +62,7 @@ class HelloUi(UrwidUi):
         app_ = controller.pyGestorFacade.getInstance()
         app_._widgetregistrapai(self.toplevel)
         self.toplevel._widgetfacade = app_
-        app_.sendNotification(conf.cmds.STARTUP, nisk.tui.mdi)
+        # app_.sendNotification(conf.cmds.STARTUP, nisk.tui.mdi)
 
         loop = t.loop
         self.screen.loop = loop

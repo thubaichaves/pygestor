@@ -7,6 +7,7 @@ from sqlalchemy.orm import *
 from sqlalchemy.ext.declarative import declarative_base
 import logging
 import nisk
+import conf
 import puremvc.patterns.mediator
 
 Base = declarative_base()
@@ -24,7 +25,7 @@ class dbsession:
     @staticmethod
     def initonce():
         if dbsession.smaker is None:
-            dbsession.engine = create_engine(dbsession._dburl, echo=False)
+            dbsession.engine = create_engine(dbsession._dburl, echo=conf.cfg_sqlecho)
             dbsession.smaker = sessionmaker(bind=dbsession.engine)
             dbsession.smaker.configure(bind=dbsession.engine)
             # session = SessionMkr()

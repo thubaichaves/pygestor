@@ -190,7 +190,7 @@ class formmer_contatos_edit(formmer.formmer, dlger):
 
     def __init__(self, params, dados=None):
         self.params = params
-        self.cc = nisk.widgets.HMenu(conf.menu_contatos_edit, None, defaultcb=self.callbacks, width=24, selfclose=True)
+        self.cc = nisk.widgets.HMenu(conf.menu_contatos_edit, None, defaultcb=self.callbacks, width=24, selfclose=False)
 
         formmer.formmer.__init__(self, [
             (tfld.textbox, 'Nome', 'alias'),

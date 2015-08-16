@@ -9,6 +9,7 @@ cfg_prncmd_win = 'lpr -d %cfg_prntxt %var_prnfile'
 cfg_prncmd_unix = 'cat $1 | smbclient $2 -c "print -" -N -U "nisk%000"'
 
 cfg_dburl = "firebird+fdb://sysdba:masterkey@localhost:3050/o:\\prog\\pygestor\\banco.fdb?charset=WIN1252"
+cfg_sqlecho = False
 
 cfg_dburl_list = {
     'dev': "firebird+fdb://sysdba:masterkey@localhost:3050/c:\\neon\\banco.gdb?charset=WIN1252",

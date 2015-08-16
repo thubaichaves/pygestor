@@ -1,1 +1,0 @@
- * Detectado BUG no wgtFieldBoxDB ao mudar de um número de linhas para outro (ocorre um erro de renderização)

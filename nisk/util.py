@@ -14,10 +14,7 @@ from pprint import pprint
 from functools import wraps
 from profilestats import profile
 from time import time
-
-
-def stringExactLen(txt, lenx):
-    return str(str(txt) + '                                   ')[:lenx]
+import wxplatform
 
 
 def row2dict(row):
@@ -127,6 +124,7 @@ def astext(v, limit=None, exact=None):
         v = v + '                                   '
         return v[:exact]
     return v
+
 
 def asInt(v):
     i = None
@@ -335,7 +333,7 @@ class TerminalLogger(object):
         # logging.critical('this is critical')
         # TerminalLogger.logstream = open(TerminalLogger.logfile, "a")
         # logging.basicConfig(stream=TerminalLogger.TerminalLogger, level=logging.DEBUG)
-        # logging.basicConfig(stream =sys.stderr, level=logging.DEBUG)
+        logging.basicConfig(stream =sys.stderr, level=logging.DEBUG)
         logging.debug('''.*************************************.''')
 
     @staticmethod
@@ -429,3 +427,40 @@ def timed(f):
         return result
 
     return wrapper
+
+import wx
+class wxtext:
+    wxapp = 0
+    wins = []
+    main = None
+
+    @staticmethod
+    def once():
+        if not wxtext.wxapp:
+            wxtext.wxapp =  wxplatform.WxApp()
+            wxtext.wxapp.SetTopWindow(wxtext.wxapp.appFrame)
+            wxtext.wxapp.appFrame.Bind(wxplatform.evtnew, wxtext.new)
+            wxtext.wxapp.MainLoop()
+
+    @staticmethod
+    def win():
+        wxtext.once()
+        evt = wxplatform.newwin(barNum=0, value=0)
+        wx.PostEvent(wxtext.wxapp.appFrame, evt)
+
+    @staticmethod
+    def new(*args):
+        f =wxplatform.AppFrame()
+        f.Show()
+        wxtext.wins.append(f)
+        wxtext.wxapp.SetTopWindow(f)
+
+
+    @staticmethod
+    def winx():
+        for x in wxtext.wins:
+            evt = wxplatform.UpdateBarEvent(barNum=0, value=0)
+            wx.PostEvent(x, evt)
+        del wxtext.wins[:]
+
+

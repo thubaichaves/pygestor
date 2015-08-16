@@ -245,7 +245,7 @@ class formmer_os_new(formmer.formmer):
     def __init__(self, params={}, dados={}):
         self.params = params
         self.dados = dados
-        self.cc = nisk.widgets.HMenu(conf.menu_os_add, None, defaultcb=self.callbacks, width=24, selfclose=True)
+        self.cc = nisk.widgets.HMenu(conf.menu_os_add, None, defaultcb=self.callbacks, width=24, selfclose=False)
         self.tocall = None
         self.r = dlger.void
 
@@ -340,7 +340,7 @@ class formmer_os_new(formmer.formmer):
         mt.addComplement(urwid.AttrWrap(buttonbar, 'foot'))
 
         self.cc.setwid(mt)
-        self.cc.onmenuopen()
+        # self.cc.onmenuopen()
 
         lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='Nova OS'), 'windowsborder', 'windowsborder_of')
         return lb
@@ -371,17 +371,20 @@ class formmer_os_edit(formmer.formmer, dlger):
         'Salvar',
         'Cancelar', ]
 
+    @timed
     def __init__(self, params=None, dados=None):
         self.params = params
         self.dados = dados
-        self.cc = nisk.widgets.HMenu(conf.menu_os_edit, None, defaultcb=self.callbacks, width=24, selfclose=True)
+        self.cc = nisk.widgets.HMenu(conf.menu_os_edit, None, defaultcb=self.callbacks, width=24, selfclose=False)
 
         formmer.formmer.__init__(self, [
             (tfld.itextbox, 'OS', 'os', {'readonly': 1, 'estreito': 2}),
-            (tfld.datepicker, 'Data de Entrada', 'dataent', {'readonly': 1, 'estreito': 2}),
 
             (tfld.fieldbox, 'Cliente', 'cliente', {'tab': 'contatos'}),
             (tfld.textbox, 'Telefones', ('oscliente', 't4a'), {'readonly': 1}),
+
+            (tfld.datepicker, 'Data de Entrada', 'dataent', {'readonly': 1, 'estreito': 2}),
+            (tfld.datepicker, 'Data de Saída', 'datasai', {'readonly': 1, 'estreito': 2}),
 
             (tfld.fieldbox, 'Status', 'status', {'ltab': 'osstt', 'estreito': 2}),
             (tfld.fieldbox, 'Tarefa', 'ntarefa', {'ltab': 'osnxt', 'estreito': 2}),
@@ -497,6 +500,7 @@ class formmer_os_edit(formmer.formmer, dlger):
         lb = urwid.AttrWrap(widgets.LineBox(self.cc, title='OS'), 'windowsborder', 'windowsborder_of')
         return lb
 
+    @timed
     def show(self, isdialog=False):
         x = self.binder.consulta(self.params)
         if x:
@@ -519,7 +523,7 @@ class formmer_os_edit(formmer.formmer, dlger):
 class mediator_os(puremvc.patterns.mediator.Mediator, puremvc.interfaces.IMediator, nisk.formmer.binder):
     NAME = 'OSCreate'
 
-    @timed
+    #@timed
     def __init__(self, f):
         super(mediator_os, self).__init__(mediator_os.NAME, viewComponent=None)
         nisk.formmer.binder.__init__(self, f.widgets, f.fields)
@@ -545,7 +549,7 @@ class mediator_os(puremvc.patterns.mediator.Mediator, puremvc.interfaces.IMediat
             self.update()
             return
 
-    @timed
+    #@timed
     def consulta(self, params={}):
         if params.has_key('new') and params.has_key('dados'):
             r = self.consultor.getNovo(params, params['dados'])
@@ -787,7 +791,7 @@ class wgtGridRow_oslist(nisk.ListBrowser.wgtGridRow):
                 (15, self.f_dataent), (1, urwid.Text('|')),
                 (15, self.f_datasai)
             ]),
-            urwid.Divider()
+            urwid.Divider('-')
         ])
 
     def toappend(self):

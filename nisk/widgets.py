@@ -14,7 +14,7 @@ from nsatw import *
 from urwid import *
 import math
 import urwid
-# import tk
+import wx
 import urwidtrees
 
 
@@ -382,13 +382,12 @@ class wgtFieldBox(AttrWrap, bindablefield):
             return 'up'
         
         elif key == "f4":
-            # nisk.util.paralelo(self.seleciona_popup)
+            # nisk.util.wxtext.winx()
+            ''''''
+        elif key == "f5":
+            # nisk.util.paralelo(nisk.util.wxtext.win)
             pass
-            '''
-            elif key == "f5":
-                nisk.util.paralelo(self.edit_tk)
-                pass
-            '''
+            ''''''
         else:
             # key wasn't handled
             return key
@@ -1399,10 +1398,12 @@ class HMenu(urwid.Columns):
             del self.contents[1]
 
         self.contents.insert(0, (self.wid, self.options('weight', 1)))
+        self.onmenuopen()
 
     def onmenuclose(self):
         if len(self.contents) == 2:
-            del self.contents[0]
+            pass
+            # del self.contents[0]
 
     def onmenuopen(self):
         if not self.opts is None:
@@ -1456,8 +1457,8 @@ class HMenu(urwid.Columns):
             self.menu = menu
 
     def __init__(self, opts, wid, defaultcb=None, width=24, selfclose=False):
-        o = self.onmenuclose if selfclose else None
-        self.top = HMenu.HorizontalBoxes(onclose=o)
+        x = self.onmenuclose if selfclose else None
+        self.top = HMenu.HorizontalBoxes(onclose=x)
         self.wdt = width
         self.wid = wid
         self.defaultcb = defaultcb
